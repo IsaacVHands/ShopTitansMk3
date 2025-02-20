@@ -5,13 +5,14 @@ energyLevel := 0
 surchargeCost := 0.1
 restartCounter := 0
 tick := 0
-mode := "reg"
+mode := "reg"      ;reg for only surcharge. Nreg for burn mode
 craftMode := true
 heroTokenMode := false
 {
-    MouseMove(758, 380)
+    customerZone := [738, 369, 1224, 736]
+    MouseMove(customerZone[1], customerZone[2])
     sleep(1000)
-    MouseMove(1160, 795)
+    MouseMove(customerZone[3], customerZone[4])
     sleep(1000)
     global surchargeCost
     tabTimer := 0
@@ -110,7 +111,7 @@ heroTokenMode := false
             Sleep(500)
             ClickAtCoord(958, 715)      ;click finish
         }
-        sleep(750)
+        sleep(500)
         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
             if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))          ;checks if for king reinhold
@@ -198,10 +199,15 @@ heroTokenMode := false
                 ClickAtCoord(968, 756)      ;Wait
             }
         }
-        else if(PixelSearch(&pX, &pY, 758, 380, 1160, 795, 0xEFEAD6, 2) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
+        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tick <= 17)         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
         { 
             ClickAtCoord(pX, pY)
             Sleep(500)
+            if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 3))        ;check for edit furniture button
+            {
+                Send("{Esc}")
+                Sleep(250)
+            }
         }
         else if(tabTimer >= 15)         ;check if enough time has passed to go to town for a few seconds
         {
@@ -228,11 +234,16 @@ heroTokenMode := false
                 sleep(750)
                 ClickAtCoord(951, 941)          ;click the continue button
                 Sleep(500)
-                 ClickAtCoord(1133, 938)          ;click the continue button
+                ClickAtCoord(1133, 938)          ;click the continue button
             }
+            RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
             Sleep(2500)
             Send("{Tab}")
             tabTimer := 0
+        }
+        else if(tick == 20)     ;reset position
+        {
+            RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\SubFunctions\General\ReturnToDefaultPos.ahk")
         }
         else if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3) and craftMode == true)       ;check if the item is done crafting
         {
@@ -242,7 +253,7 @@ heroTokenMode := false
         {
             RunWait("c:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\Manufacture\CraftQuick.ahk")     ;launch the quick crafter
         }
-        sleep(1000)
+        sleep(500)
         if(sellingMode)
         {
             if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if surcharge is possible and if the item is in stock
@@ -314,7 +325,7 @@ heroTokenMode := false
         }
         tabTimer++
         tick++
-        sleep 750
+        sleep 250
     }
 }
 
