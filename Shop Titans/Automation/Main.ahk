@@ -5,11 +5,13 @@ energyLevel := 0
 surchargeCost := 0.1
 restartCounter := 0
 tick := 0
-mode := "reg"      ;reg for only surcharge. Nreg for burn mode
+mode := "reg"      ;reg for only surcharge. Nreg for burn mode. and MANreg for manual selling
+regModTimer := 0
 craftMode := true
 heroTokenMode := false
 {
-    customerZone := [738, 369, 1224, 736]
+    RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
+    customerZone := [695, 539, 1131, 663]
     MouseMove(customerZone[1], customerZone[2])
     sleep(1000)
     MouseMove(customerZone[3], customerZone[4])
@@ -70,11 +72,11 @@ heroTokenMode := false
             if(restartCounter > 5)
             {
                 
-                RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\General\KillAllScripts.ahk")
+                RunWait("SubFunctions\General\KillAllScripts.ahk")
             }
             else
             {
-                RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\SubFunctions\General\RestartShopTitans.ahk")
+                RunWait("SubFunctions\General\RestartShopTitans.ahk")
             }
             restartCounter++
         }
@@ -85,7 +87,7 @@ heroTokenMode := false
         }
         else if(PixelSearch(&pX, &pY, 978, 778, 1098, 886, 0x000000, 2) and PixelSearch(&pX, &pY, 1706, 786, 1745, 833, 0xA5A6A5, 3))       ;check for infinite loading screen
         {
-            RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\SubFunctions\General\TrappedInLoading.ahk")
+            RunWait("SubFunctions\General\TrappedInLoading.ahk")
         }
         else if(PixelSearch(&pX, &pY, 834, 484, 980, 623, 0xB57923, 3) and PixelSearch(&pX, &pY, 834, 484, 980, 623, 0xA21308, 3))        ;checks for recieving a gift
         {
@@ -181,6 +183,15 @@ heroTokenMode := false
                 }
                 else
                 {
+                    Sleep(1000)
+                    ClickAtCoord(1266, 637)      ;click the sell button
+                    Sleep(500)
+                    Send("{Esc}")
+                    Sleep(500)
+                    if(PixelSearch(&pX, &pY, 2334, 295, 2382, 325, 0xF7491F, 3))        ;check if escape brought up the quit game menu
+                    {
+                        ClickAtCoord(827, 644)      ;click no
+                    }
                     ClickAtCoord(684, 633)      ;refuse
                     Sleep(500)
                     ClickAtCoord(1105, 645)     ;confirm
@@ -236,22 +247,26 @@ heroTokenMode := false
                 Sleep(500)
                 ClickAtCoord(1133, 938)          ;click the continue button
             }
-            RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
+            RunWait("SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
             Sleep(2500)
             Send("{Tab}")
             tabTimer := 0
         }
         else if(tick == 20)     ;reset position
         {
-            RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\SubFunctions\General\ReturnToDefaultPos.ahk")
+            RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
         }
         else if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3) and craftMode == true)       ;check if the item is done crafting
         {
-            RunWait("c:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\Manufacture\CraftExacutable.ahk")     ;launch the crafter
+            RunWait("Manufacture\CraftExacutable.ahk")     ;launch the crafter
         }
         else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and tick > 17 and craftMode == true)       ;check if there is an empty crafting slot
         {
-            RunWait("c:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\Manufacture\CraftQuick.ahk")     ;launch the quick crafter
+            RunWait("Manufacture\CraftQuick.ahk")     ;launch the quick crafter
+        }
+        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and tick > 17)       ;check on the bounty status
+        {
+            RunWait("SubFunctions\Bounties\CollectBounty.ahk")
         }
         sleep(500)
         if(sellingMode)
@@ -291,12 +306,18 @@ heroTokenMode := false
             }
             else
             {
-                if(mode == "reg")
+                if(mode == "reg" or regModTimer > 9600)
                 {
                     if(PixelSearch(&pX, &pY, 599, 613, 640, 659, 0xF74A21, 3))  ;check for refuse button
                     {
                         ClickAtCoord(692, 633)      ;refuse because the surcharge price is to high
                     }
+                }
+                else if(mode == "MANreg")
+                {
+                    Send("{Esc}")
+                    Sleep(500)
+                    ;for manual selling
                 }
                 else
                 {
@@ -325,6 +346,7 @@ heroTokenMode := false
         }
         tabTimer++
         tick++
+        regModTimer++
         sleep 250
     }
 }
@@ -406,5 +428,5 @@ tierScan()
 CreateErrorMessage(errorTitle, ErrorDetails)
 {
 
-    ;FileAppend(, errorTitle, "C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Errors")
+    ;FileAppend(, errorTitle, "Errors")
 }

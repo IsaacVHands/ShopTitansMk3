@@ -149,8 +149,13 @@ CapriceMode()
                 sleep(750)
                 loop 10
                 {
-                    if(!PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if it gets out of the components buying menu early
+                    if(PixelSearch(&pX, &pY, 744, 729, 791, 749, 0x7E7E7E, 2))         ;checks if there are no components on the market
                     {
+                        loop 2
+                        {
+                            Send("{Esc}")
+                            Sleep(500)
+                        }
                         break
                     }
                     else
@@ -159,22 +164,26 @@ CapriceMode()
                     }
                     Sleep(750)
                 }
-                if(PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if its stil in the components buying menu
+                if(PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if its still in the components buying menu
                 {
                     Send("{Escape}")
                     Sleep(250)
                 }
             }
+            else if(PixelSearch(&pX, &pY, 1004, 675, 1058, 713, 0x21F45A, 2))   ;scan for "using high quality item"
+            {
+                ClickAtCoord(2713, 360)     ;click yes
+            }
             if(PixelSearch(&pX, &pY, 1209, 355, 1230, 367, 0xFF3F18, 2) or PixelSearch(&pX, &pY, 909, 715, 1031, 756, 0x3F61C0, 2))        ;check if recource menu is open or unlock with blueprints button
             {
                 Send("{Esc}")
                 Sleep(300)
+                CraftSlotShift()
             }
-            else
+            else if(PixelSearch(&pX, &pY, 611, 154, 789, 204, 0xFF2D00, 2))        ;check if the workers level is too low
             {
                 CraftSlotShift()
             }
-            Sleep(500)
         }
     }
     if(!PixelSearch(&pX, &pY, 1848, 935, 1855, 943, 0x1E783F, 1))          ;check if the crafting menu is still open
