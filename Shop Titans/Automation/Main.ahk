@@ -75,7 +75,7 @@ heroTokenMode := false
             RunWait("SubFunctions\General\RestartShopTitans.ahk")
             AutomaticRestartTimer := 0
         }
-        else if(PixelSearch(&pX, &pY, 812, 135, 846, 157, 0x1D2129, 1))     ;checks if the game is stuck in the steam shop
+        else if(PixelSearch(&pX, &pY, 812, 135, 846, 157, 0x1D2129, 1) and PixelSearch(&pX, &pY, 971, 751, 1082, 799, 0x95B407, 2))     ;checks if the game is stuck in the steam shop
         {
             if(restartCounter > 5)
             {
