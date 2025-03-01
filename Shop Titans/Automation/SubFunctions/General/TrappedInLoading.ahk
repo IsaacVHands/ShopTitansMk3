@@ -18,6 +18,6 @@
     }
     if(loadingScreen)
     {
-        RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\SubFunctions\General\RestartShopTitans.ahk")
+        RunWait("RestartShopTitans.ahk")
     }
 }

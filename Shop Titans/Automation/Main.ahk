@@ -18,6 +18,7 @@ heroTokenMode := false
     sleep(1000)
     global surchargeCost
     tabTimer := 0
+    AutomaticRestartTimer := 0
     a := true
     while a == true
     {
@@ -66,6 +67,11 @@ heroTokenMode := false
         else if(PixelSearch(&pX, &pY, 1076, 734, 1125, 777, 0x21F75D, 3))       ;check for a worker level up
         {
             ClickAtCoord(1185, 760)     ;click continue
+        }
+        else if(AutomaticRestartTimer > 10000)
+        {
+            RunWait("SubFunctions\General\RestartShopTitans.ahk")
+            AutomaticRestartTimer := 0
         }
         else if(PixelSearch(&pX, &pY, 812, 135, 846, 157, 0x1D2129, 1))     ;checks if the game is stuck in the steam shop
         {
@@ -248,6 +254,8 @@ heroTokenMode := false
                 ClickAtCoord(1133, 938)          ;click the continue button
             }
             RunWait("SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
+            Sleep(500)
+            RunWait("SubFunctions\Quests\TOTSendQuest.ahk")         ;try to launch a tot mission
             Sleep(2500)
             Send("{Tab}")
             tabTimer := 0
@@ -264,7 +272,7 @@ heroTokenMode := false
         {
             RunWait("Manufacture\CraftQuick.ahk")     ;launch the quick crafter
         }
-        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and tick > 17)       ;check on the bounty status
+        else if(PixelSearch(&pX, &pY, 246, 918, 284, 956, 0xFFE894, 3) and tick > 17)       ;check on the bounty status
         {
             RunWait("SubFunctions\Bounties\CollectBounty.ahk")
         }
@@ -347,6 +355,7 @@ heroTokenMode := false
         tabTimer++
         tick++
         regModTimer++
+        AutomaticRestartTimer++
         sleep 250
     }
 }

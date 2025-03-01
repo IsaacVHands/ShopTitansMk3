@@ -156,6 +156,7 @@ CapriceMode()
                             Send("{Esc}")
                             Sleep(500)
                         }
+                        CraftSlotShift()
                         break
                     }
                     else
@@ -172,7 +173,7 @@ CapriceMode()
             }
             else if(PixelSearch(&pX, &pY, 1004, 675, 1058, 713, 0x21F45A, 2))   ;scan for "using high quality item"
             {
-                ClickAtCoord(2713, 360)     ;click yes
+                ClickAtCoord(1098, 687)     ;click yes
             }
             if(PixelSearch(&pX, &pY, 1209, 355, 1230, 367, 0xFF3F18, 2) or PixelSearch(&pX, &pY, 909, 715, 1031, 756, 0x3F61C0, 2))        ;check if recource menu is open or unlock with blueprints button
             {
