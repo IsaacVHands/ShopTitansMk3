@@ -6,10 +6,12 @@ surchargeCost := 0.1
 restartCounter := 0
 tick := 0
 mode := "reg"      ;reg for only surcharge. Nreg for burn mode. and MANreg for manual selling
+
 regModTimer := 0
 craftMode := true
 heroTokenMode := false
 {
+    subscription := true
     RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
     customerZone := [695, 539, 1131, 663]
     MouseMove(customerZone[1], customerZone[2])
@@ -253,11 +255,16 @@ heroTokenMode := false
                 Sleep(500)
                 ClickAtCoord(1133, 938)          ;click the continue button
             }
-            RunWait("SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
-            Sleep(500)
-            RunWait("SubFunctions\Quests\TOTSendQuest.ahk")         ;try to launch a tot mission
-            Sleep(2500)
-            Send("{Tab}")
+            if(subscription)
+            {
+                RunWait("SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
+                Sleep(500)
+                RunWait("SubFunctions\General\EscapeToShop.ahk")
+                Sleep(500)
+                RunWait("SubFunctions\Quests\TOTSendQuest.ahk")         ;try to launch a tot mission
+                Sleep(2500)
+                RunWait("SubFunctions\General\EscapeToShop.ahk")
+            }
             tabTimer := 0
         }
         else if(tick == 20)     ;reset position
