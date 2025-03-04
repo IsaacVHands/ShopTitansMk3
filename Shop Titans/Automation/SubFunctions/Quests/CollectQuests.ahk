@@ -51,6 +51,13 @@
                 }
                 Sleep(1000)
             }
+                Sleep(500)
+                RunWait("EscapeToShop.ahk")
+                Sleep(2000)
+                if(PixelSearch(&pX, &pY, 25, 112, 94, 183, 0x645693, 2))            ;check if the tower of titans is active
+                {
+                    RunWait("TOTSendQuest.ahk")         ;try to launch a tot mission
+                }
         }
         Sleep(250)
     }

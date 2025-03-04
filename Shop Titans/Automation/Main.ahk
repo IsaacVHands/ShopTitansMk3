@@ -11,13 +11,16 @@ regModTimer := 0
 craftMode := true
 heroTokenMode := false
 {
-    subscription := true
     RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
     customerZone := [695, 539, 1131, 663]
     MouseMove(customerZone[1], customerZone[2])
     sleep(1000)
     MouseMove(customerZone[3], customerZone[4])
     sleep(1000)
+    if(PixelSearch(&pX, &pY, 8, 4, 29, 22, 0xEDC53F, 2))
+        subscription := true
+    else
+        subscription := false
     global surchargeCost
     tabTimer := 0
     AutomaticRestartTimer := 0
@@ -28,8 +31,8 @@ heroTokenMode := false
         buyingMode := false
         if(!WinActive("Shop Titans"))      ;checks if shop titans is selected
         {
-            Send("{Alt Down}{Tab}{Alt Up}")
-            Sleep(500)
+            RunWait("steam://rungameid/1258080")
+            Sleep(15000)
         }
         else if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
         {
@@ -258,10 +261,6 @@ heroTokenMode := false
             if(subscription)
             {
                 RunWait("SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
-                Sleep(500)
-                RunWait("SubFunctions\General\EscapeToShop.ahk")
-                Sleep(500)
-                RunWait("SubFunctions\Quests\TOTSendQuest.ahk")         ;try to launch a tot mission
                 Sleep(2500)
                 RunWait("SubFunctions\General\EscapeToShop.ahk")
             }
