@@ -70,41 +70,14 @@ Craft4()
 {
     slotX := 727        ;starts in slot 4
     slotChangeCoef := 208
-    loop 4
+    loop 10
     {
-        if(!PixelSearch(&pX, &pY, 1848, 935, 1855, 943, 0x1E783F))          ;check if the crafting menu is still open
+        CraftError := CraftItem(slotX)
+        if(CraftError == -1)
         {
-            ClickAtCoord(slotX, 725)      ;craft item IN SLOT FOUR
-            sleep(500)
-            if(PixelSearch(&pX, &pY, 737, 650, 766, 704, 0xFFB729, 2))      ;check if it needs to buy components from the market
-            {
-                ClickAtCoord(834, 683)      ;click market button
-                sleep(750)
-                loop 10
-                {
-                    if(!PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if it gets out of the components buying menu early
-                    {
-                        break
-                    }
-                    else
-                    {
-                        ClickAtCoord(835, 731)         ;click buy
-                    }
-                    Sleep(750)
-                }
-                if(PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if its stil in the components buying menu
-                {
-                    Send("{Escape}")
-                    Sleep(250)
-                }
-            }
-            if(PixelSearch(&pX, &pY, 1209, 355, 1230, 367, 0xFF3F18, 2))        ;check if recource menu is open
-            {
-                Send("{Esc}")
-                Sleep(300)
-            }
             slotX -= slotChangeCoef
-            Sleep(500)
+            if(slotX < 0)
+                break
         }
     }
     if(!PixelSearch(&pX, &pY, 1848, 935, 1855, 943, 0x1E783F, 1))          ;check if the crafting menu is still open
@@ -139,52 +112,10 @@ CapriceMode()
 {
     loop 30
     {
-        if(!PixelSearch(&pX, &pY, 1848, 935, 1855, 943, 0x1E783F))          ;check if the crafting menu is still open
+        CraftError := CraftItem(103)         ;craft slot 1
+        if(CraftError == -1)
         {
-            ClickAtCoord(103, 725)      ;craft item in slot 1
-            sleep(500)
-            if(PixelSearch(&pX, &pY, 737, 650, 766, 704, 0xFFB729, 2))      ;check if it needs to buy components from the market
-            {
-                ClickAtCoord(834, 683)      ;click market button
-                sleep(750)
-                loop 10
-                {
-                    if(PixelSearch(&pX, &pY, 744, 729, 791, 749, 0x7E7E7E, 2))         ;checks if there are no components on the market
-                    {
-                        loop 2
-                        {
-                            Send("{Esc}")
-                            Sleep(500)
-                        }
-                        CraftSlotShift()
-                        break
-                    }
-                    else
-                    {
-                        ClickAtCoord(835, 731)         ;click buy
-                    }
-                    Sleep(750)
-                }
-                if(PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if its still in the components buying menu
-                {
-                    Send("{Escape}")
-                    Sleep(250)
-                }
-            }
-            else if(PixelSearch(&pX, &pY, 1004, 675, 1058, 713, 0x21F45A, 2))   ;scan for "using high quality item"
-            {
-                ClickAtCoord(1098, 687)     ;click yes
-            }
-            if(PixelSearch(&pX, &pY, 1209, 355, 1230, 367, 0xFF3F18, 2) or PixelSearch(&pX, &pY, 909, 715, 1031, 756, 0x3F61C0, 2))        ;check if recource menu is open or unlock with blueprints button
-            {
-                Send("{Esc}")
-                Sleep(300)
-                CraftSlotShift()
-            }
-            else if(PixelSearch(&pX, &pY, 611, 154, 789, 204, 0xFF2D00, 2))        ;check if the workers level is too low
-            {
-                CraftSlotShift()
-            }
+            CraftSlotShift()
         }
     }
     if(!PixelSearch(&pX, &pY, 1848, 935, 1855, 943, 0x1E783F, 1))          ;check if the crafting menu is still open
@@ -192,6 +123,58 @@ CapriceMode()
         Send("{Escape}")
         sleep(500)
     }
+}
+CraftItem(x)
+{
+    info := 0
+    if(!PixelSearch(&pX, &pY, 1848, 935, 1855, 943, 0x1E783F))          ;check if the crafting menu is still open
+    {
+        ClickAtCoord(x, 725)      ;craft item in the given slot
+        sleep(500)
+        if(PixelSearch(&pX, &pY, 737, 650, 766, 704, 0xFFB729, 2))      ;check if it needs to buy components from the market
+        {
+            ClickAtCoord(834, 683)      ;click market button
+            sleep(750)
+            loop 10
+            {
+                if(PixelSearch(&pX, &pY, 740, 722, 803, 747, 0x7E7E7E, 2))         ;checks if there are no components on the market
+                {
+                    loop 2
+                    {
+                        Send("{Escape}")
+                        Sleep(500)
+                    }
+                    info := -1
+                    break
+                }
+                else
+                {
+                    ClickAtCoord(835, 731)         ;click buy
+                }
+                Sleep(750)
+            }
+            if(PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if its still in the components buying menu
+            {
+                Send("{Escape}")
+                Sleep(250)
+            }
+        }
+        else if(PixelSearch(&pX, &pY, 1004, 675, 1058, 713, 0x21F45A, 2))   ;scan for "using high quality item"
+        {
+            ClickAtCoord(1098, 687)     ;click yes
+        }
+        if(PixelSearch(&pX, &pY, 1209, 355, 1230, 367, 0xFF3F18, 2) or PixelSearch(&pX, &pY, 909, 715, 1031, 756, 0x3F61C0, 2) or PixelSearch(&pX, &pY, 833, 649, 858, 663, 0x18F355))        ;check if recource menu is open or unlock with blueprints button or the buy a summoner button is open
+        {
+            Send("{Esc}")
+            Sleep(300)
+            info := -1
+        }
+        else if(PixelSearch(&pX, &pY, 611, 154, 789, 204, 0xFF2D00, 2))        ;check if the workers level is too low
+        {
+            info := -1
+        }
+    }
+    return info
 }
 CraftSlotShift()
 {

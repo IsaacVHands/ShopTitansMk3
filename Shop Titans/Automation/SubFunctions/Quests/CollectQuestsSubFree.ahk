@@ -2,12 +2,24 @@
 #SingleInstance Force
 
 {
+    collectedQuest := false
     loop 7
     {
         if(PixelSearch(&pX, &pY, 1643, 961, 1722, 998, 0x71571B, 3))        ;check if quest is ready
         {
             ClickAtCoord(1678, 933)         ;collect quest
             Sleep(1000)
+            if(PixelSearch(&pX, &pY, 150, 946, 210, 986, 0x000000, 2))      ;check if the game is in combat
+            {
+                loop(20)
+                {
+                    Sleep(10000)
+                    if(!PixelSearch(&pX, &pY, 150, 946, 210, 986, 0x000000, 2))      ;check if the game is in combat
+                    {
+                        break
+                    }
+                }
+            }
             if(PixelSearch(&pX, &pY, 983, 659, 1014, 701, 0x20F75C, 2))     ;check for broken equipment
             {
                 ClickAtCoord(1102, 685)         ;click show all
@@ -15,9 +27,9 @@
                 BrokenEquipment := true
                 while(BrokenEquipment)
                 {
-                    if(PixelSearch(&pX, &pY, 1278, 552, 1313, 576, 0xBA7D1F, 2))     ;check for repair with gold button
+                    if(PixelSearch(&pX, &pY, 1270, 619, 1314, 641, 0x26F863, 2))     ;check for repair button
                     {
-                        ClickAtCoord(1391, 546)     ;click repair with gold
+                        ClickAtCoord(pX, pY)     ;click repair with gold
                         Sleep(250)
                     }
                     else
@@ -39,7 +51,7 @@
                     ClickAtCoord(958, 931)     ;click continue
                     Sleep(300)
                 }
-                if(PixelSearch(&pX, &pY, 839, 726, 895, 772, 0xE3A00D, 2))      ;check for collect button
+                if(PixelSearch(&pX, &pY, 704, 734, 747, 763, 0x522C44, 2))      ;check for collect button
                 {
                     ClickAtCoord(895, 772)
                     Sleep(500)
@@ -51,15 +63,16 @@
                 }
                 Sleep(1000)
             }
-                Sleep(500)
-                RunWait("EscapeToShop.ahk")
-                Sleep(2000)
-                if(PixelSearch(&pX, &pY, 25, 201, 94, 282, 0x645693, 2))            ;check if the tower of titans is active
-                {
-                    RunWait("TOTSendQuest.ahk")         ;try to launch a tot mission
-                }
+            collectedQuest := true
         }
         Sleep(250)
+    }
+    Sleep(500)
+    RunWait("EscapeToShop.ahk")
+    Sleep(2000)
+    if(PixelSearch(&pX, &pY, 25, 200, 94, 277, 0x565E8A, 2) and PixelSearch(&pX, &pY, 25, 200, 94, 277, 0xA238F4, 2) and collectedQuest)            ;check if the tower of titans is active
+    {
+        RunWait("TOTSendQuest.ahk")         ;try to launch a tot mission
     }
 }
 

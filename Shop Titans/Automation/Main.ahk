@@ -5,12 +5,17 @@ energyLevel := 0
 surchargeCost := 0.1
 restartCounter := 0
 tick := 0
-mode := "reg"      ;reg for only surcharge. Nreg for burn mode. and MANreg for manual selling
 
-regModTimer := 0
 craftMode := true
 heroTokenMode := false
 {
+    if(!WinActive("Shop Titans"))      ;checks if shop titans is selected
+    {
+        RunWait("steam://rungameid/1258080")
+        Sleep(14500)
+        ClickAtCoord(1849, -8)          ;maximize the window
+        Sleep(500)
+    }
     RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
     customerZone := [695, 539, 1131, 663]
     MouseMove(customerZone[1], customerZone[2])
@@ -22,7 +27,6 @@ heroTokenMode := false
     else
         subscription := false
     global surchargeCost
-    tabTimer := 0
     AutomaticRestartTimer := 0
     a := true
     while a == true
@@ -32,7 +36,22 @@ heroTokenMode := false
         if(!WinActive("Shop Titans"))      ;checks if shop titans is selected
         {
             RunWait("steam://rungameid/1258080")
-            Sleep(15000)
+            Sleep(14500)
+            ClickAtCoord(1849, -8)          ;maximize the window
+            Sleep(500)
+        }
+        else if(PixelSearch(&pX, &pY, 802, 673, 822, 742, 0x21F75A, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))         ;checks if the game has failed steam identification and needs to restart and top left corner of the box
+        {
+            if(restartCounter > 20)
+            {
+                
+                RunWait("SubFunctions\General\KillAllScripts.ahk")
+            }
+            else
+            {
+                RunWait("SubFunctions\General\RestartShopTitans.ahk")
+            }
+            restartCounter++
         }
         else if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
         {
@@ -80,7 +99,7 @@ heroTokenMode := false
         }
         else if(PixelSearch(&pX, &pY, 812, 135, 846, 157, 0x1D2129, 1) and PixelSearch(&pX, &pY, 971, 751, 1082, 799, 0x95B407, 2))     ;checks if the game is stuck in the steam shop
         {
-            if(restartCounter > 5)
+            if(restartCounter > 20)
             {
                 
                 RunWait("SubFunctions\General\KillAllScripts.ahk")
@@ -127,101 +146,9 @@ heroTokenMode := false
         sleep(500)
         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
-            if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))          ;checks if for king reinhold
-            {
-                Sleep(delay * 3)
-                ;ClickAtCoord(1303, 630)     ;sell
-                ClickAtCoord(968, 756)      ;Wait
-            }
-            else if(PixelSearch(&pX, &pY, 953, 311, 971, 322, 0xECE168, 1))      ;checks if it is a seller
-            {
-                buyingMode := true
-            }
-            else if(!PixelSearch(&pX, &pY, 1318, 396, 1346, 422, 0x522C44, 2) and PixelSearch(&pX, &pY, 747, 622, 797, 657, 0xF7491E, 2) and !PixelSearch(&pX, &pY, 695, 513, 754, 545, 0x522C44, 3))     ;check if its a hero
-            {
-                if(heroTokenMode)
-                {
-                    if(PixelSearch(&pX, &pY, 1288, 614, 1350, 657, 0x21F75D, 3))        ;check if there is enough items for the hero
-                    {
-                        ClickAtCoord(1241, 643)     ;sell
-                        Sleep(750)
-                        if(PixelSearch(&pX, &pY, 1014, 674, 1065, 711, 0x21F75D, 3))        ;scan for sell warning
-                        {
-                            ClickAtCoord(1103, 698)     ;click yes
-                        }
-                    }
-                    else
-                    {
-                        ClickAtCoord(1247, 641)     ;click restock
-                        Sleep(500)
-                        ClickAtCoord(840, 675)      ;click market
-                        sleep(500)
-                        loop 8
-                        {
-                            if(PixelSearch(&pX, &pY, 734, 698, 776, 714, 0xFFBA29, 3))      ;scan for buy button
-                            {
-                                ClickAtCoord(851, 724)      ;click buy
-                            }
-                            else if(PixelSearch(&pX, &pY, 1288, 614, 1350, 657, 0x21F75D, 3))       ;scan for sell button
-                            {
-                                ClickAtCoord(1241, 643)     ;sell
-                                Sleep(750)
-                                if(PixelSearch(&pX, &pY, 1014, 674, 1065, 711, 0x21F75D, 3))        ;scan for sell warning
-                                {
-                                    ClickAtCoord(1103, 698)     ;click yes
-                                }
-                                Sleep(600)
-                            }
-                            Sleep(333)
-                        }
-                        Sleep(1000)
-                        if(PixelSearch(&pX, &pY, 1288, 614, 1350, 657, 0x21F75D, 3))        ;check for green sell button
-                        {
-                            ClickAtCoord(1241, 643)     ;sell
-                            Sleep(750)
-                            if(PixelSearch(&pX, &pY, 1014, 674, 1065, 711, 0x21F75D, 3))        ;scan for sell warning
-                            {
-                                ClickAtCoord(1103, 698)     ;click yes
-                            }
-                        }
-                        else
-                        {
-                            ClickAtCoord(684, 633)      ;refuse
-                            Sleep(500)
-                            ClickAtCoord(1105, 645)     ;confirm
-                        }
-                    }
-                }
-                else
-                {
-                    Sleep(1000)
-                    ClickAtCoord(1266, 637)      ;click the sell button
-                    Sleep(500)
-                    Send("{Esc}")
-                    Sleep(500)
-                    if(PixelSearch(&pX, &pY, 2334, 295, 2382, 325, 0xF7491F, 3))        ;check if escape brought up the quit game menu
-                    {
-                        ClickAtCoord(827, 644)      ;click no
-                    }
-                    ClickAtCoord(684, 633)      ;refuse
-                    Sleep(500)
-                    ClickAtCoord(1105, 645)     ;confirm
-                }
-            }
-            else if(PixelSearch(&pX, &pY, 952, 312, 968, 321, 0xECE4CE, 3))     ;checks if it is a buyer
-            {
-                sellingMode := true
-            }
-            else if(PixelSearch(&pX, &pY, 1861, 80, 1893, 120, 0xFF3F18, 2))
-            {
-                ClickAtCoord(1884, 95)      ;Click the x for daily
-            }
-            else
-            {
-                ClickAtCoord(968, 756)      ;Wait
-            }
+            RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
         }
-        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tick <= 17)         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
+        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
         { 
             ClickAtCoord(pX, pY)
             Sleep(500)
@@ -230,12 +157,41 @@ heroTokenMode := false
                 Send("{Esc}")
                 Sleep(250)
             }
+            else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
+            {
+                RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
+            }
         }
-        else if(tabTimer >= 15)         ;check if enough time has passed to go to town for a few seconds
+         else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFE46B, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the yellow customer bubble, if you cant see guild tokens in the top right(not in city view)
+        { 
+            ClickAtCoord(pX, pY)
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 3))        ;check for edit furniture button
+            {
+                Send("{Esc}")
+                Sleep(250)
+            }
+            else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
+            {
+                RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
+            }
+        }
+        else if(tickallocator(tick, "tabCity"))         ;check if enough time has passed to go to town for a few seconds
         {
             Send("{Tab}")
-            Sleep(2500)
-            if(PixelSearch(&pX, &pY, 803, 236, 1179, 574, 0x0677B8, 2))         ;scan for cleaning hearts
+            Sleep(2000)
+            SendEvent("{WheelDown 10}")         ;scroll all the way out
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
+            {
+                ClickAtCoord(995, 410)      ;click the offer help button
+                Sleep(1000)
+                ClickAtCoord(960, 728)      ;click help all
+                Sleep(500)
+                Send("{Escape}")
+                Sleep(500)
+            }
+            if(PixelSearch(&pX, &pY, 803, 227, 1171, 556, 0x01D5E6, 2))         ;scan for cleaning hearts
             {
                 ClickAtCoord(pX, pY)
                 Sleep(3000)
@@ -258,109 +214,66 @@ heroTokenMode := false
                 Sleep(500)
                 ClickAtCoord(1133, 938)          ;click the continue button
             }
+            if(PixelSearch(&pX, &pY, 262, 934, 305, 959, 0xF5BB0D, 2))       ;scan for market tab
+            {
+                RunWait("SubFunctions\Market\CollectAndRelistMarket.ahk")
+            }
             if(subscription)
             {
                 RunWait("SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
                 Sleep(2500)
                 RunWait("SubFunctions\General\EscapeToShop.ahk")
             }
-            tabTimer := 0
+            else
+            {
+                RunWait("SubFunctions\Quests\CollectQuestsSubFree.ahk")       ;collect any finished quests
+                Sleep(2500)
+                RunWait("SubFunctions\General\EscapeToShop.ahk")
+            }
         }
-        else if(tick == 20)     ;reset position
+        else if(tickallocator(tick, "resetPos"))     ;reset position
         {
             RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
+        }
+        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xEF3214, 2))          ;check for a new recipe notification on the craft button
+        {
+            ClickAtCoord(1804, 919)     ;click on the crafting menu
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 1192, 335, 1243, 389, 0xFF3D17, 2))         ;check for the red x button in the unlock crafting slot menu
+            {
+                ClickAtCoord(1195, 446)         ;click the crafting menu button
+                Sleep(500)
+            }
+            if(PixelSearch(&pX, &pY, 1594, 918, 1919, 949, 0xEF3214, 2))           ;check which tab the notification is in
+            {
+                ClickAtCoord(pX, pY)        ;click the tab with the notification
+                Sleep(500)
+                if(PixelSearch(&pX, &pY, 4, 936, 922, 1001, 0xF03315, 2))
+                {
+                    ClickAtCoord(pX, pY)        ;click the tab with the notification
+                    Sleep(250)
+                    Send("{Escape}")
+                }
+            }
         }
         else if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3) and craftMode == true)       ;check if the item is done crafting
         {
             RunWait("Manufacture\CraftExacutable.ahk")     ;launch the crafter
         }
-        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and tick > 17 and craftMode == true)       ;check if there is an empty crafting slot
+        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and tickallocator(tick, "craft") and craftMode == true)       ;check if there is an empty crafting slot
         {
             RunWait("Manufacture\CraftQuick.ahk")     ;launch the quick crafter
         }
-        else if(PixelSearch(&pX, &pY, 246, 918, 284, 956, 0xFFE894, 3) and tick > 17)       ;check on the bounty status
+        if(PixelSearch(&pX, &pY, 246, 918, 284, 956, 0xFFE894, 3) and tickallocator(tick, "bounty"))       ;check on the bounty status
         {
             RunWait("SubFunctions\Bounties\CollectBounty.ahk")
         }
         sleep(500)
-        if(sellingMode)
-        {
-            if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if surcharge is possible and if the item is in stock
-            {
-                ClickAtCoord(1279, 518)        ;surcharge
-                Sleep(delay)
-                ClickAtCoord(632, 523)      ;smalltalk
-                Sleep(delay * 2)
-                ClickAtCoord(1303, 630)     ;sell
-                Sleep(delay)
-            }
-            else if(PixelSearch(&pX, &pY, 949, 233, 1173, 289, 0x49FB21, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if auto surcharge has accured and if the item is in stock
-            {
-                ClickAtCoord(632, 523)      ;smalltalk
-                Sleep(delay * 2)
-                ClickAtCoord(1303, 630)     ;sell
-                Sleep(delay)
-            }
-            else if(tierScan() == 13 and PixelSearch(&pX, &pY, 1295, 617, 1348, 647, 0x21F75D, 3))      ;check if the tier is 13 and if the item is in stock
-            {
-                ClickAtCoord(632, 523)      ;smalltalk
-                Sleep(delay * 2)
-                ClickAtCoord(1303, 630)     ;sell
-                Sleep(delay)
-            }
-            else if(PixelSearch(&pX, &pY, 1331, 622, 1379, 647, 0xFFB729, 3))
-            {
-                ClickAtCoord(692, 633)      ;refuse because the item is out of stock
-                Sleep(500)
-                if(PixelSearch(&pX, &pY, 996, 620, 1046, 648, 0x23F75D, 3))
-                {
-                    ClickAtCoord(1025, 642)
-                    Sleep(500)
-                }
-            }
-            else
-            {
-                if(mode == "reg" or regModTimer > 9600)
-                {
-                    if(PixelSearch(&pX, &pY, 599, 613, 640, 659, 0xF74A21, 3))  ;check for refuse button
-                    {
-                        ClickAtCoord(692, 633)      ;refuse because the surcharge price is to high
-                    }
-                }
-                else if(mode == "MANreg")
-                {
-                    Send("{Esc}")
-                    Sleep(500)
-                    ;for manual selling
-                }
-                else
-                {
-                    ClickAtCoord(632, 523)      ;smalltalk
-                    Sleep(delay * 2)
-                    if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3))
-                    {
-                        ClickAtCoord(1279, 518)        ;surcharge
-                        sleep(delay)
-                    }
-                    ClickAtCoord(1303, 630)     ;sell
-                    Sleep(delay)
-                }
-            }
-        }
-        else if(buyingMode)
-        {
-            Sleep(delay)
-            ClickAtCoord(632, 523)      ;smalltalk
-            Sleep(delay * 2)
-            ClickAtCoord(1255, 634)         ;buy
-        }
         if(tick >= 20)
         {
             tick := 0
         }
-        tabTimer++
         tick++
-        regModTimer++
         AutomaticRestartTimer++
         sleep 250
     }
@@ -444,4 +357,38 @@ CreateErrorMessage(errorTitle, ErrorDetails)
 {
 
     ;FileAppend(, errorTitle, "Errors")
+}
+
+AltTab(TabQuantity)
+{
+    Send("{Alt Down}")
+    Sleep(50)
+    loop TabQuantity
+    {
+        Send("{Tab}")
+        Sleep(200)
+    }
+    Send("{Alt Up}")
+}
+
+tickallocator(tickN, event)
+{
+    CurrentEvent := ""
+    switch(tickN)
+    {
+        case 1, 2, 3, 10, 11, 12:
+            CurrentEvent := "customer"
+        case 4, 5, 6:
+            CurrentEvent := "craft"
+        case 7:
+            CurrentEvent := "bounty"
+        case 20:
+            CurrentEvent := "resetPos"
+        case 19:
+            CurrentEvent := "tabCity"
+    }
+    if(event == CurrentEvent)
+        return true
+    else
+        return false
 }

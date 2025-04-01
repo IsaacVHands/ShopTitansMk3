@@ -14,7 +14,7 @@
         {
             Send("{Esc}")
         }
-        Sleep(700)
+        Sleep(850)
         attemps++
     }
     SendEvent("{WheelDown 10}")

@@ -4,6 +4,8 @@
 {
     ClickAtCoord(281, 929)      ;open goals tab
     Sleep(500)
+    RunWait("CollectTask.ahk")
+    Sleep(500)
     if(PixelSearch(&pX, &pY, 699, 335, 735, 358, 0xFFCF00, 2))        ;check if the tasks tab is selected
     {
         ClickAtCoord(1092, 345)      ;switch to bounty tab

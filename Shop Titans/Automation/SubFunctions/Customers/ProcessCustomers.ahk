@@ -2,31 +2,22 @@
 #SingleInstance Force
 delay := 500
 energyLevel := 0
-surchargeCost := 0.1
 restartCounter := 0
 tick := 0
-mode := "reg"      ;reg for only surcharge. Nreg for burn mode. and MANreg for manual selling
-
 regModTimer := 0
 craftMode := true
 heroTokenMode := false
 {
-    subscription := true
-    RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
+    mode := "reg"
     customerZone := [695, 539, 1131, 663]
-    MouseMove(customerZone[1], customerZone[2])
-    sleep(1000)
-    MouseMove(customerZone[3], customerZone[4])
-    sleep(1000)
-    global surchargeCost
-    a := true
-    while a == true
+    loop 15
     {
         sellingMode := false
         buyingMode := false
-        sleep(500)
+        sleep(250)
         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
+            Sleep(500)
             if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))          ;checks if for king reinhold
             {
                 Sleep(delay * 3)
@@ -121,6 +112,10 @@ heroTokenMode := false
                 ClickAtCoord(968, 756)      ;Wait
             }
         }
+        else
+        {
+            break
+        }
 
         sleep(500)
         if(sellingMode)
@@ -177,6 +172,7 @@ heroTokenMode := false
                     }
                     ClickAtCoord(1303, 630)     ;sell
                     Sleep(delay)
+                    mode := "reg"
                 }
             }
         }
@@ -186,6 +182,17 @@ heroTokenMode := false
             ClickAtCoord(632, 523)      ;smalltalk
             Sleep(delay * 2)
             ClickAtCoord(1255, 634)         ;buy
+        }
+        Sleep(150)
+        if(PixelSearch(&pX, &pY, 798, 156, 1115, 198, 0xFF2D00, 2))     ;check for iventory full red letters
+        {
+            Send("{Right}")
+            Sleep(200)
+            mode := "Nreg"
+        }
+        if(PixelSearch(&pX, &pY, 1893, 109, 1916, 138, 0xCF9318, 3))          ;check for full inventory brown bar on the right
+        {
+            mode := "Nreg"
         }
         if(tick >= 20)
         {
