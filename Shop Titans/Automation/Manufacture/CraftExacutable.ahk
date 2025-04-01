@@ -19,7 +19,7 @@
     }
     if(PixelSearch(&pX, &pY, 1845, 851, 1875, 887, 0xFFBA29, 3))        ;check if there is a crafting slot available
     {
-        RunWait("C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\Manufacture\CraftQuick.ahk")
+        RunWait("CraftQuick.ahk")
         /*
         ClickAtCoord(1803, 914)     ;open crafting menu
         Sleep(500)
