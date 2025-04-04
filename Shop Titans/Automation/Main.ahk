@@ -35,10 +35,15 @@ heroTokenMode := false
         buyingMode := false
         if(!WinActive("Shop Titans"))      ;checks if shop titans is selected
         {
-            RunWait("steam://rungameid/1258080")
-            Sleep(14500)
-            ClickAtCoord(1849, -8)          ;maximize the window
-            Sleep(500)
+            AltTab(1)
+            Sleep(250)
+            if(!WinActive("Shop Titans"))
+            {
+                RunWait("steam://rungameid/1258080")
+                Sleep(14500)
+                ClickAtCoord(1849, -8)          ;maximize the window
+                Sleep(500)
+            }
         }
         else if(PixelSearch(&pX, &pY, 802, 673, 822, 742, 0x21F75A, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))         ;checks if the game has failed steam identification and needs to restart and top left corner of the box
         {
@@ -144,6 +149,7 @@ heroTokenMode := false
             ClickAtCoord(958, 715)      ;click finish
         }
         sleep(500)
+        RunWait("SubFunctions\GatherInfo\GemTracker\TakeSnapshot.ahk")
         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
             RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
@@ -362,7 +368,7 @@ CreateErrorMessage(errorTitle, ErrorDetails)
 AltTab(TabQuantity)
 {
     Send("{Alt Down}")
-    Sleep(50)
+    Sleep(100)
     loop TabQuantity
     {
         Send("{Tab}")

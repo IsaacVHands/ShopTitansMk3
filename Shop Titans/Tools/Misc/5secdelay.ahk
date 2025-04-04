@@ -3,5 +3,4 @@
 {
     Sleep(5000)
     Run("Shop Titans\Automation\Main.ahk")
-    Run("Shop Titans\Tools\Misc\KillAllScriptsWithK.ahk")
 }
