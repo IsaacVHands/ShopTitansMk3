@@ -18,11 +18,27 @@ heroTokenMode := false
         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
             Sleep(500)
-            if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))          ;checks if for king reinhold
+            if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))          ;checks for king reinhold
             {
                 Sleep(delay * 3)
-                ;ClickAtCoord(1303, 630)     ;sell
-                ClickAtCoord(968, 756)      ;Wait
+                if(PixelSearch(&pX, &pY, 708, 538, 773, 551, 0x522C44, 2) and PixelSearch(&pX, &pY, 713, 538, 767, 553, 0x453B42, 2))          ;check if the king has a surcharge button
+                {
+                    if(CheckEnergyLevel(0.5))
+                    {
+                        ClickAtCoord(649, 522)      ;suggest
+                        Sleep(500)
+                        ClickAtCoord(1303, 630)     ;sell
+                    }
+                    else
+                    {
+                        ClickAtCoord(968, 756)      ;Wait
+                    }
+                }
+                else
+                {
+                    ClickAtCoord(1303, 630)     ;sell
+                    FileAppend("No Suggest Button | Month:" A_MM " Day:" A_DD " Hour:" A_Hour, "KingMessage.txt")
+                }
             }
             else if(PixelSearch(&pX, &pY, 953, 311, 971, 322, 0xECE168, 1))      ;checks if it is a seller
             {
@@ -187,8 +203,13 @@ heroTokenMode := false
         if(PixelSearch(&pX, &pY, 798, 156, 1115, 198, 0xFF2D00, 2))     ;check for iventory full red letters
         {
             Send("{Right}")
-            Sleep(200)
+            Sleep(500)
             mode := "Nreg"
+            if(PixelSearch(&pX, &pY, 713, 296, 1205, 315, 0xEFE368, 2))     ;check if the customer is still selling an item(for the scenario of a worker selling an item)
+            {
+                Send("{Escape}")
+                Sleep(500)
+            }
         }
         if(PixelSearch(&pX, &pY, 1893, 109, 1916, 138, 0xCF9318, 3))          ;check for full inventory brown bar on the right
         {
@@ -210,4 +231,39 @@ ClickAtCoord(x, y)
     Sleep(50)
     Click(x, y, "Left", "Up")
     Sleep(10)
+}
+
+CheckEnergyLevel(fillPercent)       ;Note, scan maxes out at 96%
+{
+    barStart := 1388
+    barEnd := 1511
+    barLength := barEnd - barStart
+    scan := barStart
+    counter := 0
+    global energyLevel
+
+    loop barLength
+    {
+        MouseMove(scan, 25)
+        if(PixelCompareColor(scan, 25, 0xFE5D36))
+        {
+            energyLevel := ((3 + counter)/barLength)
+        }
+        scan++
+        counter++
+    }
+    if(energyLevel >= fillPercent)
+        return true
+    ;else
+    ;    MsgBox(energyLevel)
+}
+
+PixelCompareColor(x, y, color)
+{
+    if(PixelGetColor(x, y) == color)
+    {
+        return true
+    }
+    else
+        return false
 }
