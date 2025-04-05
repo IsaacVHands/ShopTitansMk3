@@ -30,11 +30,11 @@
         Sleep(100)
     }
     Sleep(500)
-    MouseMove(1770, 173)
+    MouseMove(955, 22)
     Send("{LButton Down}")
     Sleep(100)
     SendMode "Event"
-    MouseMove(1251, 379)
+    MouseMove(400, 130)
     Send("{LButton Up}")
     Sleep(100)
 }
