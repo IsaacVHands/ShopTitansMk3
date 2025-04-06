@@ -9,13 +9,7 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
-    if(!WinActive("Shop Titans"))      ;checks if shop titans is selected
-    {
-        RunWait("steam://rungameid/1258080")
-        Sleep(14500)
-        ClickAtCoord(1849, -8)          ;maximize the window
-        Sleep(500)
-    }
+    ActivateShopTitans()
     RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
     customerZone := [695, 539, 1131, 663]
     MouseMove(customerZone[1], customerZone[2])
@@ -34,22 +28,11 @@ heroTokenMode := false
     {
         sellingMode := false
         buyingMode := false
-        if(!WinActive("Shop Titans"))      ;checks if shop titans is selected
-        {
-            AltTab(1)
-            Sleep(250)
-            if(!WinActive("Shop Titans"))
-            {
-                RunWait("steam://rungameid/1258080")
-                Sleep(14500)
-                ClickAtCoord(1849, -8)          ;maximize the window
-                Sleep(500)
-            }
-        }
-        else if(PixelSearch(&pX, &pY, 802, 673, 822, 742, 0x21F75A, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))         ;checks if the game has failed steam identification and needs to restart and top left corner of the box
+        ActivateShopTitans()
+        if(PixelSearch(&pX, &pY, 802, 673, 822, 742, 0x21F75A, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))         ;checks if the game has failed steam identification and needs to restart and top left corner of the box
         {
             if(restartCounter > 20)
-            {
+            {    
                 
                 Sleep(900000)
             }
@@ -405,4 +388,24 @@ tickallocator(tickN, event)
         return true
     else
         return false
+}
+
+ActivateShopTitans()
+{
+    if(!WinActive("ahk_exe ShopTitan.exe"))      ;checks if shop titans is selected
+    {
+        if(WinExist("ahk_exe ShopTitan.exe"))
+        {
+            WinActivate("ahk_exe ShopTitan.exe")         ;activate the shop titans window
+            Sleep(500)
+            WinMaximize("ahk_exe ShopTitan.exe")        ;maximize window
+        }
+        else
+        {
+            RunWait("steam://rungameid/1258080")
+            Sleep(15000)
+            WinMaximize("ahk_exe ShopTitan.exe")        ;maximize window
+            ActivateShopTitans()
+        }
+    }
 }
