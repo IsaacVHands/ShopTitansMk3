@@ -194,6 +194,11 @@ heroTokenMode := false
         }
         else if(buyingMode)
         {
+            if(FileRead("Mode.txt") == "refuse")
+            {
+                Sleep(delay)
+                Customer("refuse")
+            }
             Sleep(delay)
             ClickAtCoord(632, 523)      ;smalltalk
             Sleep(delay * 2)
@@ -222,6 +227,10 @@ heroTokenMode := false
         tick++
         sleep 250
     }
+    if(FileRead("Mode.txt") != "")
+    {
+        FileErase("Mode.txt")
+    }
 }
 
 
@@ -233,7 +242,7 @@ ClickAtCoord(x, y)
     Sleep(10)
 }
 
-CheckEnergyLevel(fillPercent)       ;Note, scan maxes out at 96%
+CheckEnergyLevel(fillPercent)       ;Note, scan maxes out at 96% and has a margin of error of around 5 percent
 {
     barStart := 1388
     barEnd := 1511
@@ -266,4 +275,20 @@ PixelCompareColor(x, y, color)
     }
     else
         return false
+}
+
+Customer(Action)
+{
+    Switch(Action)
+    {
+    case "refuse":
+        ClickAtCoord(684, 633)      ;refuse
+    }
+}
+
+FileErase(path)
+{
+    FileDelete(path)
+    Sleep(500)
+    FileAppend(path)
 }

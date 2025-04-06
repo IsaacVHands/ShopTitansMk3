@@ -28,6 +28,7 @@ heroTokenMode := false
         subscription := false
     global surchargeCost
     AutomaticRestartTimer := 0
+    SellerClogDetecter := 0
     a := true
     while a == true
     {
@@ -50,7 +51,7 @@ heroTokenMode := false
             if(restartCounter > 20)
             {
                 
-                RunWait("SubFunctions\General\KillAllScripts.ahk")
+                Sleep(900000)
             }
             else
             {
@@ -107,7 +108,7 @@ heroTokenMode := false
             if(restartCounter > 20)
             {
                 
-                RunWait("SubFunctions\General\KillAllScripts.ahk")
+                Sleep(15*60*1000)
             }
             else
             {
@@ -155,7 +156,7 @@ heroTokenMode := false
             RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
         }
         else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
-        { 
+        {
             ClickAtCoord(pX, pY)
             Sleep(500)
             if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 3))        ;check for edit furniture button
@@ -167,11 +168,18 @@ heroTokenMode := false
             {
                 RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
             }
+            SellerClogDetecter := 0
         }
          else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFE46B, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the yellow customer bubble, if you cant see guild tokens in the top right(not in city view)
         { 
             ClickAtCoord(pX, pY)
             Sleep(500)
+            if(SellerClogDetecter > 10)
+            {
+                FileAppend("refuse", "SubFunctions\Customers\Mode.txt")
+            }
+            else
+                SellerClogDetecter++
             if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 3))        ;check for edit furniture button
             {
                 Send("{Esc}")
