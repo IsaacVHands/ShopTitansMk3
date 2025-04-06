@@ -205,7 +205,7 @@ heroTokenMode := false
             ClickAtCoord(1255, 634)         ;buy
         }
         Sleep(150)
-        if(PixelSearch(&pX, &pY, 798, 156, 1115, 198, 0xFF2D00, 2))     ;check for iventory full red letters
+        if(PixelSearch(&pX, &pY, 798, 156, 1115, 198, 0xFF2D00, 2))     ;check for inventory full red letters
         {
             Send("{Right}")
             Sleep(500)
@@ -226,6 +226,11 @@ heroTokenMode := false
         }
         tick++
         sleep 250
+    }
+    if(!FileExist("Mode.txt"))
+    {
+        FileAppend("", "Mode.txt")
+        Sleep(250)
     }
     if(FileRead("Mode.txt") != "")
     {
@@ -290,5 +295,5 @@ FileErase(path)
 {
     FileDelete(path)
     Sleep(500)
-    FileAppend(path)
+    FileAppend("", path)
 }
