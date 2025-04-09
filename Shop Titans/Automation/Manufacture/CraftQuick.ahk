@@ -35,6 +35,7 @@ PixelCompareColor(x, y, color)
     else
         return false
 }
+
 Craft4()
 {
     slotX := 727        ;starts in slot 4
@@ -55,6 +56,7 @@ Craft4()
         sleep(500)
     }
 }
+
 GoToCorrectTab()
 {
     if(PixelSearch(&pX, &pY, 1515, 955, 1529, 974, 0xFFCF00, 2))        ;check if the misc. tab is not selected
@@ -102,30 +104,39 @@ CraftItem(x)
         sleep(500)
         if(PixelSearch(&pX, &pY, 737, 650, 766, 704, 0xFFB729, 2))      ;check if it needs to buy components from the market
         {
-            ClickAtCoord(834, 683)      ;click market button
-            sleep(750)
-            loop 10
+            if(CheckConfig("crafting.buycomponents"))       ;check if buying components is enabled
             {
-                if(PixelSearch(&pX, &pY, 740, 722, 803, 747, 0x7E7E7E, 2))         ;checks if there are no components on the market
+                ClickAtCoord(834, 683)      ;click market button
+                sleep(750)
+                loop 10
                 {
-                    loop 2
+                    if(PixelSearch(&pX, &pY, 740, 722, 803, 747, 0x7E7E7E, 2))         ;checks if there are no components on the market
                     {
-                        Send("{Escape}")
-                        Sleep(500)
+                        loop 2
+                        {
+                            Send("{Escape}")
+                            Sleep(500)
+                        }
+                        info := -1
+                        break
                     }
-                    info := -1
-                    break
+                    else
+                    {
+                        ClickAtCoord(835, 731)         ;click buy
+                    }
+                    Sleep(750)
                 }
-                else
+                if(PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if its still in the components buying menu
                 {
-                    ClickAtCoord(835, 731)         ;click buy
+                    Send("{Escape}")
+                    Sleep(250)
                 }
-                Sleep(750)
             }
-            if(PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if its still in the components buying menu
+            else
             {
                 Send("{Escape}")
-                Sleep(250)
+                Sleep(500)
+                info := -1
             }
         }
         else if(PixelSearch(&pX, &pY, 1004, 670, 1057, 715, 0x21F75A, 3))   ;scan for "using high quality item"
@@ -155,4 +166,28 @@ CraftSlotShift()
     MouseMove(277, 725, 20)
     Sleep(100)
     Send("{LButton Up}")
+}
+
+CheckConfig(configInquiry)
+{
+    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
+    configFile := MainDir "/Config.txt"
+
+    loop read configFile
+    {
+        if(configInquiry " :" == LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t'))
+        {
+            mode := LTrim(RTrim(A_LoopReadLine, " "), configInquiry " :")
+            switch(mode)
+            {
+                case "= true":
+                    return true
+                case "= false":
+                    return false
+                default:
+                    MsgBox("Error: config status not found")
+            }
+        }
+    }
+    MsgBox("Error: config does not exist")
 }

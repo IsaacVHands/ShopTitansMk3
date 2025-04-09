@@ -226,6 +226,7 @@ heroTokenMode := false
                 RunWait("SubFunctions\Quests\CollectQuestsSubFree.ahk")       ;collect any finished quests
                 Sleep(2500)
                 RunWait("SubFunctions\General\EscapeToShop.ahk")
+                Sleep(1000)
             }
         }
         else if(tickallocator(tick, "resetPos"))     ;reset position
@@ -408,4 +409,28 @@ ActivateShopTitans()
             ActivateShopTitans()
         }
     }
+}
+
+CheckConfig(configInquiry)
+{
+    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
+    configFile := MainDir "/Config.txt"
+
+    loop read configFile
+    {
+        if(configInquiry " :" == LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t'))
+        {
+            mode := LTrim(RTrim(A_LoopReadLine, " "), configInquiry " :")
+            switch(mode)
+            {
+                case "= true":
+                    return true
+                case "= false":
+                    return false
+                default:
+                    MsgBox("Error: config status not found")
+            }
+        }
+    }
+    MsgBox("Error: config does not exist")
 }

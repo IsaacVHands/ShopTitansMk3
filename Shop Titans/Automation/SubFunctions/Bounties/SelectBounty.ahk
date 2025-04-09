@@ -14,7 +14,7 @@
         ClickAtCoord(972, 497)      ;click on the first bounty
         loop 20
         {
-            if(PixelSearch(&pX, &pY, 792, 527, 817, 563, 0x6EFF2E, 2))      ;check if there is any green on the bounty(I.E. its a surcharge/sell item bounty)
+            if(PixelSearch(&pX, &pY, 801, 543, 809, 550, 0x65E321, 2) or PixelSearch(&pX, &pY, 792, 527, 817, 563, 0x6EFF2E, 2))      ;check if there is any green on the bounty(I.E. its a surcharge/sell item bounty)
             {
                 ClickAtCoord(1088, 698)     ;accept quest
                 Sleep(500)
