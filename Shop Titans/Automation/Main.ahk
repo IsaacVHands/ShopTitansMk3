@@ -525,7 +525,10 @@ GetStoredInfo(fileName, returnType)
         case "int":
             num := 0
             num := FileRead(targetFile)
-            return num
+            if(num == "")
+                return 0
+            else
+                return num
         default:
             MsgBox("Error: return type not found")
     }
