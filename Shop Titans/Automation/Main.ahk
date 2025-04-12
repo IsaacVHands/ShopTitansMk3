@@ -302,6 +302,10 @@ heroTokenMode := false
                     Sleep(1000)
                     Send("{Escape}")
                 }
+                else
+                {
+                    Send("{Escape}")
+                }
                 piggyBank := false
             }
         }
