@@ -509,29 +509,26 @@ GetStoredInfo(fileName, returnType)
 {
     FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
     targetFile := MainDir "\Automation\InfoBroker\" fileName
-    if(fileExist(targetFile))
+    if(!fileExist(targetFile))
     {
-        switch(StrLower(returnType))
-        {
-            case "bool":
-                info := ""
-                info := FileRead(targetFile)
-                if(info == "true")
-                    return true
-                else
-                    return false
-            case "int":
-                num := 0
-                num := FileRead(targetFile)
-                return num
-            default:
-                MsgBox("Error: return type not found")
-        }
-        
+        FileAppend("", targetFile)
     }
-    else
-        MsgBox("Error: File does not exist" "`n" targetFile)
-    return info
+    switch(StrLower(returnType))
+    {
+        case "bool":
+            info := ""
+            info := FileRead(targetFile)
+            if(info == "true")
+                return true
+            else
+                return false
+        case "int":
+            num := 0
+            num := FileRead(targetFile)
+            return num
+        default:
+            MsgBox("Error: return type not found")
+    }
 }
 
 WriteToInfoStorage(fileName, data)
