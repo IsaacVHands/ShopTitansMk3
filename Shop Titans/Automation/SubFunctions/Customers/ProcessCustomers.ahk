@@ -324,8 +324,7 @@ FileErase(path)
 
 WriteToInfoStorage(fileName, data)
 {
-    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
-    targetFile := MainDir "\Automation\InfoBroker\" fileName
+    targetFile := A_ScriptDir "\..\..\InfoBroker\" fileName
     FileDelete(targetFile)
     FileAppend(data, targetFile)
 }

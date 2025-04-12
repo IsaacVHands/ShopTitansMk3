@@ -507,8 +507,7 @@ CheckInventoryLevel(fillPercent)       ;Note, scan maxes out at 96%
 
 GetStoredInfo(fileName, returnType)
 {
-    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
-    targetFile := MainDir "\Automation\InfoBroker\" fileName
+    targetFile := A_ScriptDir "\InfoBroker\" fileName
     if(!fileExist(targetFile))
     {
         FileAppend("", targetFile)
@@ -536,7 +535,6 @@ GetStoredInfo(fileName, returnType)
 
 WriteToInfoStorage(fileName, data)
 {
-    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
-    targetFile := MainDir "\Automation\InfoBroker\" fileName
+    targetFile := A_ScriptDir "\InfoBroker\" fileName
     FileAppend(data, targetFile)
 }
