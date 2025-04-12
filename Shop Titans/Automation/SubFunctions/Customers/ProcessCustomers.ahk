@@ -9,6 +9,7 @@ craftMode := true
 heroTokenMode := false
 {
     mode := "reg"
+    inventoryLevel := 0
     customerZone := [695, 539, 1131, 663]
     loop 15
     {
@@ -216,9 +217,32 @@ heroTokenMode := false
                 Sleep(500)
             }
         }
-        if(PixelSearch(&pX, &pY, (1893 - 20), 109, 1916, 138, 0xCF9318, 3))          ;check for full inventory brown bar on the right
+        if(PixelSearch(&pX, &pY, 1901, 114, 1916, 138, 0xCF9318, 3))        ;check if inventory is basically full(~90%)
         {
+            if(inventoryLevel != 0.9)
+            {
+                WriteToInfoStorage("InventoryCapacity.txt", 0.9)
+                inventoryLevel := 0.9
+            }
             mode := "Nreg"
+        }
+        else if(PixelSearch(&pX, &pY, (1893 - 20), 109, 1916, 138, 0xCF9318, 3))          ;check for full inventory brown bar on the right (true of > 75% full)
+        {
+            if(inventoryLevel != 0.75)
+            {
+                WriteToInfoStorage("InventoryCapacity.txt", 0.75)
+                inventoryLevel := 0.75
+            }
+            mode := "Nreg"
+        }
+        else
+        {
+            if(inventoryLevel != 0.5)
+            {
+                WriteToInfoStorage("InventoryCapacity.txt", 0.5)
+                inventoryLevel := 0.5
+            }
+            mode := "reg"
         }
         if(tick >= 20)
         {
@@ -296,4 +320,12 @@ FileErase(path)
     FileDelete(path)
     Sleep(500)
     FileAppend("", path)
+}
+
+WriteToInfoStorage(fileName, data)
+{
+    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
+    targetFile := MainDir "\Automation\InfoBroker\" fileName
+    FileDelete(targetFile)
+    FileAppend(data, targetFile)
 }

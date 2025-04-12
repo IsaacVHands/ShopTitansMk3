@@ -21,6 +21,7 @@ heroTokenMode := false
     else
         subscription := false
     global surchargeCost
+    ExtraInventory := false
     AutomaticRestartTimer := 0
     SellerClogDetecter := 0
     piggyBank := true
@@ -49,38 +50,50 @@ heroTokenMode := false
             sleep(300000)       ;wait 5 minutes
             ClickAtCoord(1121, 701)        ;Reconnect
         }
-        else if(PixelSearch(&pX, &pY, 74, 883, 174, 932, 0xEFE7D3, 1) and PixelSearch(&pX, &pY,898, 836, 984, 906, 0xEFE7D3, 1) and PixelSearch(&pX, &pY, 1689, 860, 1804, 930, 0xEFE7D3, 1))
+        if(tickallocator(tick, "closeMenus"))
         {
-            ClickAtCoord(930, 889)      ;click through the diolog
-        }
-        else if(PixelSearch(&pX, &pY, 997, 923, 1045, 950, 0x21F75D, 3))
-        {
-            ClickAtCoord(996, 936)      ;click the okay button
-        }
-        else if(PixelSearch(&pX, &pY, 75, 883, 100, 905, 0x14C3B2, 3))   ;check for the return to shop button in the bottom left corner
-        {
-            ClickAtCoord(100, 912)      ;click the shop button
-            Sleep(500)
-        }
-        else if(PixelSearch(&pX, &pY, 903, 614, 931, 655, 0xF7491F, 3))
-        {
-            ClickAtCoord(893, 644)      ;click the no button
-        }
-        else if(PixelSearch(&pX, &pY, 1848, 99, 1891, 141, 0xFF3E16, 3))       ;check for the red x for the crafting menu
-        {
-            ClickAtCoord(1870, 127)     ;click the red x
-        }
-        else if(PixelSearch(&pX, &pY, 1478, 269, 1523, 311, 0xFF3D17, 3))       ;check for the red x for the workers
-        {
-            ClickAtCoord(1504, 289)     ;click the red x
-        }
-        else if(PixelSearch(&pX, &pY, 1225, 229, 1275, 281, 0xFF4820, 3))       ;check for the red x from the welcome back popup
-        {
-            ClickAtCoord(1250, 255)     ;click the red x
-        }
-        else if(PixelSearch(&pX, &pY, 1076, 734, 1125, 777, 0x21F75D, 3))       ;check for a worker level up
-        {
-            ClickAtCoord(1185, 760)     ;click continue
+            loop(5)
+            {
+                if(PixelSearch(&pX, &pY, 74, 883, 174, 932, 0xEFE7D3, 1) and PixelSearch(&pX, &pY,898, 836, 984, 906, 0xEFE7D3, 1) and PixelSearch(&pX, &pY, 1689, 860, 1804, 930, 0xEFE7D3, 1))
+                {
+                    ClickAtCoord(930, 889)      ;click through the diolog
+                }
+                else if(PixelSearch(&pX, &pY, 997, 923, 1045, 950, 0x21F75D, 3))
+                {
+                    ClickAtCoord(996, 936)      ;click the okay button
+                }
+                else if(PixelSearch(&pX, &pY, 75, 883, 100, 905, 0x14C3B2, 3))   ;check for the return to shop button in the bottom left corner
+                {
+                    ClickAtCoord(100, 912)      ;click the shop button
+                    Sleep(500)
+                }
+                else if(PixelSearch(&pX, &pY, 903, 614, 931, 655, 0xF7491F, 3))
+                {
+                    ClickAtCoord(893, 644)      ;click the no button
+                }
+                else if(PixelSearch(&pX, &pY, 1848, 99, 1891, 141, 0xFF3E16, 3))       ;check for the red x for the crafting menu
+                {
+                    ClickAtCoord(1870, 127)     ;click the red x
+                }
+                else if(PixelSearch(&pX, &pY, 1478, 269, 1523, 311, 0xFF3D17, 3))       ;check for the red x for the workers
+                {
+                    ClickAtCoord(1504, 289)     ;click the red x
+                }
+                else if(PixelSearch(&pX, &pY, 1225, 229, 1275, 281, 0xFF4820, 3))       ;check for the red x from the welcome back popup
+                {
+                    ClickAtCoord(1250, 255)     ;click the red x
+                }
+                else if(PixelSearch(&pX, &pY, 1248, 300, 1289, 345, 0xFF3F18, 2))        ;checks for red x button on offers
+                {
+                    ClickAtCoord(1270, 319)     ;click the x
+                    sleep(500)
+                }
+                else if(PixelSearch(&pX, &pY, 1076, 734, 1125, 777, 0x21F75D, 3))       ;check for a worker level up
+                {
+                    ClickAtCoord(1185, 760)     ;click continue
+                }
+                sleep(400)
+            }
         }
         else if(AutomaticRestartTimer > 10000)
         {
@@ -99,11 +112,6 @@ heroTokenMode := false
                 RunWait("SubFunctions\General\RestartShopTitans.ahk")
             }
             restartCounter++
-        }
-        else if(PixelSearch(&pX, &pY, 1248, 300, 1289, 345, 0xFF3F18, 2))        ;checks for red x button on offers
-        {
-            ClickAtCoord(1270, 319)     ;click the x
-            sleep(500)
         }
         else if(PixelSearch(&pX, &pY, 978, 778, 1098, 886, 0x000000, 2) and PixelSearch(&pX, &pY, 1706, 786, 1745, 833, 0xA5A6A5, 3))       ;check for infinite loading screen
         {
@@ -261,11 +269,11 @@ heroTokenMode := false
                 }
             }
         }
-        else if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3) and craftMode == true)       ;check if the item is done crafting
+        else if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3) and GetStoredInfo("InventoryCapacity.txt", "int") < 0.9 and tickallocator(tick, "craft") and craftMode == true)       ;check if the item is done crafting
         {
             RunWait("Manufacture\CraftExacutable.ahk")     ;launch the crafter
         }
-        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and tickallocator(tick, "craft") and craftMode == true)       ;check if there is an empty crafting slot
+        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and GetStoredInfo("InventoryCapacity.txt", "int") < 0.9 and tickallocator(tick, "craft") and  craftMode == true)       ;check if there is an empty crafting slot
         {
             RunWait("Manufacture\CraftQuick.ahk")     ;launch the quick crafter
         }
@@ -415,10 +423,12 @@ tickallocator(tickN, event)
             CurrentEvent := "craft"
         case 7:
             CurrentEvent := "bounty"
+        case 18:
+            CurrentEvent := "closeMenus"
+        case 19:
+            CurrentEvent := "tabCity"       
         case 20:
             CurrentEvent := "resetPos"
-        case 19:
-            CurrentEvent := "tabCity"
     }
     if(event == CurrentEvent)
         return true
@@ -493,4 +503,40 @@ CheckInventoryLevel(fillPercent)       ;Note, scan maxes out at 96%
         return true
     ;else
     ;    MsgBox(energyLevel)
+}
+
+GetStoredInfo(fileName, returnType)
+{
+    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
+    targetFile := MainDir "\Automation\InfoBroker\" fileName
+    if(fileExist(targetFile))
+    {
+        switch(StrLower(returnType))
+        {
+            case "bool":
+                info := ""
+                info := FileRead(targetFile)
+                if(info == "true")
+                    return true
+                else
+                    return false
+            case "int":
+                num := 0
+                num := FileRead(targetFile)
+                return num
+            default:
+                MsgBox("Error: return type not found")
+        }
+        
+    }
+    else
+        MsgBox("Error: File does not exist" "`n" targetFile)
+    return info
+}
+
+WriteToInfoStorage(fileName, data)
+{
+    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
+    targetFile := MainDir "\Automation\InfoBroker\" fileName
+    FileAppend(data, targetFile)
 }

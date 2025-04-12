@@ -40,6 +40,13 @@ Craft4()
 {
     slotX := 727        ;starts in slot 4
     slotChangeCoef := 208
+    loop(4)
+    {
+        if(!PixelSearch(&pX, &pY, (slotX-98), 844, (slotX + 92), 864, 0xB5B0B3, 3))          ;Check if there is an item bookmarked in the current slot(using the white resource letters)
+        {
+            slotX -= slotChangeCoef
+        }
+    }
     loop 10
     {
         CraftError := CraftItem(slotX)
