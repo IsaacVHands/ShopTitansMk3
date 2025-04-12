@@ -35,6 +35,6 @@ MoveScreenShot()
 {
     YearMonth := A_YYYY "-" A_MM
     PullAddress := "C:\Users\isaac\OneDrive\Documents\ShareX\Screenshots\" YearMonth "\ShopTitan_*.png"
-    FileCopy(PullAddress, "C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\Shop Titans\Automation\SubFunctions\GatherInfo\GemTracker\images")
+    FileCopy(PullAddress, "C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\ShopTitansMk3\Shop Titans\Automation\SubFunctions\GatherInfo\GemTracker\images")
     FileDelete(PullAddress)
 }

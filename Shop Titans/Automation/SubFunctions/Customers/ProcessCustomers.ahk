@@ -21,7 +21,7 @@ heroTokenMode := false
             if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))          ;checks for king reinhold
             {
                 Sleep(delay * 3)
-                if(PixelSearch(&pX, &pY, 708, 538, 773, 551, 0x522C44, 2) and PixelSearch(&pX, &pY, 713, 538, 767, 553, 0x453B42, 2))          ;check if the king has a surcharge button
+                if(PixelSearch(&pX, &pY, 708, 538, 773, 551, 0x522C44, 2) or PixelSearch(&pX, &pY, 713, 538, 767, 553, 0x453B42, 2))          ;check if the king has a surcharge button
                 {
                     if(CheckEnergyLevel(0.5))
                     {
@@ -216,7 +216,7 @@ heroTokenMode := false
                 Sleep(500)
             }
         }
-        if(PixelSearch(&pX, &pY, 1893, 109, 1916, 138, 0xCF9318, 3))          ;check for full inventory brown bar on the right
+        if(PixelSearch(&pX, &pY, (1893 - 20), 109, 1916, 138, 0xCF9318, 3))          ;check for full inventory brown bar on the right
         {
             mode := "Nreg"
         }

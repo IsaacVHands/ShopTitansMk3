@@ -23,6 +23,7 @@ heroTokenMode := false
     global surchargeCost
     AutomaticRestartTimer := 0
     SellerClogDetecter := 0
+    piggyBank := true
     a := true
     while a == true
     {
@@ -219,15 +220,21 @@ heroTokenMode := false
             {
                 RunWait("SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
                 Sleep(2500)
-                RunWait("SubFunctions\General\EscapeToShop.ahk")
             }
             else
             {
                 RunWait("SubFunctions\Quests\CollectQuestsSubFree.ahk")       ;collect any finished quests
                 Sleep(2500)
-                RunWait("SubFunctions\General\EscapeToShop.ahk")
-                Sleep(1000)
             }
+            Sleep(3000)
+            if(PixelSearch(&pX, &pY, 654, 164, 1362, 748, 0x11E85C, 2))         ;scan for upgraded furniture
+            {
+                ClickAtCoord(pX, pY)        ;click upgraded furniture
+                Sleep(1000)
+                
+            }
+            RunWait("SubFunctions\General\EscapeToShop.ahk")
+            Sleep(1000)
         }
         else if(tickallocator(tick, "resetPos"))     ;reset position
         {
@@ -262,9 +269,37 @@ heroTokenMode := false
         {
             RunWait("Manufacture\CraftQuick.ahk")     ;launch the quick crafter
         }
-        if(PixelSearch(&pX, &pY, 246, 918, 284, 956, 0xFFE894, 3) and tickallocator(tick, "bounty"))       ;check on the bounty status
+        else if(PixelSearch(&pX, &pY, 246, 918, 284, 956, 0xFFE894, 3) and tickallocator(tick, "bounty"))       ;check on the bounty status
         {
             RunWait("SubFunctions\Bounties\CollectBounty.ahk")
+        }
+        else if(A_Hour < 19 and 16 < A_Hour and piggyBank)
+        {
+            ClickAtCoord(1881, 37)          ;click the white bars in the top right
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 1472, 591, 1527, 643, 0xFD8EAA, 2))            ;scan for the piggy bank icon
+            {
+                ClickAtCoord(1498, 616)         ;click on the piggy bank
+                Sleep(500)
+                if(PixelSearch(&pX, &pY, 1269, 742, 1304, 769, 0x21F459, 2))            ;scan for claim button
+                {
+                    ClickAtCoord(1397, 745)         ;click the claim button
+                    Sleep(500)
+                    loop(12)
+                    {
+                        ClickAtCoord(964, 526)          ;click through the piggy bank animation
+                        Sleep(333)
+                    }
+                    ClickAtCoord(956, 956)      ;click ok
+                    Sleep(1000)
+                    Send("{Escape}")
+                }
+                piggyBank := false
+            }
+        }
+        else if(A_Hour >= 19 and !piggyBank)
+        {
+            piggyBank := true
         }
         sleep(500)
         if(tick >= 20)
@@ -433,4 +468,29 @@ CheckConfig(configInquiry)
         }
     }
     MsgBox("Error: config does not exist")
+}
+
+CheckInventoryLevel(fillPercent)       ;Note, scan maxes out at 96%
+{
+    barStart := 1800
+    barEnd := 1904
+    barLength := barEnd - barStart
+    scan := barStart
+    counter := 0
+    global energyLevel
+
+    loop barLength
+    {
+        MouseMove(scan, 25)
+        if(PixelCompareColor(scan, 111, 0xFE5D36))
+        {
+            energyLevel := ((3 + counter)/barLength)
+        }
+        scan++
+        counter++
+    }
+    if(energyLevel >= fillPercent)
+        return true
+    ;else
+    ;    MsgBox(energyLevel)
 }

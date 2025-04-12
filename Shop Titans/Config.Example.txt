@@ -1,12 +1,12 @@
 crafting := true
-   crafting.buycomponents := true
+   crafting.buycomponents := false
    crafting.mastery := false
    crafting.bookmarkpriority := true
 
-questing := true
+questing := false
    questing.regularquests := false
    questing.keyquests := false
-   questing.userepairpacks := true
+   questing.userepairpacks := false
    questing.events := false
       questing.toweroftitans := false
       questing.lostcityofgold := false
