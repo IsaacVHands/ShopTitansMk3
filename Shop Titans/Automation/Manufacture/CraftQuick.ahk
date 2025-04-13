@@ -177,9 +177,8 @@ CraftSlotShift()
 
 CheckConfig(configInquiry)
 {
-    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
-    configFile := MainDir "/Config.txt"
-
+    configFile := getMainDir() "/Shop Titans/Config.txt"
+    
     loop read configFile
     {
         if(configInquiry " :" == LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t'))
@@ -197,4 +196,24 @@ CheckConfig(configInquiry)
         }
     }
     MsgBox("Error: config does not exist")
+}
+
+getMainDir()
+{
+    dots := "/"
+    scanPos := A_ScriptDir dots ".gitignore"
+    a := true
+    
+    while(a)
+    {
+        if(FileExist(scanPos))
+        {
+            return A_ScriptDir dots
+        }
+        else
+        {
+            dots := dots "../"
+            scanPos := A_ScriptDir dots ".gitignore"
+        }
+    }
 }

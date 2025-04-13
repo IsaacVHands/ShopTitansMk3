@@ -92,6 +92,10 @@ heroTokenMode := false
                 {
                     ClickAtCoord(1185, 760)     ;click continue
                 }
+                else if(PixelSearch(&pX, &pY, 1169, 267, 1183, 276, 0xFF5129, 3))
+                {
+                    ClickAtCoord(1176, 287)
+                }
                 sleep(400)
             }
         }
@@ -180,6 +184,15 @@ heroTokenMode := false
             else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
             {
                 RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
+            }
+            loop(5)
+            {
+                if(PixelSearch(&pX, &pY, 74, 883, 174, 932, 0xEFE7D3, 1) and PixelSearch(&pX, &pY,898, 836, 984, 906, 0xEFE7D3, 1) and PixelSearch(&pX, &pY, 1689, 860, 1804, 930, 0xEFE7D3, 1))
+                {
+                    ClickAtCoord(930, 889)      ;click through the diolog
+                    Sleep(450)
+                }
+                Sleep(50)
             }
         }
         else if(tickallocator(tick, "tabCity"))         ;check if enough time has passed to go to town for a few seconds
@@ -458,30 +471,6 @@ ActivateShopTitans()
             ActivateShopTitans()
         }
     }
-}
-
-CheckConfig(configInquiry)
-{
-    FileGetShortcut("Shop Titans - Shortcut.lnk", &MainDir)
-    configFile := MainDir "/Config.txt"
-
-    loop read configFile
-    {
-        if(configInquiry " :" == LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t'))
-        {
-            mode := LTrim(RTrim(A_LoopReadLine, " "), configInquiry " :")
-            switch(mode)
-            {
-                case "= true":
-                    return true
-                case "= false":
-                    return false
-                default:
-                    MsgBox("Error: config status not found")
-            }
-        }
-    }
-    MsgBox("Error: config does not exist")
 }
 
 CheckInventoryLevel(fillPercent)       ;Note, scan maxes out at 96%
