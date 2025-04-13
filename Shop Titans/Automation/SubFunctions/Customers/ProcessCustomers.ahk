@@ -1,4 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
+#include ../../../lib/helpers.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -262,15 +263,6 @@ heroTokenMode := false
     }
 }
 
-
-ClickAtCoord(x, y)
-{
-    Click(x, y, "Left", "Down")
-    Sleep(50)
-    Click(x, y, "Left", "Up")
-    Sleep(10)
-}
-
 CheckEnergyLevel(fillPercent)       ;Note, scan maxes out at 96% and has a margin of error of around 5 percent
 {
     barStart := 1388
@@ -296,16 +288,6 @@ CheckEnergyLevel(fillPercent)       ;Note, scan maxes out at 96% and has a margi
     ;    MsgBox(energyLevel)
 }
 
-PixelCompareColor(x, y, color)
-{
-    if(PixelGetColor(x, y) == color)
-    {
-        return true
-    }
-    else
-        return false
-}
-
 Customer(Action)
 {
     Switch(Action)
@@ -320,11 +302,4 @@ FileErase(path)
     FileDelete(path)
     Sleep(500)
     FileAppend("", path)
-}
-
-WriteToInfoStorage(fileName, data)
-{
-    targetFile := A_ScriptDir "\..\..\InfoBroker\" fileName
-    FileDelete(targetFile)
-    FileAppend(data, targetFile)
 }

@@ -1,5 +1,6 @@
 crafting := true
    crafting.buycomponents := false
+      crafting.buycomponents.maxbuyprice := 
    crafting.mastery := false
    crafting.bookmarkpriority := true
 
