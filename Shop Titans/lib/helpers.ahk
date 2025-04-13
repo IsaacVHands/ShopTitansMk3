@@ -10,7 +10,7 @@ ClickAtCoord(x, y)
 
 GetStoredInfo(fileName, returnType)
 {
-    targetFile := A_ScriptDir "\InfoBroker\" fileName
+    targetFile := getMainDir() "/Shop Titans/Automation/InfoBroker/" fileName
     if(!fileExist(targetFile))
     {
         FileAppend("", targetFile)
@@ -38,7 +38,7 @@ GetStoredInfo(fileName, returnType)
 
 WriteToInfoStorage(fileName, data)
 {
-    targetFile := A_ScriptDir "\InfoBroker\" fileName
+    targetFile := getMainDir() "/Shop Titans/Automation/InfoBroker/" fileName
     FileAppend(data, targetFile)
 }
 
@@ -50,4 +50,47 @@ PixelCompareColor(x, y, color)
     }
     else
         return false
+}
+
+getMainDir()
+{
+    dots := "/"
+    scanPos := A_ScriptDir dots ".gitignore"
+    a := true
+    
+    while(a)
+    {
+        if(FileExist(scanPos))
+        {
+            return A_ScriptDir dots
+        }
+        else
+        {
+            dots := dots "../"
+            scanPos := A_ScriptDir dots ".gitignore"
+        }
+    }
+}
+
+CheckConfig(configInquiry)
+{
+    configFile := getMainDir() "/Shop Titans/Config.txt"
+    
+    loop read configFile
+    {
+        if(configInquiry " :" == LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t'))
+        {
+            mode := LTrim(RTrim(A_LoopReadLine, " "), configInquiry " :")
+            switch(mode)
+            {
+                case "= true":
+                    return true
+                case "= false":
+                    return false
+                default:
+                    MsgBox("Error: config status not found")
+            }
+        }
+    }
+    MsgBox("Error: config does not exist")
 }
