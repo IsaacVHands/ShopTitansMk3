@@ -39,6 +39,10 @@ GetStoredInfo(fileName, returnType)
 WriteToInfoStorage(fileName, data)
 {
     targetFile := getMainDir() "/Shop Titans/Automation/InfoBroker/" fileName
+    if(FileExist(targetFile))
+    {
+
+    }
     FileAppend(data, targetFile)
 }
 
@@ -93,4 +97,5 @@ CheckConfig(configInquiry)
         }
     }
     MsgBox("Error: config does not exist")
+    return false
 }
