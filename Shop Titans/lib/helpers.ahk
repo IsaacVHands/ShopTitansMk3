@@ -27,7 +27,7 @@ GetStoredInfo(fileName, returnType)
         case "int":
             num := 0
             num := FileRead(targetFile)
-            if(num == "")
+            if(num == "" or !type(num) == "int")
                 return 0
             else
                 return num
@@ -41,7 +41,7 @@ WriteToInfoStorage(fileName, data)
     targetFile := getMainDir() "/Shop Titans/Automation/InfoBroker/" fileName
     if(FileExist(targetFile))
     {
-
+        FileErase(targetFile)
     }
     FileAppend(data, targetFile)
 }
@@ -98,4 +98,11 @@ CheckConfig(configInquiry)
     }
     MsgBox("Error: config does not exist")
     return false
+}
+
+FileErase(path)
+{
+    FileDelete(path)
+    Sleep(500)
+    FileAppend("", path)
 }

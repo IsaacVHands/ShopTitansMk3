@@ -296,10 +296,3 @@ Customer(Action)
         ClickAtCoord(684, 633)      ;refuse
     }
 }
-
-FileErase(path)
-{
-    FileDelete(path)
-    Sleep(500)
-    FileAppend("", path)
-}
