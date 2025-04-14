@@ -39,7 +39,6 @@ heroTokenMode := false
                 else
                 {
                     ClickAtCoord(1303, 630)     ;sell
-                    FileAppend("No Suggest Button | Month:" A_MM " Day:" A_DD " Hour:" A_Hour, "KingMessage.txt")
                 }
             }
             else if(PixelSearch(&pX, &pY, 953, 311, 971, 322, 0xECE168, 1))      ;checks if it is a seller
@@ -128,6 +127,18 @@ heroTokenMode := false
             else
             {
                 ClickAtCoord(968, 756)      ;Wait
+            }
+        }
+        else if(PixelSearch(&pX, &pY, 74, 883, 174, 932, 0xEFE7D3, 1) and PixelSearch(&pX, &pY,898, 836, 984, 906, 0xEFE7D3, 1) and PixelSearch(&pX, &pY, 1689, 860, 1804, 930, 0xEFE7D3, 1))
+        {
+            loop(5)
+            {
+                if(PixelSearch(&pX, &pY, 74, 883, 174, 932, 0xEFE7D3, 1) and PixelSearch(&pX, &pY,898, 836, 984, 906, 0xEFE7D3, 1) and PixelSearch(&pX, &pY, 1689, 860, 1804, 930, 0xEFE7D3, 1))
+                {
+                    ClickAtCoord(930, 889)      ;click through the diolog
+                    Sleep(450)
+                }
+                Sleep(50)
             }
         }
         else

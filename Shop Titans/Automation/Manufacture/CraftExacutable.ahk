@@ -1,4 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
+#Include ../../lib/helpers.ahk
 #SingleInstance Force
 {
     ClickAtCoord(1686, 935)         ;collects an item
@@ -25,20 +26,4 @@
     {
         RunWait("CraftQuick.ahk")
     }
-}
-
-ClickAtCoord(x, y)
-{
-    Click(x, y, "Left", "Down")
-    Sleep(50)
-    Click(x, y, "Left", "Up")
-}
-PixelCompareColor(x, y, color)
-{
-    if(PixelGetColor(x, y) == color)
-    {
-        return true
-    }
-    else
-        return false
 }

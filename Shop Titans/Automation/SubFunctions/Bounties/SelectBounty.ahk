@@ -1,4 +1,5 @@
 ﻿#Requires AutoHotkey v2.0
+#Include ../../../lib/helpers.ahk
 #SingleInstance Force
 
 {
@@ -37,12 +38,4 @@
     {
         Send("{Esc}")
     }
-}
-
-ClickAtCoord(x, y)
-{
-    Click(x, y, "Left", "Down")
-    Sleep(50)
-    Click(x, y, "Left", "Up")
-    Sleep(10)
 }

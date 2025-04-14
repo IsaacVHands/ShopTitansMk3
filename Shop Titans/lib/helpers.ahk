@@ -27,7 +27,7 @@ GetStoredInfo(fileName, returnType)
         case "int":
             num := 0
             num := FileRead(targetFile)
-            if(num == "" or !type(num) == "int")
+            if(num == "" or type(num) != "integer")
                 return 0
             else
                 return num
