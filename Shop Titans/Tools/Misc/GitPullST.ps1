@@ -3,7 +3,7 @@ $PSNativeCommandUseErrorActionPreference = $true
 Set-Location "$PSScriptRoot\..\..\"
 git checkout -- .
 git pull
-$mainScript=(Get-Item ".\Shop Titans\Automation\Main.ahk").FullName
+$mainScript=(Get-Item ".\Automation\Main.ahk").FullName
 Start-Process($mainScript)
 
 $stmlLocation="$PSScriptRoot\..\..\shop_titans_ml"
