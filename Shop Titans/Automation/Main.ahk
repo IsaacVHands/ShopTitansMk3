@@ -11,8 +11,8 @@ craftMode := true
 heroTokenMode := false
 {
     ActivateShopTitans()
-    RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
-    customerZone := [695, 539, 1131, 663]
+    RunFromTopDir("Shop Titans/Automation/SubFunctions/General/ReturnToDefaultPos.ahk")
+    customerZone := [710, 513, 1112, 639]
     MouseMove(customerZone[1], customerZone[2])
     sleep(1000)
     MouseMove(customerZone[3], customerZone[4])
@@ -99,6 +99,7 @@ heroTokenMode := false
                 }
                 sleep(400)
             }
+            EventChampionAtDoor()
         }
         else if(AutomaticRestartTimer > 10000)
         {
@@ -358,31 +359,6 @@ ScanForPixel(firstX, firstY, secondX, secondY, color, scanCoef)
         scanX := firstX
         scanY += scanCoef
     }
-}
-
-CheckEnergyLevel(fillPercent)       ;Note, scan maxes out at 96%
-{
-    barStart := 1388
-    barEnd := 1511
-    barLength := barEnd - barStart
-    scan := barStart
-    counter := 0
-    global energyLevel
-
-    loop barLength
-    {
-        MouseMove(scan, 25)
-        if(PixelCompareColor(scan, 25, 0xFE5D36))
-        {
-            energyLevel := ((3 + counter)/barLength)
-        }
-        scan++
-        counter++
-    }
-    if(energyLevel >= fillPercent)
-        return true
-    ;else
-    ;    MsgBox(energyLevel)
 }
 
 tierScan()

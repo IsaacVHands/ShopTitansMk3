@@ -9,9 +9,9 @@ regModTimer := 0
 craftMode := true
 heroTokenMode := false
 {
+    customerZone := [710, 513, 1112, 639]
     mode := "reg"
     inventoryLevel := 0
-    customerZone := [695, 539, 1131, 663]
     loop 15
     {
         sellingMode := false
@@ -34,6 +34,31 @@ heroTokenMode := false
                     else
                     {
                         ClickAtCoord(968, 756)      ;Wait
+                        Sleep(500)
+                        zoneDif := customerZone[3] - customerZone[1]
+                        zoneSliver := zoneDif/4
+                        a := 0
+                        loop(4)
+                        {
+                            if(PixelSearch(&pX, &pY, customerZone[1]+zoneSliver*a, customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1))         ;Look for and click on the customer bubble in the specific sub customer zone
+                            {
+                                ClickAtCoord(pX, pY)          ;click on the customer in the subzone
+                                Sleep(500)
+                                if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
+                                {
+                                    if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))          ;checks for king reinhold
+                                    {
+                                        ClickAtCoord(968, 756)      ;Wait
+                                    }
+                                    else
+                                    {
+                                        break
+                                    }
+                                }
+                            }
+                            Sleep(1500)
+                            a++
+                        }
                     }
                 }
                 else
@@ -274,30 +299,7 @@ heroTokenMode := false
     }
 }
 
-CheckEnergyLevel(fillPercent)       ;Note, scan maxes out at 96% and has a margin of error of around 5 percent
-{
-    barStart := 1388
-    barEnd := 1511
-    barLength := barEnd - barStart
-    scan := barStart
-    counter := 0
-    global energyLevel
 
-    loop barLength
-    {
-        MouseMove(scan, 25)
-        if(PixelCompareColor(scan, 25, 0xFE5D36))
-        {
-            energyLevel := ((3 + counter)/barLength)
-        }
-        scan++
-        counter++
-    }
-    if(energyLevel >= fillPercent)
-        return true
-    ;else
-    ;    MsgBox(energyLevel)
-}
 
 Customer(Action)
 {
