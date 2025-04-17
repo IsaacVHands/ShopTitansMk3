@@ -25,6 +25,7 @@ heroTokenMode := false
     ExtraInventory := false
     AutomaticRestartTimer := 0
     SellerClogDetecter := 0
+    autoUpdate := false
     piggyBank := true
     a := true
     while a == true
@@ -50,6 +51,14 @@ heroTokenMode := false
             sleep(300000)       ;wait 5 minutes
             sleep(300000)       ;wait 5 minutes
             ClickAtCoord(1121, 701)        ;Reconnect
+        }
+        if(A_Hour == 0)
+        {
+            autoUpdate := true
+        }
+        else if(A_Hour == 1)
+        {
+            RunFromTopDir("AutoStart.ahk")
         }
         if(tickallocator(tick, "closeMenus"))
         {
