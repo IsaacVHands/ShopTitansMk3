@@ -134,7 +134,7 @@ CheckEnergyLevel(fillPercent)       ;Note, scan maxes out at 96% and has a margi
 
 EventChampionAtDoor()
 {
-    if(PixelSearch(&pX, &pY, 20, 961, 35, 979, 0x454545, 2) and PixelSearch(&pX, &pY, 521, 924, 539, 949, 0x3A3A3A, 2) and PixelSearch(&pX, &pY, 867, 547, 923, 608, 0xEFE7D3, 2) and PixelSearch(&pX, &pY, 954, 533, 977, 553, 0xFFF379, 2))       ;checks for the city and destign tab(if they are grayed out), checks for a champion bubble(bot white and gold)
+    if(PixelSearch(&pX, &pY, 20, 961, 35, 979, 0x454545, 2) and PixelSearch(&pX, &pY, 521, 924, 539, 949, 0x3A3A3A, 2))       ;checks for the city and destign tab(if they are grayed out)
     {
         ClickAtCoord(960, 560)      ;click champion bubble
         loop(20)
