@@ -26,6 +26,7 @@ heroTokenMode := false
     ExtraInventory := false
     AutomaticRestartTimer := 0
     SellerClogDetecter := 0
+    hour := A_Hour
     autoUpdate := false
     piggyBank := true
     a := true
@@ -52,6 +53,31 @@ heroTokenMode := false
             sleep(300000)       ;wait 5 minutes
             sleep(300000)       ;wait 5 minutes
             ClickAtCoord(1121, 701)        ;Reconnect
+        }
+        if(A_hour > hour)
+        {
+            if(CheckConfig("crafting.echantments.autotrash"))
+            {
+                ClickAtCoord(383, 944)          ;open the inventory
+                Sleep(1000)
+                ClickAtCoord(1611, 966)         ;open enchantment tab
+                Sleep(500)
+                loop(3)
+                {
+                    if(PixelSearch(&pX, &pY, 169, 680, 194, 705, 0x5D3148, 2))          ;check if there is an enchant in slot 1
+                    {
+                        ClickAtCoord(111, 875)          ;click on the enchant in the first slot
+                        Sleep(750)
+                        ClickAtCoord(733, 706)          ;click the trash button
+                        Sleep(750)
+                        ClickAtCoord(824, 604)          ;click the minus to switch to the maximum number of enchants
+                        Sleep(500)
+                        ClickAtCoord(1093, 738)         ;click yes
+                        Sleep(500)
+                    }
+                }
+                Send("{Escape}")
+            }
         }
         if(A_Hour == 0)
         {

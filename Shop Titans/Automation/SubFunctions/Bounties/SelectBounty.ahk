@@ -15,18 +15,8 @@
         ClickAtCoord(972, 497)      ;click on the first bounty
         loop 20
         {
-            if(PixelSearch(&pX, &pY, 801, 543, 809, 550, 0x65E321, 2) or PixelSearch(&pX, &pY, 792, 527, 817, 563, 0x6EFF2E, 2))      ;check if there is any green on the bounty(I.E. its a surcharge/sell item bounty)
+            if(SelectBounty(801, 543, 809, 550, 0x65E321) or SelectBounty(792, 527, 817, 563, 0x6EFF2E) or SelectBounty(817, 521, 828, 558, 0xE3B919))      ;check for green on the bounty(I.E. its a surcharge/sell item bounty) or yellow for smalltalk
             {
-                ClickAtCoord(1088, 698)     ;accept quest
-                Sleep(500)
-                Send("{Esc}")
-                break
-            }
-            else if(PixelSearch(&pX, &pY, 817, 521, 828, 558, 0xE3B919, 2))         ;excepts smalltalk bounties
-            {
-                ClickAtCoord(1088, 698)     ;accept quest
-                Sleep(500)
-                Send("{Esc}")
                 break
             }
             else
@@ -44,5 +34,16 @@
     else
     {
         Send("{Esc}")
+    }
+}
+
+SelectBounty(x1, y1, x2, y2, colour)
+{
+    if(PixelSearch(&pX, &pY, x1, y1, x2, y2, colour, 2))
+    {
+        ClickAtCoord(1088, 698)     ;accept quest
+        Sleep(500)
+        Send("{Esc}")
+        return "true"
     }
 }

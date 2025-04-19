@@ -3,6 +3,7 @@ crafting := true
       crafting.buycomponents.maxbuyprice := 
    crafting.mastery := false
    crafting.bookmarkpriority := true
+   crafting.echantments.autotrash := false
 
 questing := false
    questing.regularquests := false

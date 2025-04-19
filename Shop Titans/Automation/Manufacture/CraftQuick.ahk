@@ -112,6 +112,16 @@ CraftItem(x)
                         info := -1
                         break
                     }
+                    else if(PixelSearch(&pX, &pY, 919, 372, 991, 450, 0x9A9991, 2) and PixelSearch(&pX, &pY, 919, 372, 991, 450, 0x898A84, 2))          ;check if its a runestone
+                    {
+                        loop 2
+                        {
+                            Send("{Escape}")
+                            Sleep(500)
+                        }
+                        info := -1
+                        break
+                    }
                     else
                     {
                         ClickAtCoord(835, 731)         ;click buy
