@@ -22,6 +22,13 @@
                 Send("{Esc}")
                 break
             }
+            else if(PixelSearch(&pX, &pY, 817, 521, 828, 558, 0xE3B919, 2))         ;excepts smalltalk bounties
+            {
+                ClickAtCoord(1088, 698)     ;accept quest
+                Sleep(500)
+                Send("{Esc}")
+                break
+            }
             else
             {
                 Send("{right}")      ;go to the next bounty
