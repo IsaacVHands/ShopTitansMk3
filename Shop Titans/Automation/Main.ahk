@@ -56,7 +56,7 @@ heroTokenMode := false
         }
         if(A_hour > hour)
         {
-            if(CheckConfig("crafting.echantments.autotrash"))
+            if(CheckConfig("crafting.enchantments.autotrash"))
             {
                 ClickAtCoord(383, 944)          ;open the inventory
                 Sleep(1000)
