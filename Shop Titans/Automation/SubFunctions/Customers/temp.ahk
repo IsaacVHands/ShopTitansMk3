@@ -3,5 +3,5 @@
 #SingleInstance Force
 
 {
-    run("Customers.ahk")
+    MsgBox("this is the test button")
 }

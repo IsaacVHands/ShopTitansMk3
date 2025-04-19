@@ -1,26 +1,44 @@
 ﻿#Requires AutoHotkey v2.0
-
+#Include ../../lib/helpers.ahk
 {
-    MsgBox(FileRead(getMainDir() "/Shop Titans/Config.txt"))
+    CompareConfig()
 }
-
-
-getMainDir()
+CompareConfig()
 {
-    dots := "/"
-    scanPos := A_ScriptDir dots ".gitignore"
-    a := true
-    
-    while(a)
+    configFile := getMainDir() "/Shop Titans/Config.txt"
+    configFileExample := getMainDir() "/Shop Titans/Config.example.txt"
+    b := 0
+    loop read configFile
     {
-        if(FileExist(scanPos))
+        if(GetFileLine(configFileExample, b) == LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t'))
         {
-            return A_ScriptDir dots
+            /*mode := LTrim(RTrim(A_LoopReadLine, " "), GetFileLine(configFileExample, b) " :")
+            switch(mode)
+            {
+                case "= true":
+                    return true
+                case "= false":
+                    return false
+                default:
+                    MsgBox("Error: config status not found")
+            }*/
         }
         else
         {
-            dots := dots "../"
-            scanPos := A_ScriptDir dots ".gitignore"
+            MsgBox(GetFileLine(configFileExample, b) "  " LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t'))
         }
+        b++
+    }
+    ;MsgBox("Error: config does not exist: " configInquiry)             ;uncomment this line for debbuging 
+    return false
+}
+GetFileLine(fileAddress, lineNum)
+{
+    a := 0
+    loop read fileAddress
+    {
+        if(a == lineNum)
+            return LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t')
+        a++
     }
 }

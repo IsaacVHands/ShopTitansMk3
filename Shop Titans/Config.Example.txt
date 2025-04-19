@@ -1,6 +1,6 @@
 crafting := true
    crafting.buycomponents := false
-      crafting.buycomponents.maxbuyprice := 
+   crafting.buycomponents.maxbuyprice := false
    crafting.mastery := false
    crafting.bookmarkpriority := true
    crafting.echantments.autotrash := false

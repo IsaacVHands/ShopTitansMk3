@@ -96,7 +96,7 @@ CheckConfig(configInquiry)
             }
         }
     }
-    MsgBox("Error: config does not exist")
+    ;MsgBox("Error: config does not exist: " configInquiry)             ;uncomment this line for debbuging 
     return false
 }
 
