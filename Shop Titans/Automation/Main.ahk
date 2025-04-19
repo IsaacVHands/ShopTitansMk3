@@ -11,6 +11,7 @@ craftMode := true
 heroTokenMode := false
 {
     ActivateShopTitans()
+    CheckWindowRes(1920, 1009, 10)
     RunFromTopDir("Shop Titans/Automation/SubFunctions/General/ReturnToDefaultPos.ahk")
     customerZone := [710, 513, 1112, 639]
     MouseMove(customerZone[1], customerZone[2])
@@ -38,7 +39,7 @@ heroTokenMode := false
             if(restartCounter > 20)
             {    
                 
-                Sleep(900000)
+                Sleep(30*60*1000)
             }
             else
             {
@@ -109,11 +110,6 @@ heroTokenMode := false
                 sleep(400)
             }
             EventChampionAtDoor()
-        }
-        else if(AutomaticRestartTimer > 10000)
-        {
-            RunWait("SubFunctions\General\RestartShopTitans.ahk")
-            AutomaticRestartTimer := 0
         }
         else if(PixelSearch(&pX, &pY, 812, 135, 846, 157, 0x1D2129, 1) and PixelSearch(&pX, &pY, 971, 751, 1082, 799, 0x95B407, 2))     ;checks if the game is stuck in the steam shop
         {
@@ -465,4 +461,14 @@ CheckInventoryLevel(fillPercent)       ;Note, scan maxes out at 96%
         return true
     ;else
     ;    MsgBox(energyLevel)
+}
+
+CheckWindowRes(x, y, errorMargin)
+{
+    windowX := SysGet(16)
+    windowY := SysGet(17)
+    if(x - errorMargin > windowX or windowX > x + errorMargin or y - errorMargin > windowY or windowY > y + errorMargin)
+    {
+        msgBox("Error: resolution is not set to 1920 X 1080 `nplease set resolution the the appropriate `nsetting before pressing ok")
+    }
 }

@@ -202,7 +202,19 @@ heroTokenMode := false
             }
             else
             {
-                if(mode == "reg" or regModTimer > 9600)
+                if(GetStoredInfo("InventoryCapacity.txt", "int") >= 0.75)
+                {
+                    ClickAtCoord(632, 523)      ;smalltalk
+                    Sleep(delay * 2)
+                    if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3))
+                    {
+                        ClickAtCoord(1279, 518)        ;surcharge
+                        sleep(delay)
+                    }
+                    ClickAtCoord(1303, 630)     ;sell
+                    Sleep(delay)
+                }
+                else if(mode == "reg" or regModTimer > 9600)
                 {
                     if(PixelSearch(&pX, &pY, 599, 613, 640, 659, 0xF74A21, 3))  ;check for refuse button
                     {
