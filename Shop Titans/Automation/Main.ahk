@@ -83,7 +83,7 @@ heroTokenMode := false
         {
             autoUpdate := true
         }
-        else if(A_Hour == 1)
+        else if(A_Hour == 1 and autoUpdate)
         {
             RunFromTopDir("AutoStart.ahk")
         }
