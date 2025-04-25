@@ -56,6 +56,7 @@ heroTokenMode := false
         }
         if(A_hour > hour)
         {
+            WinMaximize("ahk_exe ShopTitan.exe")
             if(CheckConfig("crafting.enchantments.autotrash"))
             {
                 ClickAtCoord(383, 944)          ;open the inventory
@@ -133,36 +134,15 @@ heroTokenMode := false
                 {
                     ClickAtCoord(1176, 287)
                 }
+                if(PixelSearch(&pX, &pY, 861, 708, 884, 723, 0x21F75A, 2))          ;scan for collect button for in shop free chest
+                {
+                    ClickAtCoord(955, 721)          ;click collect
+                }
+                if(PixelSearch(&pX, &pY, 1120, 333, 1313, 350, 0xFF481F, 2))            ;scan for red x 
+                {
+                    ClickAtCoord(pX, pY)            ;click red x
+                }
                 sleep(400)
-            }
-            EventChampionAtDoor()
-        }
-        else if(PixelSearch(&pX, &pY, 812, 135, 846, 157, 0x1D2129, 1) and PixelSearch(&pX, &pY, 971, 751, 1082, 799, 0x95B407, 2))     ;checks if the game is stuck in the steam shop
-        {
-            if(restartCounter > 20)
-            {
-                
-                Sleep(15*60*1000)
-            }
-            else
-            {
-                RunWait("SubFunctions\General\RestartShopTitans.ahk")
-            }
-            restartCounter++
-        }
-        else if(PixelSearch(&pX, &pY, 978, 778, 1098, 886, 0x000000, 2) and PixelSearch(&pX, &pY, 1706, 786, 1745, 833, 0xA5A6A5, 3))       ;check for infinite loading screen
-        {
-            RunWait("SubFunctions\General\TrappedInLoading.ahk")
-        }
-        else if(PixelSearch(&pX, &pY, 834, 484, 980, 623, 0xB57923, 3) and PixelSearch(&pX, &pY, 834, 484, 980, 623, 0xA21308, 3))        ;checks for recieving a gift
-        {
-            ClickAtCoord(912, 533)     ;click the present
-            sleep(500)
-        }
-        else if(PixelSearch(&pX, &pY, 947, 283, 969, 313, 0xFECE23, 3) and PixelSearch(&pX, &pY, 924, 684, 993, 701, 0x29F863, 3))  ;scan for gold gift ribbon and scan for green confirm button
-        {
-            if(PixelSearch(&pX, &pY, 724, 424, 758, 442,  0x8FB7DC, 3) or PixelSearch(&pX, &pY, 724, 424, 758, 442,  0xA21D08, 3))      ;scan slot 1 for danial or thomas
-            {
                 ClickAtCoord(945, 445)
             }
             else if(PixelSearch(&pX, &pY, 719, 503, 758, 524, 0x8FB7DC, 3) or PixelSearch(&pX, &pY, 719, 503, 758, 524, 0xA21D08, 3))       ;scan slot 2 for danial or thomas
@@ -186,7 +166,7 @@ heroTokenMode := false
         }
         else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
         {
-            ClickAtCoord(pX, pY)
+            ClickAtCoord(pX + 10, pY + 10)
             Sleep(500)
             if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 3))        ;check for edit furniture button
             {
@@ -457,8 +437,9 @@ ActivateShopTitans()
         else
         {
             RunWait("steam://rungameid/1258080")
-            Sleep(15000)
+            Sleep(8000)
             WinMaximize("ahk_exe ShopTitan.exe")        ;maximize window
+            Sleep(7000)
             ActivateShopTitans()
         }
     }
