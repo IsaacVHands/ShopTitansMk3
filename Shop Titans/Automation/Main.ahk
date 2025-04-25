@@ -87,6 +87,7 @@ heroTokenMode := false
         else if(A_Hour == 1 and autoUpdate)
         {
             RunFromTopDir("AutoStart.ahk")
+            autoUpdate := false
         }
         if(tickallocator(tick, "closeMenus"))
         {
