@@ -158,6 +158,7 @@ heroTokenMode := false
             ClickAtCoord(958, 715)      ;click confirm
             Sleep(500)
             ClickAtCoord(958, 715)      ;click finish
+            FixWindowFrozen()
         }
         sleep(500)
         RunWait("SubFunctions\GatherInfo\GemTracker\TakeSnapshot.ahk")
@@ -444,6 +445,21 @@ ActivateShopTitans()
             ActivateShopTitans()
         }
     }
+}
+
+FixWindowFrozen()
+{
+    if(WinGetTitle("ahk_exe ShopTitan.exe") == "Shop Titans (Not Responding)")
+    {
+        RestartShopTitans()
+    }
+}
+
+RestartShopTitans()
+{
+    WinKill("ahk_exe ShopTitan.exe")
+    Sleep(10000)
+    ActivateShopTitans()
 }
 
 CheckInventoryLevel(fillPercent)       ;Note, scan maxes out at 96%
