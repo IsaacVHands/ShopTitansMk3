@@ -449,9 +449,12 @@ ActivateShopTitans()
 
 FixWindowFrozen()
 {
-    if(WinGetTitle("ahk_exe ShopTitan.exe") == "Shop Titans (Not Responding)")
+    if(WinExist("ahk_exe ShopTitan.exe"))
     {
-        RestartShopTitans()
+        if(InStr(WinGetTitle("ahk_exe ShopTitan.exe"), "(") > 0)
+        {
+            RestartShopTitans()
+        }
     }
 }
 
