@@ -460,21 +460,9 @@ ActivateShopTitans()
 
 FixWindowFrozen()
 {
-    if(WinExist("ahk_exe ShopTitan.exe"))
+    if(WinExist("ahk_exe ShopTitan.exe") and PixelSearch(&pX, &pY, 103, -18, 185, -5, 0x000000, 5))       ;check if the game is potentially frozen
     {
-        if(InStr(WinGetTitle("ahk_exe ShopTitan.exe"), "(") > 0)
-        {
-            RestartShopTitans()
-        }
-        else if(LTrim(StrLower(WinGetTitle("ahk_exe ShopTitan.exe")), 'shoptitans `t') == "(not responding)")
-        {
-            RestartShopTitans()
-        }
-        else if(PixelSearch(&pX, &pY, 88, 945, 101, 965, 0xFAEEA3, 1) and PixelSearch(&pX, &pY, 525, 958, 536, 970, 0xB9ABB2, 1) and PixelSearch(&pX, &pY, 33, 80, 52, 91, 0xA9C6FB, 1))       ;check if the game is potentially frozen
-        {
-            MsgBox("this is test code. it is for fixing not responding bug")
-            RestartShopTitans()
-        }
+        RestartShopTitans()
     }
 }
 
