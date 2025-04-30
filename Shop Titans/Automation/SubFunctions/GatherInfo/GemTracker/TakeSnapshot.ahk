@@ -5,6 +5,10 @@
     FileGetShortcut("imagesShortcut.lnk", &OutTarget)
     if(InStr(OutTarget, "C:\Users\isaac\"))
     {
+        if(!FileExist("TimeStamp.txt"))
+        {
+            FileAppend(0, "TimeStamp.txt")
+        }
         timeStamp := FileRead("TimeStamp.txt")
         currentTime := A_YYYY A_MM A_DD A_Hour
         if(currentTime > timeStamp)
