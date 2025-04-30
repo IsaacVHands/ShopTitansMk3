@@ -465,6 +465,7 @@ FixWindowFrozen()
         {
             RestartShopTitans()
         }
+        else if(LTrim(StrLower(WinGetTitle("ahk_exe ShopTitan.exe")), 'shoptitans `t') == "(not responding)")
     }
 }
 
