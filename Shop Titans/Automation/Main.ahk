@@ -471,6 +471,10 @@ FixWindowFrozen()
             RestartShopTitans()
         }
     }
+    else
+    {
+        MsgBox("window isnt there")
+    }
 }
 
 RestartShopTitans()
