@@ -472,6 +472,7 @@ FixWindowFrozen()
         }
         else if(PixelSearch(&pX, &pY, 88, 945, 101, 965, 0xFAEEA3, 1) and PixelSearch(&pX, &pY, 525, 958, 536, 970, 0xB9ABB2, 1) and PixelSearch(&pX, &pY, 33, 80, 52, 91, 0xA9C6FB, 1))       ;check if the game is potentially frozen
         {
+            MsgBox("this is test code. it is for fixing not responding bug")
             RestartShopTitans()
         }
     }
