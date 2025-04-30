@@ -145,6 +145,7 @@ heroTokenMode := false
             else if(PixelSearch(&pX, &pY, 952, 312, 968, 321, 0xECE4CE, 3))     ;checks if it is a buyer
             {
                 sellingMode := true
+                currentCustomer := Customer()
             }
             else if(PixelSearch(&pX, &pY, 1861, 80, 1893, 120, 0xFF3F18, 2))
             {
@@ -179,14 +180,14 @@ heroTokenMode := false
             {
                 ClickAtCoord(1279, 518)        ;surcharge
                 Sleep(delay)
-                ClickAtCoord(632, 523)      ;smalltalk
+                Customer.SmallTalk()
                 Sleep(delay * 2)
                 Customer.Sell()
                 Sleep(delay)
             }
             else if(PixelSearch(&pX, &pY, 949, 233, 1173, 289, 0x49FB21, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if auto surcharge has accured and if the item is in stock
             {
-                ClickAtCoord(632, 523)      ;smalltalk
+                Customer.SmallTalk()
                 Sleep(delay * 2)
                 Customer.Sell()
                 Sleep(delay)
@@ -205,7 +206,7 @@ heroTokenMode := false
             {
                 if(GetStoredInfo("InventoryCapacity.txt", "int") >= 0.75)
                 {
-                    ClickAtCoord(632, 523)      ;smalltalk
+                    Customer.SmallTalk()
                     Sleep(delay * 2)
                     if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3))
                     {
@@ -224,7 +225,7 @@ heroTokenMode := false
                 }
                 else
                 {
-                    ClickAtCoord(632, 523)      ;smalltalk
+                    Customer.SmallTalk()
                     Sleep(delay * 2)
                     if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3))
                     {
@@ -245,7 +246,7 @@ heroTokenMode := false
                 Customer.Refuse()
             }
             Sleep(delay)
-            ClickAtCoord(632, 523)      ;smalltalk
+            Customer.SmallTalk()
             Sleep(delay * 2)
             ClickAtCoord(1255, 634)         ;buy
         }

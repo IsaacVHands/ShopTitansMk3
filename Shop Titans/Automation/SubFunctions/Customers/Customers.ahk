@@ -24,6 +24,21 @@ class Customer
 	{
 		ClickAtCoord(649, 522)      ;suggest
 	}
+	GetType()
+	{
+		if(PixelSearch(&pX, &pY, 953, 311, 971, 322, 0xECE168, 1))      ;checks if it is a seller
+		{
+			this.type := "seller"
+		}
+		else if(!PixelSearch(&pX, &pY, 1318, 396, 1346, 422, 0x522C44, 2) and PixelSearch(&pX, &pY, 747, 622, 797, 657, 0xF7491E, 2) and !PixelSearch(&pX, &pY, 695, 513, 754, 545, 0x522C44, 3))     ;check if its a hero
+		{
+			this.type := "hero"
+		}
+		else if(PixelSearch(&pX, &pY, 952, 312, 968, 321, 0xECE4CE, 3))     ;checks if it is a buyer
+		{
+			this.type := "buyer"
+		}
+	}
 }
 /*
 class TestClass {
