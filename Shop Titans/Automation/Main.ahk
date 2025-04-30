@@ -10,8 +10,8 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
-    ActivateShopTitans()
     FixWindowFrozen()
+    ActivateShopTitans()
     CheckWindowRes(1920, 1009, 10)
     RunFromTopDir("Shop Titans/Automation/SubFunctions/General/ReturnToDefaultPos.ahk")
     customerZone := [710, 513, 1112, 639]
