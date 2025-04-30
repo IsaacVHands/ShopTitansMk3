@@ -154,6 +154,10 @@ heroTokenMode := false
                 {
                     ClickAtCoord(pX, pY)            ;click red x
                 }
+                else if(PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFF3E17, 2), PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFFFFFF, 2))       ;check for red event(daily login) circle and the white of the x
+                {
+                    Send("{Escape}")
+                }
                 sleep(400)
                 ClickAtCoord(945, 445)
             }
@@ -189,6 +193,10 @@ heroTokenMode := false
             else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
             {
                 RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
+            }
+            else if(PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFF3E17, 2), PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFFFFFF, 2))       ;check for red event(daily login) circle and the white of the x
+            {
+                Send("{Escape}")
             }
             SellerClogDetecter := 0
         }
