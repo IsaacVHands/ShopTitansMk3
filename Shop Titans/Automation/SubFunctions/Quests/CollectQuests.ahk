@@ -8,6 +8,10 @@
         {
             ClickAtCoord(1678, 933)         ;collect quest
             Sleep(1000)
+            if(PixelSearch(&pX, &pY, 1761, 950, 1795, 979, 0x825771, 2))        ;scan for skip battle button(in case of a special monster)
+            {
+                ClickAtCoord(pX, pY)
+            }
             if(PixelSearch(&pX, &pY, 983, 659, 1014, 701, 0x20F75C, 2))     ;check for broken equipment
             {
                 ClickAtCoord(1102, 685)         ;click show all

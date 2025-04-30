@@ -53,6 +53,16 @@ heroTokenMode := false
             sleep(300000)       ;wait 5 minutes
             sleep(300000)       ;wait 5 minutes
             ClickAtCoord(1121, 701)        ;Reconnect
+            Sleep(10000)
+            if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
+            {
+                ClickAtCoord(1121, 701)        ;Reconnect
+                Sleep(10000)
+            }
+            if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
+            {
+                RestartShopTitans()
+            }
         }
         if(A_hour > hour)
         {
@@ -299,11 +309,11 @@ heroTokenMode := false
         }
         else if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3) and GetStoredInfo("InventoryCapacity.txt", "int") < 0.9 and tickallocator(tick, "craft") and craftMode == true)       ;check if the item is done crafting
         {
-            RunWait("Manufacture\CraftExacutable.ahk")     ;launch the crafter
+            RunWait("SubFunctions\Manufacture\CraftExacutable.ahk")     ;launch the crafter
         }
         else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and GetStoredInfo("InventoryCapacity.txt", "int") < 0.9 and tickallocator(tick, "craft") and  craftMode == true)       ;check if there is an empty crafting slot
         {
-            RunWait("Manufacture\CraftQuick.ahk")     ;launch the quick crafter
+            RunWait("SubFunctions\Manufacture\CraftQuick.ahk")     ;launch the quick crafter
         }
         else if(PixelSearch(&pX, &pY, 246, 918, 284, 956, 0xFFE894, 3) and tickallocator(tick, "bounty"))       ;check on the bounty status
         {

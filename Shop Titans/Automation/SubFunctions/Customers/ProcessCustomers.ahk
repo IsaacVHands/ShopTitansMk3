@@ -1,5 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 #include ../../../lib/helpers.ahk
+#include Customers.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -27,9 +28,9 @@ heroTokenMode := false
                 {
                     if(CheckEnergyLevel(0.5))
                     {
-                        ClickAtCoord(649, 522)      ;suggest
+                        Customer.Suggest()
                         Sleep(500)
-                        ClickAtCoord(1303, 630)     ;sell
+                        Customer.Sell()
                     }
                     else
                     {
@@ -63,7 +64,7 @@ heroTokenMode := false
                 }
                 else
                 {
-                    ClickAtCoord(1303, 630)     ;sell
+                    Customer.Sell()
                 }
             }
             else if(PixelSearch(&pX, &pY, 953, 311, 971, 322, 0xECE168, 1))      ;checks if it is a seller
@@ -76,7 +77,7 @@ heroTokenMode := false
                 {
                     if(PixelSearch(&pX, &pY, 1288, 614, 1350, 657, 0x21F75D, 3))        ;check if there is enough items for the hero
                     {
-                        ClickAtCoord(1241, 643)     ;sell
+                        Customer.Sell()
                         Sleep(750)
                         if(PixelSearch(&pX, &pY, 1014, 674, 1065, 711, 0x21F75D, 3))        ;scan for sell warning
                         {
@@ -97,7 +98,7 @@ heroTokenMode := false
                             }
                             else if(PixelSearch(&pX, &pY, 1288, 614, 1350, 657, 0x21F75D, 3))       ;scan for sell button
                             {
-                                ClickAtCoord(1241, 643)     ;sell
+                                Customer.Sell()
                                 Sleep(750)
                                 if(PixelSearch(&pX, &pY, 1014, 674, 1065, 711, 0x21F75D, 3))        ;scan for sell warning
                                 {
@@ -110,7 +111,7 @@ heroTokenMode := false
                         Sleep(1000)
                         if(PixelSearch(&pX, &pY, 1288, 614, 1350, 657, 0x21F75D, 3))        ;check for green sell button
                         {
-                            ClickAtCoord(1241, 643)     ;sell
+                            Customer.Sell()
                             Sleep(750)
                             if(PixelSearch(&pX, &pY, 1014, 674, 1065, 711, 0x21F75D, 3))        ;scan for sell warning
                             {
@@ -119,7 +120,7 @@ heroTokenMode := false
                         }
                         else
                         {
-                            ClickAtCoord(684, 633)      ;refuse
+                            Customer.Refuse()
                             Sleep(500)
                             ClickAtCoord(1105, 645)     ;confirm
                         }
@@ -136,7 +137,7 @@ heroTokenMode := false
                     {
                         ClickAtCoord(827, 644)      ;click no
                     }
-                    ClickAtCoord(684, 633)      ;refuse
+                    Customer.Refuse()
                     Sleep(500)
                     ClickAtCoord(1105, 645)     ;confirm
                 }
@@ -180,14 +181,14 @@ heroTokenMode := false
                 Sleep(delay)
                 ClickAtCoord(632, 523)      ;smalltalk
                 Sleep(delay * 2)
-                ClickAtCoord(1303, 630)     ;sell
+                Customer.Sell()
                 Sleep(delay)
             }
             else if(PixelSearch(&pX, &pY, 949, 233, 1173, 289, 0x49FB21, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if auto surcharge has accured and if the item is in stock
             {
                 ClickAtCoord(632, 523)      ;smalltalk
                 Sleep(delay * 2)
-                ClickAtCoord(1303, 630)     ;sell
+                Customer.Sell()
                 Sleep(delay)
             }
             else if(PixelSearch(&pX, &pY, 1331, 622, 1379, 647, 0xFFB729, 3))
@@ -208,24 +209,18 @@ heroTokenMode := false
                     Sleep(delay * 2)
                     if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3))
                     {
-                        ClickAtCoord(1279, 518)        ;surcharge
+                        Customer.Surcharge()
                         sleep(delay)
                     }
-                    ClickAtCoord(1303, 630)     ;sell
+                    Customer.Sell()
                     Sleep(delay)
                 }
-                else if(mode == "reg" or regModTimer > 9600)
+                else if(mode == "reg" and Random(1, 20) < 20)
                 {
                     if(PixelSearch(&pX, &pY, 599, 613, 640, 659, 0xF74A21, 3))  ;check for refuse button
                     {
                         ClickAtCoord(692, 633)      ;refuse because the surcharge price is to high
                     }
-                }
-                else if(mode == "MANreg")
-                {
-                    Send("{Esc}")
-                    Sleep(500)
-                    ;for manual selling
                 }
                 else
                 {
@@ -236,7 +231,7 @@ heroTokenMode := false
                         ClickAtCoord(1279, 518)        ;surcharge
                         sleep(delay)
                     }
-                    ClickAtCoord(1303, 630)     ;sell
+                    Customer.Sell()
                     Sleep(delay)
                     mode := "reg"
                 }
@@ -247,7 +242,7 @@ heroTokenMode := false
             if(FileRead("Mode.txt") == "refuse")
             {
                 Sleep(delay)
-                Customer("refuse")
+                Customer.Refuse()
             }
             Sleep(delay)
             ClickAtCoord(632, 523)      ;smalltalk
@@ -308,16 +303,5 @@ heroTokenMode := false
     if(FileRead("Mode.txt") != "")
     {
         FileErase("Mode.txt")
-    }
-}
-
-
-
-Customer(Action)
-{
-    Switch(Action)
-    {
-    case "refuse":
-        ClickAtCoord(684, 633)      ;refuse
     }
 }
