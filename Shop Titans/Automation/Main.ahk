@@ -1,5 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 #include ../lib/helpers.ahk
+#Include SubFunctions/GatherInfo/GemTracker/Gem.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -24,6 +25,7 @@ heroTokenMode := false
     else
         subscription := false
     global surchargeCost
+    gemCounter := Gem()
     ExtraInventory := false
     AutomaticRestartTimer := 0
     SellerClogDetecter := 0
@@ -176,7 +178,7 @@ heroTokenMode := false
             FixWindowFrozen()
         }
         sleep(500)
-        RunWait("SubFunctions\GatherInfo\GemTracker\TakeSnapshot.ahk")
+        gemCounter.logGemsHourly()
         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
             RunWait("SubFunctions\Customers\ProcessCustomers.ahk")

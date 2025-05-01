@@ -18,7 +18,7 @@
             SendMode "Event"
             TakeScreenShot(3326, 41, 3385, 76)
             Sleep(500)
-            MoveScreenShot()
+            MoveScreenShot()                
         }
     }
 }
