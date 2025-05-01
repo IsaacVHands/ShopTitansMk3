@@ -6,31 +6,28 @@ class Gem
 {
     __New() 
     {
+        this.path := getMainDir() "Shop Titans/Automation/SubFunctions/GatherInfo/GemTracker/"
         this.gemCount := -1
         this.timeStamp := A_YYYY "," A_MM "," A_DD "," A_Hour
     }
-    logGemsHourly()
+    logGems()
     {
-        if(this.TimeChange())
+        this.Get()
+        if(this.ErrorLevel() == 0)
         {
-            this.Get()
-            if(this.ErrorLevel() == 0)
-            {
-                this.SetLog()
-                this.gemCount := -1
-                this.timeStamp := A_YYYY "," A_MM "," A_DD "," A_Hour
-            }
+            this.SetLog()
+            this.ResetObj()
         }
     }
     Get()
     {
-        if(FileExist("shop_titans_ml"))
+        if(FileExist(this.path "shop_titans_ml"))
         {
-            RunWait("powershell.exe -WindowStyle Hidden -ExecutionPolicy Bypass -File RunmlModel.ps1")
+            RunWait(this.path "psLauncher.ahk")
         }
-        if(FileExist("mlOutput.txt"))
+        if(FileExist(this.path "mlOutput.txt"))
         {
-            mlOutput := FileRead("mlOutput.txt")
+            mlOutput := FileRead(this.path "mlOutput.txt")
             if(mlOutput != "")
             {
                 this.gemCount := mlOutput
@@ -39,7 +36,7 @@ class Gem
     }
     SetLog()
     {
-        fileAppend(this.timeStamp "," RTrim(this.gemCount, ' `t'), "GemData.txt")
+        fileAppend(this.timeStamp "," RTrim(this.gemCount, ' `t'), this.path "GemData.txt")
     }
     TimeChange()
     {

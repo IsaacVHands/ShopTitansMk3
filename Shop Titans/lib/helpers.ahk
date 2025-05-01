@@ -66,7 +66,7 @@ getMainDir()
     {
         if(FileExist(scanPos))
         {
-            return A_ScriptDir dots
+            return StrReplace(A_ScriptDir, '\', '/') dots
         }
         else
         {

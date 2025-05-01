@@ -11,8 +11,8 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
-    FixWindowFrozen()
     ActivateShopTitans()
+    FixWindowFrozen()
     CheckWindowRes(1920, 1009, 10)
     RunFromTopDir("Shop Titans/Automation/SubFunctions/General/ReturnToDefaultPos.ahk")
     customerZone := [710, 513, 1112, 639]
@@ -25,13 +25,14 @@ heroTokenMode := false
     else
         subscription := false
     global surchargeCost
-    gemCounter := Gem()
+
     ExtraInventory := false
     AutomaticRestartTimer := 0
     SellerClogDetecter := 0
     hour := A_Hour
     autoUpdate := false
     piggyBank := true
+    gemCount := Gem()
     a := true
     while a == true
     {
@@ -69,6 +70,7 @@ heroTokenMode := false
         }
         if(A_hour > hour)
         {
+            gemCount.logGems()
             WinMaximize("ahk_exe ShopTitan.exe")
             if(CheckConfig("crafting.enchantments.autotrash"))
             {
@@ -92,6 +94,7 @@ heroTokenMode := false
                 }
                 Send("{Escape}")
             }
+            hour := A_Hour
         }
         if(A_Hour == 0)
         {
@@ -178,7 +181,6 @@ heroTokenMode := false
             FixWindowFrozen()
         }
         sleep(500)
-        gemCounter.logGemsHourly()
         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
             RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
@@ -460,9 +462,18 @@ ActivateShopTitans()
         else
         {
             RunWait("steam://rungameid/1258080")
-            Sleep(8000)
-            WinMaximize("ahk_exe ShopTitan.exe")        ;maximize window
-            Sleep(7000)
+            a := true
+            while(a)
+            {
+                Sleep(3000)
+                if(WinExist("ahk_exe ShopTitan.exe"))
+                {
+                    Sleep(5000)
+                    WinMaximize("ahk_exe ShopTitan.exe")        ;maximize window
+                    a := false
+                }
+            }
+            Sleep(3000)
             ActivateShopTitans()
         }
     }
