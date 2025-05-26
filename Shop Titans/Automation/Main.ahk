@@ -28,6 +28,7 @@ heroTokenMode := false
         subscription := false
     global surchargeCost
 
+    counter_upgrade := false
     ExtraInventory := false
     AutomaticRestartTimer := 0
     SellerClogDetecter := 0
@@ -86,6 +87,7 @@ heroTokenMode := false
         if(A_hour > hour)
         {
             gemCount.logGems()
+            counter_upgrade := false
             WinMaximize("ahk_exe ShopTitan.exe")
             if(CheckConfig("crafting.enchantments.autotrash"))
             {
@@ -188,12 +190,13 @@ heroTokenMode := false
         {
             inventory_level := Process_Customers(customerZone, inventory_level)
         }
-        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
+        else if(PixelSearch(&pX, &pY, customerZone[1], (customerZone[2] + 113), customerZone[3], customerZone[4], 0xEFE7D3, 1) and counter_upgrade and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if there is a counter upgrade active, and if you cant see guild tokens in the top right(not in city view)
         {
             ClickAtCoord(pX + 10, pY + 10)
             Sleep(500)
-            if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle
+            if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle(in the case of a counter upgrade for instance)
             {
+                counter_upgrade := true
                 Send("{Escape}")
             }
             if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 2) and PixelSearch(&pX, &pY, 1804, 946, 1820, 962, 0x552B44, 2))        ;check for edit furniture button
@@ -203,7 +206,31 @@ heroTokenMode := false
             }
             else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
             {
-                RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
+                inventory_level := Process_Customers(customerZone, inventory_level)
+            }
+            else if(PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFF3E17, 2), PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFFFFFF, 2))       ;check for red event(daily login) circle and the white of the x
+            {
+                Send("{Escape}")
+            }
+            SellerClogDetecter := 0
+        }
+        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
+        {
+            ClickAtCoord(pX + 10, pY + 10)
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle(in the case of a counter upgrade for instance)
+            {
+                counter_upgrade := true
+                Send("{Escape}")
+            }
+            if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 2) and PixelSearch(&pX, &pY, 1804, 946, 1820, 962, 0x552B44, 2))        ;check for edit furniture button
+            {
+                Send("{Esc}")
+                Sleep(250)
+            }
+            else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
+            {
+                inventory_level := Process_Customers(customerZone, inventory_level)
             }
             else if(PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFF3E17, 2), PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFFFFFF, 2))       ;check for red event(daily login) circle and the white of the x
             {
