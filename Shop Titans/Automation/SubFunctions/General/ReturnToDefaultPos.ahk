@@ -17,6 +17,7 @@
         Sleep(850)
         attemps++
     }
+    MouseMove(336, 779)
     SendEvent("{WheelDown 10}")
     Sleep(100)
     Loop 7
