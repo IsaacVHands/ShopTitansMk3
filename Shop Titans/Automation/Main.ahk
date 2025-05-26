@@ -1,6 +1,8 @@
 ﻿#Requires AutoHotkey v2.0
 #include ../lib/helpers.ahk
 #Include SubFunctions/GatherInfo/GemTracker/Gem.ahk
+#Include SubFunctions/Quests/Quest.ahk
+#Include SubFunctions/Customers/ProcessCustomers.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -26,12 +28,14 @@ heroTokenMode := false
         subscription := false
     global surchargeCost
 
+    counter_upgrade := false
     ExtraInventory := false
     AutomaticRestartTimer := 0
     SellerClogDetecter := 0
     hour := A_Hour
     autoUpdate := false
     piggyBank := true
+    inventory_level := 0.9
     gemCount := Gem()
     a := true
     while a == true
@@ -54,23 +58,36 @@ heroTokenMode := false
         }
         else if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
         {
-            sleep(300000)       ;wait 5 minutes
-            sleep(300000)       ;wait 5 minutes
-            ClickAtCoord(1121, 701)        ;Reconnect
-            Sleep(10000)
-            if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
+            if(PixelSearch(&pX, &pY, 795, 673, 831, 748, 0x1EF65A, 2))      ;check if its just a simple lost connection error
             {
                 ClickAtCoord(1121, 701)        ;Reconnect
-                Sleep(10000)
+                Sleep(5000)
+                if(PixelSearch(&pX, &pY, 795, 673, 831, 748, 0x1EF65A, 2))      ;check if its just a simple lost connection error
+                {
+                    RestartShopTitans()
+                }
             }
-            if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
+            else
             {
-                RestartShopTitans()
+                sleep(300000)       ;wait 5 minutes
+                sleep(300000)       ;wait 5 minutes
+                ClickAtCoord(1121, 701)        ;Reconnect
+                Sleep(10000)
+                if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
+                {
+                    ClickAtCoord(1121, 701)        ;Reconnect
+                    Sleep(10000)
+                }
+                if(PixelSearch(&pX, &pY, 1090, 669, 1119, 729, 0x21F75D, 2) and PixelSearch(&pX, &pY, 577, 319, 621, 359, 0x381E2D, 2))     ;Check for the reconnect button and top left corner of the box
+                {
+                    RestartShopTitans()
+                }
             }
         }
         if(A_hour > hour)
         {
             gemCount.logGems()
+            counter_upgrade := false
             WinMaximize("ahk_exe ShopTitan.exe")
             if(CheckConfig("crafting.enchantments.autotrash"))
             {
@@ -164,39 +181,32 @@ heroTokenMode := false
                     Send("{Escape}")
                 }
                 sleep(400)
-                ClickAtCoord(945, 445)
             }
-            else if(PixelSearch(&pX, &pY, 719, 503, 758, 524, 0x8FB7DC, 3) or PixelSearch(&pX, &pY, 719, 503, 758, 524, 0xA21D08, 3))       ;scan slot 2 for danial or thomas
-            {
-                ClickAtCoord(945, 528)
-            }
-            else if(PixelSearch(&pX, &pY, 728, 594, 752, 608, 0x8FB7DC, 3) or PixelSearch(&pX, &pY, 728, 594, 752, 608, 0xA21D08, 3))       ;scan slot 3 for danial or thomas
-            {             
-                ClickAtCoord(945, 619)
-            }
-            Sleep(500)
-            ClickAtCoord(958, 715)      ;click confirm
-            Sleep(500)
-            ClickAtCoord(958, 715)      ;click finish
+            eventPopUpTowerOfTitans()
             FixWindowFrozen()
         }
         sleep(500)
         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
-            RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
+            inventory_level := Process_Customers(customerZone, inventory_level)
         }
-        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
+        else if(PixelSearch(&pX, &pY, customerZone[1], (customerZone[2] + 113), customerZone[3], customerZone[4], 0xEFE7D3, 1) and counter_upgrade and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if there is a counter upgrade active, and if you cant see guild tokens in the top right(not in city view)
         {
             ClickAtCoord(pX + 10, pY + 10)
             Sleep(500)
-            if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 3))        ;check for edit furniture button
+            if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle(in the case of a counter upgrade for instance)
+            {
+                counter_upgrade := true
+                Send("{Escape}")
+            }
+            if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 2) and PixelSearch(&pX, &pY, 1804, 946, 1820, 962, 0x552B44, 2))        ;check for edit furniture button
             {
                 Send("{Esc}")
                 Sleep(250)
             }
             else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
             {
-                RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
+                inventory_level := Process_Customers(customerZone, inventory_level)
             }
             else if(PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFF3E17, 2), PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFFFFFF, 2))       ;check for red event(daily login) circle and the white of the x
             {
@@ -204,11 +214,39 @@ heroTokenMode := false
             }
             SellerClogDetecter := 0
         }
-         else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFE46B, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the yellow customer bubble, if you cant see guild tokens in the top right(not in city view)
+        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
+        {
+            ClickAtCoord(pX + 10, pY + 10)
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle(in the case of a counter upgrade for instance)
+            {
+                counter_upgrade := true
+                Send("{Escape}")
+            }
+            if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 2) and PixelSearch(&pX, &pY, 1804, 946, 1820, 962, 0x552B44, 2))        ;check for edit furniture button
+            {
+                Send("{Esc}")
+                Sleep(250)
+            }
+            else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
+            {
+                inventory_level := Process_Customers(customerZone, inventory_level)
+            }
+            else if(PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFF3E17, 2), PixelSearch(&pX, &pY, 1862, 72, 1909, 114, 0xFFFFFF, 2))       ;check for red event(daily login) circle and the white of the x
+            {
+                Send("{Escape}")
+            }
+            SellerClogDetecter := 0
+        }
+        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFE46B, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the yellow customer bubble, if you cant see guild tokens in the top right(not in city view)
         { 
             ClickAtCoord(pX, pY)
             Sleep(500)
-            if(SellerClogDetecter > 10)
+            if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle
+            {
+                Send("{Escape}")
+            }
+            else if(SellerClogDetecter > 10)
             {
                 FileAppend("refuse", "SubFunctions\Customers\Mode.txt")
             }
@@ -238,7 +276,7 @@ heroTokenMode := false
             Send("{Tab}")
             Sleep(2000)
             SendEvent("{WheelDown 10}")         ;scroll all the way out
-            Sleep(500)
+            Sleep(1000)
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {
                 ClickAtCoord(995, 410)      ;click the offer help button
@@ -288,7 +326,7 @@ heroTokenMode := false
             Sleep(3000)
             if(PixelSearch(&pX, &pY, 654, 164, 1362, 748, 0x11E85C, 2))         ;scan for upgraded furniture
             {
-                ClickAtCoord(pX, pY)        ;click upgraded furniture
+                ClickAtCoord(pX, pY)        ;click upgrade furniture
                 Sleep(1000)
                 
             }
@@ -527,4 +565,59 @@ CheckWindowRes(x, y, errorMargin)
     {
         msgBox("Error: resolution is not set to 1920 X 1080 `nplease set resolution the the appropriate `nsetting before pressing ok")
     }
+}
+
+eventPopUpTowerOfTitans()
+{
+    if(PixelSearch(&pX, &pY, 82, 892, 118, 927, 0xEFE7D3, 2))            ;scan for hero text
+    {
+        loop(10)
+        {
+            ClickAtCoord(141, 904)          ;click in the bottom left to get through the hero text
+            if(!PixelSearch(&pX, &pY, 82, 892, 118, 927, 0xEFE7D3, 2))            ;scan for a lack of hero text
+            {
+                break
+            }
+            Sleep(333)
+        }
+    }
+    Sleep(1000)
+    if(PixelSearch(&pX, &pY, 1160, 170, 1243, 230, 0xEFE7D3, 2) and PixelSearch(&pX, &pY, 939, 491, 1003, 615, 0xFFD300, 2))         ;scan for hero indecator in the top middle and mid middle
+    {
+        ClickAtCoord(960, 544)          ;click on the hero text bubble
+    }
+    Sleep(750)
+    if(PixelSearch(&pX, &pY, 82, 892, 118, 927, 0xEFE7D3, 2))            ;scan for hero text
+    {
+        loop(10)
+        {
+            ClickAtCoord(141, 904)          ;click in the bottom left to get through the hero text
+            if(!PixelSearch(&pX, &pY, 82, 892, 118, 927, 0xEFE7D3, 2))            ;scan for a lack of hero text
+            {
+                break
+            }
+            Sleep(333)
+        }
+    }
+    Sleep(750)
+    if(PixelSearch(&pX, &pY, 1208, 274, 1252, 314, 0xFF3C17, 2))        ;scan for x in top left of event menu
+    {
+        ClickAtCoord(pX, pY)        ;click the x for the event menu
+    }
+}
+
+Give_Gift()
+{
+    if(PixelSearch(&pX, &pY, 719, 503, 758, 524, 0x8FB7DC, 3) or PixelSearch(&pX, &pY, 719, 503, 758, 524, 0xA21D08, 3))       ;scan slot 2 for danial or thomas
+    {
+        ClickAtCoord(945, 528)
+    }
+    else if(PixelSearch(&pX, &pY, 728, 594, 752, 608, 0x8FB7DC, 3) or PixelSearch(&pX, &pY, 728, 594, 752, 608, 0xA21D08, 3))       ;scan slot 3 for danial or thomas
+    {             
+        ClickAtCoord(945, 619)
+    }
+    Sleep(500)
+    ClickAtCoord(958, 715)      ;click confirm
+    Sleep(500)
+    ClickAtCoord(958, 715)      ;click finish
 }

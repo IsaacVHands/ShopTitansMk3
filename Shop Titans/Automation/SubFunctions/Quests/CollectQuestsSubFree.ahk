@@ -13,8 +13,10 @@
             {
                 loop(20)
                 {
-                    Sleep(10000)
-                    if(!PixelSearch(&pX, &pY, 150, 946, 210, 986, 0x000000, 2))      ;check if the game is in combat
+                    if(PixelSearch(&pX, &pY, 150, 946, 210, 986, 0x000000, 2) and PixelSearch(&pX, &pY, 1804, 953, 1855, 978, 0x6E4F62, 2))       ;scan for skip combat button
+                        ClickAtCoord(pX, pY)            ;click skip
+                    Sleep(2000)
+                    if(!PixelSearch(&pX, &pY, 150, 946, 210, 986, 0x000000, 2))      ;check if the game is not in combat
                     {
                         break
                     }
@@ -54,7 +56,11 @@
                 if(PixelSearch(&pX, &pY, 704, 734, 747, 763, 0x522C44, 2))      ;check for collect button
                 {
                     ClickAtCoord(895, 772)
-                    Sleep(500)
+                    Sleep(5000)
+                    if(PixelSearch(&pX, &pY, 1861, 73, 1906, 115, 0xFF3E16, 3) and PixelSearch(&pX, &pY, 1861, 73, 1906, 115, 0xFFFFFF, 3))         ;check if event progress screen has popped up
+                    {
+                        Send("{Escape}")
+                    }
                     break
                 }
                 else if(PixelSearch(&pX, &pY, 1114, 299, 1121, 323, 0xFFFFFF, 2))       ;if the quest complete words are in the upper middle
@@ -70,10 +76,10 @@
     Sleep(500)
     RunWait("EscapeToShop.ahk")
     Sleep(2000)
-    if(PixelSearch(&pX, &pY, 25, 200, 94, 277, 0x565E8A, 2) and PixelSearch(&pX, &pY, 25, 200, 94, 277, 0xA238F4, 2) and collectedQuest)            ;check if the tower of titans is active
+    /*if(PixelSearch(&pX, &pY, 25, 200, 94, 277, 0x565E8A, 2) and PixelSearch(&pX, &pY, 25, 200, 94, 277, 0xA238F4, 2) and collectedQuest)            ;check if the tower of titans is active
     {
         RunWait("TOTSendQuest.ahk")         ;try to launch a tot mission
-    }
+    } disabled 5/23/2025 for tower of terror*/
 }
 
 ClickAtCoord(x, y)

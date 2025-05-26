@@ -82,9 +82,9 @@ CheckConfig(configInquiry)
     
     loop read configFile
     {
-        if(configInquiry " :" == LTrim(RTrim(A_LoopReadLine, "= true" "= false"), ' `t'))
+        if(configInquiry " :" == LTrim(RTrim(StrLower(A_LoopReadLine), "= true" "= false"), ' `t'))
         {
-            mode := LTrim(RTrim(A_LoopReadLine, " "), configInquiry " :")
+            mode := LTrim(RTrim(StrLower(A_LoopReadLine), " "), configInquiry " :")
             switch(mode)
             {
                 case "= true":
