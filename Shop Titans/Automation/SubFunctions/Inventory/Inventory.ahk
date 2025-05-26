@@ -16,7 +16,6 @@ class Inventory
         {
             ClickAtCoord(pX, pY)        ;open inventory
             Sleep(500)
-            check
         }
     }
 }
