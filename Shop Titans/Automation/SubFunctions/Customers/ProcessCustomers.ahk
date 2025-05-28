@@ -65,7 +65,7 @@ Process_Customers(customerZone, inventoryLevel)
                 else
                 {
                     ;if(current_customer.inventory > 0.5 or Random(1, 20) == 20)
-                    if(Random(1, 20) > 17)
+                    if(Random(1, 20) == 20)
                     {
                         Customer.SmallTalk()
                         Sleep(500 * 2)
