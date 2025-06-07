@@ -81,8 +81,7 @@ Class Quest
             if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
             {
                 this.maximize_party_difficulty()
-                MsgBox("send quest")
-                ; ClickAtCoord(1301, 761)         ;send quest
+                ClickAtCoord(1301, 761)         ;send quest
                 if(!PixelSearch(&pX, &pY, 27, 930, 39, 943, 0x00FF4F, 3))       ;if there are still more questing slots
                 {
                     Sleep(7000)
