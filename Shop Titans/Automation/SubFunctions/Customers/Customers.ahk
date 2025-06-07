@@ -57,9 +57,11 @@ class Customer
 	{
 		if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
 		{
-			if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))		;check if its king reinhold
+			if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3) or PixelSearch(&pX, &pY, 827, 145, 839, 157, 0xE41F1E, 3))		;check if its king reinhold
+			{
 				this.Type := "reinhold"
-			if(PixelSearch(&pX, &pY, 953, 311, 971, 322, 0xECE168, 1))      ;checks if it is a seller
+			}
+			else if(PixelSearch(&pX, &pY, 953, 311, 971, 322, 0xECE168, 1))      ;checks if it is a seller
 				this.Type := "seller"
 			else if(!PixelSearch(&pX, &pY, 1318, 396, 1346, 422, 0x522C44, 2) and PixelSearch(&pX, &pY, 747, 622, 797, 657, 0xF7491E, 2) and !PixelSearch(&pX, &pY, 695, 513, 754, 545, 0x522C44, 3))     ;check if its a hero
 				this.Type := "hero"

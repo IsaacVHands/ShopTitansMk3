@@ -35,6 +35,10 @@ Class Quest
         else
             return 0
     }
+    Static launch_quest()
+    {
+        ClickAtCoord(1297, 760)         ;click explore area
+    }
     static maximize_party_difficulty()
     {
         loop(11)
