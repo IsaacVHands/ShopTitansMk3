@@ -1,10 +1,14 @@
 ﻿#Requires AutoHotkey v2.0
+#Include CollectTask.ahk
+#Include ../../../lib/helpers.ahk
+#Include SelectBounty.ahk
 #SingleInstance Force
 
+collect_bounty()
 {
     ClickAtCoord(281, 929)      ;open goals tab
     Sleep(500)
-    RunWait("CollectTask.ahk")
+    collect_task()
     Sleep(500)
     if(PixelSearch(&pX, &pY, 699, 335, 735, 358, 0xFFCF00, 2))        ;check if the tasks tab is selected
     {
@@ -18,13 +22,5 @@
         ClickAtCoord(1104, 944)      ;click ok
         Sleep(750)
     }
-    RunWait("SelectBounty.ahk")
-}
-
-ClickAtCoord(x, y)
-{
-    Click(x, y, "Left", "Down")
-    Sleep(50)
-    Click(x, y, "Left", "Up")
-    Sleep(10)
+    select_bounty()
 }

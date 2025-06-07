@@ -2,6 +2,7 @@
 #Include ../../../lib/helpers.ahk
 #SingleInstance Force
 
+select_bounty()
 {
     if(PixelSearch(&pX, &pY, 257, 906, 281, 919, 0xD51607, 2))      ;check for goals tab
     {

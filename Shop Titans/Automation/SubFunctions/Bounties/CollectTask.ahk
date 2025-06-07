@@ -1,6 +1,8 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
+#Include ../../../lib/helpers.ahk
 
+collect_task()
 {
     if(PixelSearch(&pX, &pY, 716, 333, 737, 360, 0x261B21, 3))      ;check if the tasks tab is active
     {
@@ -15,12 +17,4 @@
         }
         Sleep(500)
     }
-}
-
-ClickAtCoord(x, y)
-{
-    Click(x, y, "Left", "Down")
-    Sleep(50)
-    Click(x, y, "Left", "Up")
-    Sleep(10)
 }
