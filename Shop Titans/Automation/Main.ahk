@@ -15,13 +15,6 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
-    if(CheckConfig("questing.lostcityofgold"))
-    {
-        loop(7)
-        {
-            Quest.basic_lcog()
-        }
-    }
     ActivateShopTitans()
     FixWindowFrozen()
     CheckWindowRes(1920, 1009, 10)
