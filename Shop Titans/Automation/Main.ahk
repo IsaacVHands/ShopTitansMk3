@@ -15,6 +15,18 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
+    if(Dev_Mode())
+    {
+        if(PixelSearch(&pX, &pY, 478, 337, 935, 397, 0x13E533, 3))
+            MsgBox("high happiness")
+        else if(PixelSearch(&pX, &pY, 478, 337, 935, 397, 0x202020, 3) and PixelSearch(&pX, &pY, 478, 337, 935, 397, 0xF6B614, 3))
+            MsgBox("super happy")
+        if(CheckConfig("questing.lostcityofgold"))
+        {
+            Quest.basic_lcog(0)
+            MsgBox("letsgo?")
+        }
+    }
     ActivateShopTitans()
     FixWindowFrozen()
     CheckWindowRes(1920, 1009, 10)
@@ -288,10 +300,7 @@ heroTokenMode := false
             }
             if(CheckConfig("questing.lostcityofgold"))
             {
-                loop(7)
-                {
-                    Quest.basic_lcog()
-                }
+                Quest.basic_lcog(0)
             }
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {
