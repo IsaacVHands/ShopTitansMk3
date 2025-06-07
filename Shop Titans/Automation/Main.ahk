@@ -15,6 +15,13 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
+    if(CheckConfig("questing.lostcityofgold"))
+    {
+        loop(7)
+        {
+            Quest.basic_lcog()
+        }
+    }
     ActivateShopTitans()
     FixWindowFrozen()
     CheckWindowRes(1920, 1009, 10)
@@ -284,8 +291,14 @@ heroTokenMode := false
             if(Dev_Mode())
             {
                 ; Farm_Wood_Chests()
-                Quest.basic_lcog()
                 
+            }
+            if(CheckConfig("questing.lostcityofgold"))
+            {
+                loop(7)
+                {
+                    Quest.basic_lcog()
+                }
             }
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {

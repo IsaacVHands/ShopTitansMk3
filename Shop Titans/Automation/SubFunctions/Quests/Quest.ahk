@@ -56,13 +56,24 @@ Class Quest
                 break
         }
     }
-    static basic_lcog()
+    static open_quest_menu(tab)
     {
         if(PixelSearch(&pX, &pY, 215, 890, 226, 920, 0xFFB629, 3) and PixelSearch(&pX, &pY, 1866, 851, 1879, 877, 0xFFB42A, 3))            ;check for extra heroes and quest slots
         {
             ClickAtCoord(1810, 923)         ;open quest menu
             Sleep(1000)
+            if(PixelSearch(&pX, &pY, 1305, 947, 1344, 979, 0x251921, 3) and tab == "a")         ;check if the all tab is not selected
+                ClickAtCoord(1416, 970)     ;open all tab
+            if(PixelSearch(&pX, &pY, 1616, 950, 1662, 985, 0x251921, 3) and tab == "b")         ;check if the bookmarks tab is not selected 
+                ClickAtCoord(1757, 973)     ;open bookmark tab
+            Sleep(500)
         }
+        else
+            return false
+    }
+    static basic_lcog()
+    {
+        this.open_quest_menu("a")
         if(PixelSearch(&pX, &pY, 26, 825, 54, 854, 0xECB859, 3) and PixelSearch(&pX, &pY, 759, 949, 769, 955, 0x522C44, 2))            ;check if the LCOG quest is available
         {
             ClickAtCoord(102, 728)        ;open the LCOG quest
