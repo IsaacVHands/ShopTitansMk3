@@ -281,11 +281,12 @@ heroTokenMode := false
             Sleep(2000)
             SendEvent("{WheelDown 10}")         ;scroll all the way out
             Sleep(1000)
-          /*  if(Dev_Mode())
+            if(Dev_Mode())
             {
-                Farm_Wood_Chests()
+                ; Farm_Wood_Chests()
+                Quest.basic_lcog()
                 
-            }*/
+            }
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {
                 ClickAtCoord(995, 410)      ;click the offer help button
