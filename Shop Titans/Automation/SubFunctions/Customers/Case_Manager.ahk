@@ -33,7 +33,10 @@ Class Case_Manager
                         if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
                         {
                             if(PixelSearch(&pX, &pY, 829, 130, 855, 150, 0xF1C638, 3))          ;checks for king reinhold
+                            {
                                 ClickAtCoord(968, 756)      ;Wait
+                                Sleep(750)
+                            }
                             else
                                 break
                         }
@@ -127,14 +130,14 @@ Class Case_Manager
     Seller(current_customer)
     {
         Sleep(500)
-        Customer.SmallTalk()
+        Basic.SmallTalk()
         Sleep(500 * 2)
-        Customer.Buy()
+        Basic.Buy()
         Sleep(500)
         current_customer.UpdateInventory()
         if(PixelSearch(&pX, &pY, 798, 156, 1115, 198, 0xFF2D00, 2))     ;check for inventory full red letters
         {
-            Customer.Refuse()
+            Basic.Refuse()
         }
         /*Sleep(500)
         if(PixelSearch(&pX, &pY, 798, 156, 1115, 198, 0xFF2D00, 2))     ;check for inventory full red letters
@@ -143,9 +146,57 @@ Class Case_Manager
         }*/
         return current_customer
     }
-    Buyer(current_customer)
+    Buyerold(current_customer)
     {
     if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if surcharge is possible and if the item is in stock
+        {
+            Basic.Surcharge()       ;surcharge
+            Sleep(500)
+        }
+        if(PixelSearch(&pX, &pY, 949, 233, 1173, 289, 0x49FB21, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if auto surcharge has accured(or item surcharged) and if the item is in stock
+        {
+            Basic.SmallTalk()
+            Sleep(500 * 2)
+            Basic.Sell()
+            Sleep(500)
+            current_customer.UpdateInventory()
+        }
+        else if(PixelSearch(&pX, &pY, 1331, 622, 1379, 647, 0xFFB729, 3))           ;check for restock yellow in the sell position
+        {
+            Basic.Refuse()      ;refuse because the item is out of stock
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 996, 620, 1046, 648, 0x23F75D, 3))
+            {
+                ClickAtCoord(1025, 642)
+                Sleep(500)
+            }
+        }
+        else
+        {
+            if(current_customer.inventory > 0.5 or Random(1, 20) == 20)
+            {
+                Basic.SmallTalk()
+                Sleep(500 * 2)
+                if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3))
+                {
+                    Basic.Surcharge()
+                    sleep(500)
+                }
+                Basic.Sell()
+                Sleep(300)
+                current_customer.UpdateInventory()
+                Sleep(500)
+            }
+            else if(PixelSearch(&pX, &pY, 599, 613, 640, 659, 0xF74A21, 3))  ;check for refuse button
+            {
+                Customer.Refuse()      ;refuse because the surcharge price is to high
+                Sleep(750)
+            }
+        }
+    }
+    Buyer(current_customer, inventory_level)
+    {
+        if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if surcharge is possible and if the item is in stock
         {
             Customer.Surcharge()       ;surcharge
             Sleep(500)
@@ -170,6 +221,7 @@ Class Case_Manager
         }
         else
         {
+            ; if(Random(1, 30) == 20)
             if(current_customer.inventory > 0.5 or Random(1, 20) == 20)
             {
                 Customer.SmallTalk()
@@ -182,7 +234,7 @@ Class Case_Manager
                 Customer.Sell()
                 Sleep(300)
                 current_customer.UpdateInventory()
-                Sleep(500)
+                Sleep(750)
             }
             else if(PixelSearch(&pX, &pY, 599, 613, 640, 659, 0xF74A21, 3))  ;check for refuse button
             {
@@ -190,5 +242,6 @@ Class Case_Manager
                 Sleep(750)
             }
         }
+        return current_customer.inventory
     }
 }

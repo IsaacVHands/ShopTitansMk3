@@ -13,7 +13,7 @@ Process_Customers(customerZone, inventoryLevel)
     tick := 0
     loop 15
     {
-        sleep(250)
+        sleep(750)
         inventoryLevel := current_customer.inventory
         current_customer.GetType()
         if(current_customer.Type == "dialog")
@@ -27,7 +27,7 @@ Process_Customers(customerZone, inventoryLevel)
             Sleep(500)
             if(current_customer.Type == "reinhold")          ;checks for king reinhold
             {
-                Customer.case_manager.King(CustomerZone)
+                current_customer.case_manager.King(CustomerZone)
             }
             else if(current_customer.Type == "seller")      ;checks if it is a seller
             {
@@ -39,7 +39,8 @@ Process_Customers(customerZone, inventoryLevel)
             }
             else if(current_customer.Type == "buyer")     ;checks if it is a buyer
             {
-                if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if surcharge is possible and if the item is in stock
+                current_customer.inventory := current_customer.case_manager.buyer(current_customer, current_customer.inventory)
+                /*if(PixelSearch(&pX, &pY, 1335, 518, 1355, 531, 0x522C44, 3) and PixelSearch(&pX2, &pY2, 1295, 617, 1348, 647, 0x21F75D, 3))    ;Check if surcharge is possible and if the item is in stock
                 {
                     Customer.Surcharge()       ;surcharge
                     Sleep(500)
@@ -65,7 +66,7 @@ Process_Customers(customerZone, inventoryLevel)
                 else
                 {
                     ;if(current_customer.inventory > 0.5 or Random(1, 20) == 20)
-                    if(Random(1, 20) == 20)
+                    if(Random(1, 30) == 20)
                     {
                         Customer.SmallTalk()
                         Sleep(500 * 2)
@@ -84,7 +85,7 @@ Process_Customers(customerZone, inventoryLevel)
                         Customer.Refuse()      ;refuse because the surcharge price is to high
                         Sleep(750)
                     }
-                }
+                }*/
             }
             else if(PixelSearch(&pX, &pY, 1861, 80, 1893, 120, 0xFF3F18, 2))
             {
@@ -100,7 +101,6 @@ Process_Customers(customerZone, inventoryLevel)
         {
             break
         }
-
         sleep(500)
         Sleep(150)
         if(PixelSearch(&pX, &pY, 798, 156, 1115, 198, 0xFF2D00, 2))     ;check for inventory full red letters

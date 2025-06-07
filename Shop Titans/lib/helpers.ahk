@@ -154,3 +154,62 @@ RunFromTopDir(path)
     absolutePath := getMainDir() "/" path
     RunWait(absolutePath)
 }
+
+Dev_Mode()
+{
+    if(RTrim(RTrim(RTrim(getMainDir(), "ripts/ShopTitansMk3/Shop Titans/Automation/../../"), "AutoHotKey V2 Sc"), "/OneDrive/Desktop/") == "C:/Users/isaac")
+        return true
+    else
+        return false
+}
+
+return_to_default_pos()
+{
+    a := true
+    attemps := 0
+    while(a)
+    {
+        if(attemps >= 15 or PixelSearch(&pX, &pY, 81, 925, 102, 941, 0xFAD11B, 2) and PixelSearch(&pX, &pY, 17, 30, 60, 51, 0x0162FF, 2) and !PixelSearch(&pX, &pY, 1830, 902, 1867, 937, 0xFFD743, 2))   ;checks quests level and furniture edit button
+        {
+            a := false
+        }
+        else
+        {
+            Send("{Esc}")
+        }
+        Sleep(1000)
+        attemps++
+    }
+    MouseMove(336, 779)
+    SendEvent("{WheelDown 10}")
+    Sleep(100)
+    Loop 7
+    {
+        MouseMove(336, 779)
+        Send("{LButton Down}")
+        Sleep(100)
+        SendMode "Event"
+        MouseMove(1758, 227)
+        Send("{LButton Up}")
+        Sleep(100)
+    }
+    Sleep(500)
+    MouseMove(955, 22)
+    Send("{LButton Down}")
+    Sleep(100)
+    SendMode "Event"
+    MouseMove(400, 130)
+    Send("{LButton Up}")
+    Sleep(100)
+}
+
+restart_shoptitans()
+{
+    Sleep(1000)
+    Send("{Alt Down}{F4}{Alt Up}")
+    Sleep(10000)
+    RunWait("steam://rungameid/1258080")
+    Sleep(10000)
+    WinMaximize("Shop Titans")
+    Sleep(1000)
+}

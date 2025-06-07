@@ -1,8 +1,10 @@
 ﻿#Requires AutoHotkey v2.0
 #include ../lib/helpers.ahk
+#include ../lib/dev_functions.ahk
 #Include SubFunctions/GatherInfo/GemTracker/Gem.ahk
 #Include SubFunctions/Quests/Quest.ahk
 #Include SubFunctions/Customers/ProcessCustomers.ahk
+#Include SubFunctions/Bounties/CollectBounty.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -16,7 +18,7 @@ heroTokenMode := false
     ActivateShopTitans()
     FixWindowFrozen()
     CheckWindowRes(1920, 1009, 10)
-    RunFromTopDir("Shop Titans/Automation/SubFunctions/General/ReturnToDefaultPos.ahk")
+    return_to_default_pos()
     customerZone := [710, 513, 1112, 639]
     MouseMove(customerZone[1], customerZone[2])
     sleep(1000)
@@ -52,7 +54,7 @@ heroTokenMode := false
             }
             else
             {
-                RunWait("SubFunctions\General\RestartShopTitans.ahk")
+                restart_shoptitans()
             }
             restartCounter++
         }
@@ -214,14 +216,16 @@ heroTokenMode := false
             }
             SellerClogDetecter := 0
         }
-        else if(PixelSearch(&pX, &pY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
+        else if(PixelSearch(&pcX, &pcY, customerZone[1], customerZone[2], customerZone[3], customerZone[4], 0xEFEAD6, 1) and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if you cant see guild tokens in the top right(not in city view)
         {
-            ClickAtCoord(pX + 10, pY + 10)
+            ClickAtCoord(pcX + 10, pcY + 10)
             Sleep(500)
             if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle(in the case of a counter upgrade for instance)
             {
                 counter_upgrade := true
                 Send("{Escape}")
+                Sleep(500)
+                ClickAtCoord(pcX + 10 + 75, pcY + 10)
             }
             if(PixelSearch(&pX, &pY, 1828, 897, 1877, 949, 0xFFD743, 2) and PixelSearch(&pX, &pY, 1804, 946, 1820, 962, 0x552B44, 2))        ;check for edit furniture button
             {
@@ -259,7 +263,7 @@ heroTokenMode := false
             }
             else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
             {
-                RunWait("SubFunctions\Customers\ProcessCustomers.ahk")
+                Process_Customers(customerZone, inventory_level)
             }
             loop(5)
             {
@@ -277,6 +281,11 @@ heroTokenMode := false
             Sleep(2000)
             SendEvent("{WheelDown 10}")         ;scroll all the way out
             Sleep(1000)
+          /*  if(Dev_Mode())
+            {
+                Farm_Wood_Chests()
+                
+            }*/
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {
                 ClickAtCoord(995, 410)      ;click the offer help button
@@ -312,6 +321,7 @@ heroTokenMode := false
             if(PixelSearch(&pX, &pY, 262, 934, 305, 959, 0xF5BB0D, 2))       ;scan for market tab
             {
                 RunWait("SubFunctions\Market\CollectAndRelistMarket.ahk")
+                Sleep(1000)
             }
             if(subscription)
             {
@@ -321,9 +331,8 @@ heroTokenMode := false
             else
             {
                 RunWait("SubFunctions\Quests\CollectQuestsSubFree.ahk")       ;collect any finished quests
-                Sleep(2500)
+                Sleep(4000)
             }
-            Sleep(3000)
             if(PixelSearch(&pX, &pY, 654, 164, 1362, 748, 0x11E85C, 2))         ;scan for upgraded furniture
             {
                 ClickAtCoord(pX, pY)        ;click upgrade furniture
@@ -335,7 +344,7 @@ heroTokenMode := false
         }
         else if(tickallocator(tick, "resetPos"))     ;reset position
         {
-            RunWait("SubFunctions\General\ReturnToDefaultPos.ahk")
+            return_to_default_pos()
         }
         else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xEF3214, 2))          ;check for a new recipe notification on the craft button
         {
@@ -368,7 +377,7 @@ heroTokenMode := false
         }
         else if(PixelSearch(&pX, &pY, 246, 918, 284, 956, 0xFFE894, 3) and tickallocator(tick, "bounty"))       ;check on the bounty status
         {
-            RunWait("SubFunctions\Bounties\CollectBounty.ahk")
+            collect_bounty()
         }
         else if(A_Hour < 19 and 16 < A_Hour and piggyBank)
         {
