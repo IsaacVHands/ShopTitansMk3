@@ -15,18 +15,6 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
-    if(Dev_Mode())
-    {
-        if(PixelSearch(&pX, &pY, 478, 337, 935, 397, 0x13E533, 3))
-            MsgBox("high happiness")
-        else if(PixelSearch(&pX, &pY, 478, 337, 935, 397, 0x202020, 3) and PixelSearch(&pX, &pY, 478, 337, 935, 397, 0xF6B614, 3))
-            MsgBox("super happy")
-        if(CheckConfig("questing.lostcityofgold"))
-        {
-            Quest.basic_lcog(0)
-            MsgBox("letsgo?")
-        }
-    }
     ActivateShopTitans()
     FixWindowFrozen()
     CheckWindowRes(1920, 1009, 10)
@@ -98,7 +86,7 @@ heroTokenMode := false
                 }
             }
         }
-        if(A_hour > hour)
+        if(A_Hour > hour)
         {
             gemCount.logGems()
             counter_upgrade := false
@@ -293,7 +281,7 @@ heroTokenMode := false
             Sleep(2000)
             SendEvent("{WheelDown 10}")         ;scroll all the way out
             Sleep(1000)
-            if(Dev_Mode())
+            if(DevMode())
             {
                 ; Farm_Wood_Chests()
                 
@@ -339,15 +327,11 @@ heroTokenMode := false
                 RunWait("SubFunctions\Market\CollectAndRelistMarket.ahk")
                 Sleep(1000)
             }
-            if(subscription)
+            currentQuest := Quest()
+            loop(7)
             {
-                RunWait("SubFunctions\Quests\CollectQuests.ahk")       ;collect any finished quests
-                Sleep(2500)
-            }
-            else
-            {
-                RunWait("SubFunctions\Quests\CollectQuestsSubFree.ahk")       ;collect any finished quests
-                Sleep(4000)
+                currentQuest.questCollector.collectQuest(subscription, CheckConfig("questing.userepairpacks"))      ;collect any finished quests
+                Sleep(500)
             }
             if(PixelSearch(&pX, &pY, 654, 164, 1362, 748, 0x11E85C, 2))         ;scan for upgraded furniture
             {

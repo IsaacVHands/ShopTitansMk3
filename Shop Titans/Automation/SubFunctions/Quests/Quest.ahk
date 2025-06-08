@@ -1,9 +1,14 @@
 ﻿#Requires AutoHotkey v2.0
 #include ../../../lib/helpers.ahk
+#Include QuestCollector.ahk
 #SingleInstance Force
 
 Class Quest
 {
+    __New() 
+    {
+        this.questCollector := QuestCollector()
+    }
     static difficulty_up(n)
     {
         loop(n)

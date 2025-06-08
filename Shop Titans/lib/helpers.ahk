@@ -155,7 +155,7 @@ RunFromTopDir(path)
     RunWait(absolutePath)
 }
 
-Dev_Mode()
+DevMode()
 {
     if(RTrim(RTrim(RTrim(getMainDir(), "ripts/ShopTitansMk3/Shop Titans/Automation/../../"), "AutoHotKey V2 Sc"), "/OneDrive/Desktop/") == "C:/Users/isaac")
         return true
@@ -181,6 +181,7 @@ return_to_default_pos()
         attemps++
     }
     MouseMove(336, 779)
+    Sleep(250)
     SendEvent("{WheelDown 10}")
     Sleep(100)
     Loop 7

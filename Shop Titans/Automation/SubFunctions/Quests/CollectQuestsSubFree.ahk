@@ -31,7 +31,7 @@
                 {
                     if(PixelSearch(&pX, &pY, 1270, 619, 1314, 641, 0x26F863, 2))     ;check for repair button
                     {
-                        ClickAtCoord(pX, pY)     ;click repair with gold
+                        ClickAtCoord(pX, pY)     ;click repair with repair pack
                         Sleep(250)
                     }
                     else
