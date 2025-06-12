@@ -1,6 +1,8 @@
 ﻿#Requires AutoHotkey v2.0
+#Include ../../../lib/helpers.ahk
 #SingleInstance Force
 
+collectAndRelistMarket()
 {
     if(PixelSearch(&pX, &pY, 262, 934, 305, 959, 0xF5BB0D, 2))       ;scan for market tab
     {
@@ -39,12 +41,4 @@
         }
         Send("{Escape}")
     }
-}
-
-ClickAtCoord(x, y)
-{
-    Click(x, y, "Left", "Down")
-    Sleep(50)
-    Click(x, y, "Left", "Up")
-    Sleep(10)
 }

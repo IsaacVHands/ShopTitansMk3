@@ -77,7 +77,6 @@ Class Quest
                 ClickAtCoord(1416, 970)     ;open all tab
             else if(PixelSearch(&pX, &pY, 1616, 950, 1662, 985, 0x251921, 3) and tab == "b")         ;check if the bookmarks tab is not selected 
                 ClickAtCoord(1757, 973)     ;open bookmark tab
-            Sleep(500)
             return true
         }
         else
@@ -85,22 +84,33 @@ Class Quest
     }
     static basic_lcog(numtries)
     {
-        this.open_quest_menu("a")
-        if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
+        if(this.open_quest_menu("a"))
         {
-            ClickAtCoord(pX, pY)        ;open the LCOG quest
-            sleep(500)
-            if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
             {
-                this.maximize_party_difficulty()
-                ClickAtCoord(1301, 761)         ;send quest
-                if(!PixelSearch(&pX, &pY, 27, 930, 39, 943, 0x00FF4F, 3) and numtries < 15)       ;if there are still more questing slots
+                ClickAtCoord(pX, pY)        ;open the LCOG quest
+                sleep(500)
+                if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
                 {
-                    Sleep(7000)
-                    attempt := numtries + 1
-                    this.basic_lcog(attempt)
+                    this.maximize_party_difficulty()
+                    ClickAtCoord(1301, 761)         ;send quest
+                    if(!PixelSearch(&pX, &pY, 27, 930, 39, 943, 0x00FF4F, 3) and numtries < 15)       ;if there are still more questing slots
+                    {
+                        Sleep(7000)
+                        attempt := numtries + 1
+                        this.basic_lcog(attempt)
+                    }
                 }
+                return true
+            }
+            else
+            {
+                send("{Escape}")
+                return false
             }
         }
+        else
+            return true
     }
 }

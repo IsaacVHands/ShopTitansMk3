@@ -130,7 +130,12 @@ Action_Buy(current_customer)
 {
     Sleep(500)
     Customer.SmallTalk()
-    Sleep(500 * 2)
+    Sleep(500)
+    if(PixelSearch(&pX, &pY, 1199, 527, 1220, 545, 0xFF100F, 2))            ;check if you can afoord the discount
+    {
+        ClickAtCoord(1307, 521)          ;click the discount button
+    }
+    Sleep(500)
     Customer.Buy()
     Sleep(500)
     current_customer.UpdateInventory()

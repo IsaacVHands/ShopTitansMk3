@@ -5,6 +5,7 @@
 #Include SubFunctions/Quests/Quest.ahk
 #Include SubFunctions/Customers/ProcessCustomers.ahk
 #Include SubFunctions/Bounties/CollectBounty.ahk
+#Include SubFunctions/Market/CollectAndRelistMarket.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -15,10 +16,17 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
-    ActivateShopTitans()
-    FixWindowFrozen()
-    CheckWindowRes(1920, 1009, 10)
-    return_to_default_pos()
+    if(DevMode() and false)
+    {
+        ; tick := 19 
+    }
+    else
+    {
+        ActivateShopTitans()
+        FixWindowFrozen()
+        CheckWindowRes(1920, 1009, 10)
+        return_to_default_pos()
+    }
     customerZone := [710, 513, 1112, 639]
     MouseMove(customerZone[1], customerZone[2])
     sleep(1000)
@@ -37,6 +45,7 @@ heroTokenMode := false
     hour := A_Hour
     autoUpdate := false
     piggyBank := true
+    lost_city_of_gold := true
     inventory_level := 0.9
     gemCount := Gem()
     a := true
@@ -90,7 +99,10 @@ heroTokenMode := false
         {
             gemCount.logGems()
             counter_upgrade := false
-            WinMaximize("ahk_exe ShopTitan.exe")
+            if(WinExist("ahk_exe ShopTitan.exe"))
+            {
+                WinMaximize("ahk_exe ShopTitan.exe")
+            }
             if(CheckConfig("crafting.enchantments.autotrash"))
             {
                 ClickAtCoord(383, 944)          ;open the inventory
@@ -196,6 +208,7 @@ heroTokenMode := false
         {
             ClickAtCoord(pX + 10, pY + 10)
             Sleep(500)
+            capriceDailyBonus()
             if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle(in the case of a counter upgrade for instance)
             {
                 counter_upgrade := true
@@ -220,6 +233,7 @@ heroTokenMode := false
         {
             ClickAtCoord(pcX + 10, pcY + 10)
             Sleep(500)
+            capriceDailyBonus()
             if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle(in the case of a counter upgrade for instance)
             {
                 counter_upgrade := true
@@ -246,6 +260,16 @@ heroTokenMode := false
         { 
             ClickAtCoord(pX, pY)
             Sleep(500)
+            capriceDailyBonus()
+            if(PixelSearch(&pX, &pY, 1243, 315, 1252, 328, 0xFF481E, 2) and PixelSearch(&pX, &pY, 1262, 315, 1274, 327, 0xFFFFFF, 2))           ;check for red circle and white x for free kings caprice tokens
+            {
+                if(PixelSearch(&pX, &pY, 706, 463, 732, 491, 0x27E250, 2,) or PixelSearch(&pX, &pY, 898, 460, 926, 486, 0x27E251,2))           ;check for green free tokens from kings caprice event
+                {
+                    ClickAtCoord(790, 475)          ;collect the free tokens
+                    Sleep(500)
+                    ClickAtCoord(1267, 322)         ;x out of the menu
+                }
+            }
             if(PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFFFFFF, 2) and PixelSearch(&pX, &pY, 1235, 258, 1280, 301, 0xFF3C18, 2))       ;check for white x and red circle
             {
                 Send("{Escape}")
@@ -281,18 +305,24 @@ heroTokenMode := false
             Sleep(2000)
             SendEvent("{WheelDown 10}")         ;scroll all the way out
             Sleep(1000)
-            if(DevMode())
+            currentQuest := Quest()
+            loop(7)
             {
-                ; Farm_Wood_Chests()
-                
+                currentQuest.questCollector.collectQuest(subscription, CheckConfig("questing.userepairpacks"))      ;collect any finished quests
+                Sleep(500)
             }
-            if(CheckConfig("questing.lostcityofgold"))
+            if(CheckConfig("questing.lostcityofgold") and lost_city_of_gold)
             {
-                Quest.basic_lcog(0)
+                lost_city_of_gold := Quest.basic_lcog(0)
+                Sleep(750)
+            }
+            if(DevMode() and !lost_city_of_gold)
+            {
+                Farm_Wood_Chests()
             }
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {
-                ClickAtCoord(995, 410)      ;click the offer help button
+                ClickAtCoord(993, 416)      ;click the offer help button
                 Sleep(1000)
                 ClickAtCoord(960, 728)      ;click help all
                 Sleep(500)
@@ -324,14 +354,8 @@ heroTokenMode := false
             }
             if(PixelSearch(&pX, &pY, 262, 934, 305, 959, 0xF5BB0D, 2))       ;scan for market tab
             {
-                RunWait("SubFunctions\Market\CollectAndRelistMarket.ahk")
+                collectAndRelistMarket()
                 Sleep(1000)
-            }
-            currentQuest := Quest()
-            loop(7)
-            {
-                currentQuest.questCollector.collectQuest(subscription, CheckConfig("questing.userepairpacks"))      ;collect any finished quests
-                Sleep(500)
             }
             if(PixelSearch(&pX, &pY, 654, 164, 1362, 748, 0x11E85C, 2))         ;scan for upgraded furniture
             {
@@ -339,8 +363,20 @@ heroTokenMode := false
                 Sleep(1000)
                 
             }
-            RunWait("SubFunctions\General\EscapeToShop.ahk")
-            Sleep(1000)
+
+            escapeToShop()
+            Sleep(3000)
+            if(PixelSearch(&pX, &pY, 743, 256, 1261, 749, 0x11E85C, 2))         ;scan for furniture finished upgrading
+            {
+                ClickAtCoord(pX, pY)
+                Sleep(1500)
+                if(PixelSearch(&pX, &pY, 867, 932, 916, 969, 0x23F85D, 2))          ;check for okay button toward the bottom middle of the screen
+                {
+                    ClickAtCoord(966, 945)          ;click okay
+                }
+                Sleep(1000)
+                return_to_default_pos()
+            }
         }
         else if(tickallocator(tick, "resetPos"))     ;reset position
         {
@@ -477,7 +513,7 @@ tickallocator(tickN, event)
     CurrentEvent := ""
     switch(tickN)
     {
-        case 1, 2, 3, 10, 11, 12:
+        case 1, 2, 3, 8, 10, 11, 12:
             CurrentEvent := "customer"
         case 4, 5, 6:
             CurrentEvent := "craft"
@@ -485,7 +521,7 @@ tickallocator(tickN, event)
             CurrentEvent := "bounty"
         case 18:
             CurrentEvent := "closeMenus"
-        case 19:
+        case 9, 19:
             CurrentEvent := "tabCity"       
         case 20:
             CurrentEvent := "resetPos"
@@ -615,7 +651,7 @@ eventPopUpTowerOfTitans()
     }
 }
 
-Give_Gift()
+giveGift()
 {
     if(PixelSearch(&pX, &pY, 719, 503, 758, 524, 0x8FB7DC, 3) or PixelSearch(&pX, &pY, 719, 503, 758, 524, 0xA21D08, 3))       ;scan slot 2 for danial or thomas
     {
@@ -629,4 +665,18 @@ Give_Gift()
     ClickAtCoord(958, 715)      ;click confirm
     Sleep(500)
     ClickAtCoord(958, 715)      ;click finish
+}
+
+capriceDailyBonus()
+{
+    if(PixelSearch(&pX, &pY, 1243, 315, 1252, 328, 0xFF481E, 2) and PixelSearch(&pX, &pY, 1262, 315, 1274, 327, 0xFFFFFF, 2))           ;check for red circle and white x for free kings caprice tokens
+    {
+        if(PixelSearch(&pX, &pY, 706, 463, 732, 491, 0x27E250, 2,) or PixelSearch(&pX, &pY, 898, 460, 926, 486, 0x27E251,2))           ;check for green free tokens from kings caprice event
+        {
+            ClickAtCoord(790, 475)          ;collect the free tokens
+            Sleep(500)
+            ClickAtCoord(1267, 322)         ;x out of the menu
+            Sleep(500)
+        }
+    }
 }

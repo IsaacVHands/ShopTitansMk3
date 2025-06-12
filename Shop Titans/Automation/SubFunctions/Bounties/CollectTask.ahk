@@ -17,4 +17,12 @@ collect_task()
         }
         Sleep(500)
     }
+    ClickAtCoord(1197, 451)         ;click the reset button for the top task
+    Sleep(750)
+    if(PixelSearch(&pX, &pY, 1002, 628, 1028, 655, 0x20F75A, 2))            ;scan for green yes button
+    {
+        ClickAtCoord(pX, pY)         ;click yes
+        Sleep(500)
+    }
+
 }

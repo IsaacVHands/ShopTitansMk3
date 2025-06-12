@@ -52,6 +52,11 @@ class Customer
 			else
 				break
 		}
+		Sleep(500)
+		if(PixelSearch(&pX, &pY, 867, 932, 916, 969, 0x23F85D, 2))          ;check for okay button toward the bottom middle of the screen
+		{
+			ClickAtCoord(966, 945)          ;click okay
+		}
 	}
 	GetType()
 	{

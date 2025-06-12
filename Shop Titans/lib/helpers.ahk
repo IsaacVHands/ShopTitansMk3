@@ -181,7 +181,7 @@ return_to_default_pos()
         attemps++
     }
     MouseMove(336, 779)
-    Sleep(250)
+    Sleep(1500)
     SendEvent("{WheelDown 10}")
     Sleep(100)
     Loop 7
@@ -213,4 +213,23 @@ restart_shoptitans()
     Sleep(10000)
     WinMaximize("Shop Titans")
     Sleep(1000)
+}
+
+escapeToShop()
+{
+    a := true
+    attemps := 0
+    while(a)
+    {
+        if(attemps == 30 or PixelSearch(&pX, &pY, 81, 925, 102, 941, 0xFAD11B, 2) and PixelSearch(&pX, &pY, 17, 30, 60, 51, 0x0162FF, 2) and !PixelSearch(&pX, &pY, 1830, 902, 1867, 937, 0xFFD743, 2))   ;checks quests level and furniture edit button
+        {
+            a := false
+        }
+        else
+        {
+            Send("{Esc}")
+        }
+        Sleep(700)
+        attemps++
+    }
 }
