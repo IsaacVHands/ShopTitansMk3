@@ -85,7 +85,7 @@ find_customer(customerZone, counter_upgrade)
         }
         else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
         {
-            Process_Customers(customerZone, inventory_level)
+            ; Process_Customers(customerZone, inventory_level)
         }
         loop(5)
         {

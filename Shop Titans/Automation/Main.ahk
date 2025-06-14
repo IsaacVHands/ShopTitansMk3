@@ -18,7 +18,7 @@ heroTokenMode := false
 {
     if(DevMode() and false)
     {
-        ; tick := 19 
+        tick := 19 
     }
     else
     {
@@ -140,6 +140,15 @@ heroTokenMode := false
         {
             loop(5)
             {
+                if(PixelSearch(&pX, &pY, 890, 553, 928, 594, 0xCDA151, 2))          ;checks if there is a gift here
+                {
+                    ClickAtCoord(918, 543)          ;open gift
+                    Sleep(1000)
+                    if(PixelSearch(&pX, &pY, 865, 937, 895, 969, 0x1FF65A, 2))          ;check for okay button
+                    {
+                        ClickAtCoord(958, 947)          ;click okay
+                    }
+                }
                 if(PixelSearch(&pX, &pY, 74, 883, 174, 932, 0xEFE7D3, 1) and PixelSearch(&pX, &pY,898, 836, 984, 906, 0xEFE7D3, 1) and PixelSearch(&pX, &pY, 1689, 860, 1804, 930, 0xEFE7D3, 1))
                 {
                     ClickAtCoord(930, 889)      ;click through the diolog
@@ -316,9 +325,11 @@ heroTokenMode := false
                 lost_city_of_gold := Quest.basic_lcog(0)
                 Sleep(750)
             }
-            if(DevMode() and !lost_city_of_gold)
+            else
+                lost_city_of_gold := false
+            if(CheckConfig("questing") and !lost_city_of_gold)
             {
-                Farm_Wood_Chests()
+                Quest.farmEasyChests(0)
             }
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {
