@@ -6,6 +6,7 @@
 #Include SubFunctions/Customers/ProcessCustomers.ahk
 #Include SubFunctions/Bounties/CollectBounty.ahk
 #Include SubFunctions/Market/CollectAndRelistMarket.ahk
+#Include SubFunctions/General/ConfigManager.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -37,7 +38,7 @@ heroTokenMode := false
     else
         subscription := false
     global surchargeCost
-
+    configs := ConfigManager()
     counter_upgrade := false
     ExtraInventory := false
     AutomaticRestartTimer := 0
@@ -103,7 +104,7 @@ heroTokenMode := false
             {
                 WinMaximize("ahk_exe ShopTitan.exe")
             }
-            if(CheckConfig("crafting.enchantments.autotrash"))
+            if(configs.crafting_enchantments_autotrash)
             {
                 ClickAtCoord(383, 944)          ;open the inventory
                 Sleep(1000)
@@ -317,17 +318,17 @@ heroTokenMode := false
             currentQuest := Quest()
             loop(7)
             {
-                currentQuest.questCollector.collectQuest(subscription, CheckConfig("questing.userepairpacks"))      ;collect any finished quests
+                currentQuest.questCollector.collectQuest(subscription, configs.questing_userepairpacks)      ;collect any finished quests
                 Sleep(500)
             }
-            if(CheckConfig("questing.lostcityofgold") and lost_city_of_gold)
+            if(configs.questing_lostcityofgold and lost_city_of_gold)
             {
                 lost_city_of_gold := Quest.basic_lcog(0)
                 Sleep(750)
             }
             else
                 lost_city_of_gold := false
-            if(CheckConfig("questing") and !lost_city_of_gold)
+            if(configs.questing and !lost_city_of_gold)
             {
                 Quest.farmEasyChests(0)
             }
