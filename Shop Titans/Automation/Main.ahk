@@ -328,6 +328,7 @@ heroTokenMode := false
             }
             else
                 lost_city_of_gold := false
+            Quest.EscapeStuckCases(5)
             if(configs.questing and !lost_city_of_gold)
             {
                 Quest.farmEasyChests(0)

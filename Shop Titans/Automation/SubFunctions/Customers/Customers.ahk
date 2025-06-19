@@ -1,5 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 #Include ../../../lib/helpers.ahk
+#Include Basic.ahk
 #Include Case_Manager.ahk
 #SingleInstance Force
 
@@ -14,31 +15,31 @@ class Customer
 	}
 	static Refuse()
 	{
-		ClickAtCoord(684, 633)      ;refuse
+		Basic.Refuse()      ;refuse
 	}
 	static SmallTalk()
 	{
-		ClickAtCoord(632, 523)      ;smalltalk
+		Basic.SmallTalk()      ;smalltalk
 	}
 	static Surcharge()
 	{
-		ClickAtCoord(1279, 518)        ;surcharge
+		Basic.Surcharge()        ;surcharge
 	}
 	static Sell()
 	{
-		ClickAtCoord(1303, 630)     ;sell
+		Basic.Sell()     ;sell
 	}
 	static Buy()
 	{
-		ClickAtCoord(1303, 630)     ;Buy
+		Basic.Buy()     ;Buy
 	}
 	static Suggest()
 	{
-		ClickAtCoord(649, 522)      ;suggest
+		Basic.Suggest()      ;suggest
 	}
 	static Wait()
 	{
-		ClickAtCoord(968, 756)      ;Wait
+		Basic.Wait()      ;Wait
 	}
 	static Dialog()
 	{

@@ -6,31 +6,31 @@ class Basic
 {
     static Refuse()
 	{
-		ClickAtCoord(684, 633)      ;refuse
+		SendInput("z")      ;refuse
 	}
 	static SmallTalk()
 	{
-		ClickAtCoord(632, 523)      ;smalltalk
+		SendInput("s")      ;smalltalk
 	}
 	static Surcharge()
 	{
-		ClickAtCoord(1279, 518)        ;surcharge
+		SendInput("f")        ;surcharge
 	}
 	static Sell()
 	{
-		ClickAtCoord(1303, 630)     ;sell
+		SendInput("c")     ;sell
 	}
 	static Buy()
 	{
-		ClickAtCoord(1303, 630)     ;Buy
+		this.Sell()     ;Buy
 	}
 	static Suggest()
 	{
-		ClickAtCoord(649, 522)      ;suggest
+		SendInput("q")      ;suggest
 	}
 	static Wait()
 	{
-		ClickAtCoord(968, 756)      ;Wait
+		SendInput("x")      ;Wait
 	}
 	static Dialog()
 	{
