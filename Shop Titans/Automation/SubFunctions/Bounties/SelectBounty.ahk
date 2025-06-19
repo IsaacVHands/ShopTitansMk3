@@ -14,7 +14,12 @@ select_bounty()
         ClickAtCoord(978, 750)      ;click go to bounty board
         Sleep(500)
         ClickAtCoord(972, 497)      ;click on the first bounty
-        loop 20
+        Sleep(500)
+        if(PixelSearch(&pX, &pY, 709, 403, 740, 437, 0x95420E, 2))          ;check if a bounty was not clicked on
+        {
+            ClickAtCoord(1000, 497)      ;click on the first bounty but slitely lower than the last attempt
+        }
+        loop 30
         {
             if(SelectBounty(801, 543, 809, 550, 0x65E321) or SelectBounty(792, 527, 817, 563, 0x6EFF2E) or SelectBounty(817, 521, 828, 558, 0xE3B919))      ;check for green on the bounty(I.E. its a surcharge/sell item bounty) or yellow for smalltalk
             {

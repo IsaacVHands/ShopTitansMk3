@@ -24,3 +24,24 @@ Farm_Wood_Chests()
     }
     ; }
 }
+
+TakeScreenShot(x1, y1, x2, y2)
+{
+    SendMode("Event")
+    Send("{Ctrl Down}")
+    Sleep(100)
+    Send("{PrintScreen}")
+    Sleep(100)
+    Send("{Ctrl Up}")
+    Sleep(200)
+    MouseClickDrag("Left", x1, y1, x2, y2)
+    Sleep(200)
+}
+
+MoveScreenShot()
+{
+    YearMonth := A_YYYY "-" A_MM
+    PullAddress := "C:\Users\isaac\OneDrive\Documents\ShareX\Screenshots\" YearMonth "\ShopTitan_*.png"
+    FileCopy(PullAddress, "C:\Users\isaac\OneDrive\Desktop\AutoHotKey V2 Scripts\ShopTitansMk3\Shop Titans\Automation\SubFunctions\GatherInfo\GemTracker\images")
+    FileDelete(PullAddress)
+}

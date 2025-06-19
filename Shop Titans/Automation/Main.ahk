@@ -17,7 +17,7 @@ tick := 0
 craftMode := true
 heroTokenMode := false
 {
-    if(DevMode() and false)
+    if(DevMode())
     {
         tick := 19 
     }

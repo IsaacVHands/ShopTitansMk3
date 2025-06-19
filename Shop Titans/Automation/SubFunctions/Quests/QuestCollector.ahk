@@ -1,6 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 #SingleInstance Force
 #Include ../../../lib/helpers.ahk
+#Include ../../../lib/dev_functions.ahk
 
 class QuestCollector
 {
@@ -94,6 +95,14 @@ class QuestCollector
             if(PixelSearch(&pX, &pY, 704, 734, 747, 763, 0x522C44, 2) or PixelSearch(&pX, &pY, 839, 726, 895, 772, 0xE3A00D, 2))      ;check for collect button, or gold collect button
             {
                 Sleep(500)
+                if(DevMode())
+                {
+                    if(PixelSearch(&pX, &pY, 660, 562, 1297, 718, 0x34EAF7, 4))         ;check if there are gems in the loot
+                    {
+                        TakeScreenShot(2216, 579, 2953, 725)
+                        MsgBox("Found the gems!!!")
+                    }
+                }
                 ClickAtCoord(895, 772)
                 Sleep(5000)
                 if(PixelSearch(&pX, &pY, 1861, 73, 1906, 115, 0xFF3E16, 3) and PixelSearch(&pX, &pY, 1861, 73, 1906, 115, 0xFFFFFF, 3))         ;check if event progress screen has popped up
