@@ -7,6 +7,7 @@
 #Include SubFunctions/Bounties/CollectBounty.ahk
 #Include SubFunctions/Market/CollectAndRelistMarket.ahk
 #Include SubFunctions/General/ConfigManager.ahk
+#Include SubFunctions/Crafting/Craft.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -14,12 +15,12 @@ surchargeCost := 0.1
 restartCounter := 0
 tick := 0
 
-craftMode := true
 heroTokenMode := false
 {
-    if(DevMode())
+    customerZone := [710, 513, 1112, 639]
+    if(DevMode() and false)
     {
-        tick := 19 
+        tick := 4 
     }
     else
     {
@@ -27,12 +28,11 @@ heroTokenMode := false
         FixWindowFrozen()
         CheckWindowRes(1920, 1009, 10)
         return_to_default_pos()
-    }
-    customerZone := [710, 513, 1112, 639]
     MouseMove(customerZone[1], customerZone[2])
     sleep(1000)
     MouseMove(customerZone[3], customerZone[4])
     sleep(1000)
+    }
     if(PixelSearch(&pX, &pY, 8, 4, 29, 22, 0xEDC53F, 2))
         subscription := true
     else
@@ -318,9 +318,11 @@ heroTokenMode := false
             currentQuest := Quest()
             loop(7)
             {
-                currentQuest.questCollector.collectQuest(subscription, configs.questing_userepairpacks)      ;collect any finished quests
+                if(!currentQuest.questCollector.collectQuest(subscription, configs.questing_userepairpacks))      ;collect any finished quests
+                    break
                 Sleep(500)
             }
+            Sleep(500)
             if(configs.questing_lostcityofgold and lost_city_of_gold)
             {
                 lost_city_of_gold := Quest.basic_lcog(0)
@@ -382,6 +384,10 @@ heroTokenMode := false
             if(PixelSearch(&pX, &pY, 743, 256, 1261, 749, 0x11E85C, 2))         ;scan for furniture finished upgrading
             {
                 ClickAtCoord(pX, pY)
+                if(PixelSearch(&pX, &pY, 620, 181, 1277, 766, 0x35FF5C, 2))         ;scan again for furniture finished upgrading
+                {
+                    ClickAtCoord(pX, pY)
+                }
                 Sleep(1500)
                 if(PixelSearch(&pX, &pY, 867, 932, 916, 969, 0x23F85D, 2))          ;check for okay button toward the bottom middle of the screen
                 {
@@ -416,13 +422,15 @@ heroTokenMode := false
                 }
             }
         }
-        else if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3) and GetStoredInfo("InventoryCapacity.txt", "int") < 0.9 and tickallocator(tick, "craft") and craftMode == true)       ;check if the item is done crafting
+        else if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3) and GetStoredInfo("InventoryCapacity.txt", "int") < 0.9 and tickallocator(tick, "craft") and configs.crafting == true)       ;check if the item is done crafting
         {
-            RunWait("SubFunctions\Manufacture\CraftExacutable.ahk")     ;launch the crafter
+            Craft.CollectItems(10)
+            Sleep(500)
+            Craft.FigureItOut()
         }
-        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and GetStoredInfo("InventoryCapacity.txt", "int") < 0.9 and tickallocator(tick, "craft") and  craftMode == true)       ;check if there is an empty crafting slot
+        else if(PixelSearch(&pX, &pY, 1838, 851, 1880, 889, 0xFFB529, 3) and GetStoredInfo("InventoryCapacity.txt", "int") < 0.9 and tickallocator(tick, "craft") and  configs.crafting == true)       ;check if there is an empty crafting slot
         {
-            RunWait("SubFunctions\Manufacture\CraftQuick.ahk")     ;launch the quick crafter
+            Craft.FigureItOut()     ;launch the crafter
         }
         else if(PixelSearch(&pX, &pY, 246, 918, 284, 956, 0xFFE894, 3) and tickallocator(tick, "bounty"))       ;check on the bounty status
         {
@@ -526,11 +534,11 @@ tickallocator(tickN, event)
     CurrentEvent := ""
     switch(tickN)
     {
-        case 1, 2, 3, 8, 10, 11, 12:
+        case 1, 2, 3, 6, 7, 10, 11, 14, 15, 16:
             CurrentEvent := "customer"
-        case 4, 5, 6:
+        case 4, 12:
             CurrentEvent := "craft"
-        case 7:
+        case 5:
             CurrentEvent := "bounty"
         case 18:
             CurrentEvent := "closeMenus"

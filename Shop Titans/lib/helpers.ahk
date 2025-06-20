@@ -234,3 +234,14 @@ escapeToShop()
     }
 }
 
+waitForEvent(x1, y1, x2, y2, colour, scanInterval, secMaxWait)
+{
+    loop((secMaxWait*1000)/scanInterval)
+    {
+        if(PixelSearch(&pX, &pY, x1, y1, x2, y2, colour, 3))
+        {
+            return true
+        }
+    }
+    return false
+}

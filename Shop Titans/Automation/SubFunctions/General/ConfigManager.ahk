@@ -6,6 +6,23 @@ Class ConfigManager
 {
     __New() 
     {
+        this.crafting := false
+        this.crafting_buycomponents := false
+        this.crafting_buycomponents_maxbuyprice := false
+        this.crafting_mastery := false
+        this.crafting_bookmarkpriority := false
+        this.crafting_enchantments_autotrash := false
+        this.questing := false
+        this.questing_regularquests := false
+        this.questing_keyquests := false
+        this.questing_userepairpacks := false
+        this.questing_events := false
+        this.questing_toweroftitans := false
+        this.questing_lostcityofgold := false
+        this.market := false
+        this.market_collect := false
+        this.market_offer := false
+        this.market_request := false
         configFile := getMainDir() "/Shop Titans/Config.txt"
         loop read configFile
         {

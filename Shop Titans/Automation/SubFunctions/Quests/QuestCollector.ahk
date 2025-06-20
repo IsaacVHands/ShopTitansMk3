@@ -9,7 +9,7 @@ class QuestCollector
     {
         if(PixelSearch(&pX, &pY, 1643, 961, 1722, 998, 0x71571B, 3))        ;check if quest is ready
         {
-            ClickAtCoord(1681, 942)            ;click on the ready quest
+            SendInput("f")            ;click on the ready quest
             return true
         }
     }
@@ -64,7 +64,8 @@ class QuestCollector
                 }
                 else
                 {
-                    MsgBox("fix this")
+                    if(DevMode())
+                        MsgBox("fix this")
                     if(PixelSearch(&pX, &pY, 1270, 619, 1314, 641, 0x26F863, 2))     ;check for repair button
                     {
                         ClickAtCoord(pX, pY)     ;click repair with repair pack
@@ -97,14 +98,13 @@ class QuestCollector
                 Sleep(500)
                 if(DevMode())
                 {
-                    if(PixelSearch(&pX, &pY, 660, 562, 1297, 718, 0x34EAF7, 4))         ;check if there are gems in the loot
+                    if(PixelSearch(&pX, &pY, 660, 562, 1297, 718, 0x30EBEF, 2))         ;check if there are gems in the loot
                     {
                         TakeScreenShot(2216, 579, 2953, 725)
-                        MsgBox("Found the gems!!!")
                     }
                 }
                 ClickAtCoord(895, 772)          ;click collect/collect all
-                Sleep(5000)
+                Sleep(1000)
                 if(PixelSearch(&pX, &pY, 1861, 73, 1906, 115, 0xFF3E16, 3) and PixelSearch(&pX, &pY, 1861, 73, 1906, 115, 0xFFFFFF, 3))         ;check if event progress screen has popped up
                 {
                     Send("{Escape}")
@@ -128,6 +128,9 @@ class QuestCollector
             this.fixBrokenEquipment(subStatus, repairPackSetting)
             Sleep(250)
             this.clickThroughLootScreen()
+            return true
         }
+        else 
+            return false
     }
 }

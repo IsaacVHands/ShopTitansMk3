@@ -6,7 +6,7 @@ collectAndRelistMarket()
 {
     if(PixelSearch(&pX, &pY, 262, 934, 305, 959, 0xF5BB0D, 2))       ;scan for market tab
     {
-        ClickAtCoord(pX, pY)
+        SendInput("2")          ;open market tab
         Sleep(500)
         loop(4)
         {

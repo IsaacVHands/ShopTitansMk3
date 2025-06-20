@@ -4,13 +4,13 @@
 
 Class Craft
 {
-    static CollectItem(craftingSlots)
+    static CollectItems(craftingSlots)
     {
         loop(craftingSlots)
         {
             if(PixelSearch(&pX, &pY, 1647, 964, 1719, 997, 0xFFCB19, 3))        ;checks if an item is ready to be collected
             {
-                ClickAtCoord(1686, 935)     ;collects first crafting slot
+                SendInput("f")     ;collects first crafting slot
                 Sleep(750)
                 if(!PixelSearch(&pX, &pY, 1848, 935, 1855, 943, 0x1E783F, 2))      ;check if it was a quality item thus needing the collect button pushed
                 {
@@ -41,7 +41,7 @@ Class Craft
         {
             ClickAtCoord(1803, 822)         ;swap the crafting into the main possition
         }
-        if(PixelSearch(&pX, &pY, 1841, 859, 1856, 879, 0xFFB22A, 2))            ;check if 
+        ; if(PixelSearch(&pX, &pY, 1841, 859, 1856, 879, 0xFFB22A, 2))            ;check if 
     }
 
     static CraftItem(xCoord)
@@ -57,33 +57,40 @@ Class Craft
                 {
                     ClickAtCoord(834, 683)      ;click market button
                     sleep(750)
-                    loop 10
+                    if(PixelSearch(&pX, &pY, 740, 722, 803, 747, 0x7E7E7E, 2))         ;checks if there are no components on the market
                     {
-                        if(PixelSearch(&pX, &pY, 740, 722, 803, 747, 0x7E7E7E, 2))         ;checks if there are no components on the market
+                        loop 2
                         {
-                            loop 2
-                            {
-                                Send("{Escape}")
-                                Sleep(500)
-                            }
-                            info := -1
-                            break
+                            Send("{Escape}")
+                            Sleep(500)
                         }
-                        else if(PixelSearch(&pX, &pY, 919, 372, 991, 450, 0x9A9991, 2) and PixelSearch(&pX, &pY, 919, 372, 991, 450, 0x898A84, 2))          ;check if its a runestone
+                        info := -1
+                    }
+                    else if(PixelSearch(&pX, &pY, 919, 372, 991, 450, 0x9A9991, 2) and PixelSearch(&pX, &pY, 919, 372, 991, 450, 0x898A84, 2))          ;check if its a runestone
+                    {
+                        loop 2
                         {
-                            loop 2
-                            {
-                                Send("{Escape}")
-                                Sleep(500)
-                            }
-                            info := -1
-                            break
+                            Send("{Escape}")
+                            Sleep(500)
                         }
-                        else
+                        info := -1
+                    }
+                    else
+                    {
+                        loop(10)
                         {
+                            if(PixelSearch(&pX, &pY, 740, 722, 803, 747, 0x7E7E7E, 2))         ;checks if there are no components on the market
+                            {
+                                loop 2
+                                {
+                                    Send("{Escape}")
+                                    Sleep(500)
+                                }
+                                break 
+                            }
                             ClickAtCoord(835, 731)         ;click buy
+                            Sleep(750)
                         }
-                        Sleep(750)
                     }
                     if(PixelSearch(&pX, &pY, 732, 724, 770, 745, 0xBA7D1F, 2))       ;check if its still in the components buying menu
                     {

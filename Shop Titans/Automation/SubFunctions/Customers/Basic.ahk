@@ -18,7 +18,7 @@ class Basic
 	}
 	static Sell()
 	{
-		SendInput("c")     ;sell
+		ClickAtCoord(1260, 633)     ;sell
 	}
 	static Buy()
 	{

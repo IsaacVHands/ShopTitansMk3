@@ -23,6 +23,10 @@ Class Quest
     }
     static difficulty_down(n)
     {
+        if(PixelSearch(&pX, &pY, 1090, 632, 1097, 641, 0x522C44, 2))
+        {
+            return true
+        }
         loop(n)
         {
             ClickAtCoord(1090, 635)         ;click difficulty down
@@ -32,6 +36,7 @@ Class Quest
                 break
             }
         }
+        return false
     }
     Static get_hero_happiness()
     {
@@ -69,9 +74,9 @@ Class Quest
         {
             return true
         }
-        if(PixelSearch(&pX, &pY, 215, 890, 226, 920, 0xFFB629, 3) and PixelSearch(&pX, &pY, 1866, 851, 1879, 877, 0xFFB42A, 3))            ;check for extra heroes and quest slots
+        else if(PixelSearch(&pX, &pY, 215, 890, 226, 920, 0xFFB629, 3) and PixelSearch(&pX, &pY, 1866, 851, 1879, 877, 0xFFB42A, 3))            ;check for extra heroes and quest slots
         {
-            ClickAtCoord(1810, 923)         ;open quest menu
+            SendInput("{Space}")         ;open quest menu
             Sleep(1000)
             if(PixelSearch(&pX, &pY, 1305, 947, 1344, 979, 0x251921, 3) and tab == "a")         ;check if the all tab is not selected
                 ClickAtCoord(1416, 970)     ;open all tab
@@ -123,8 +128,8 @@ Class Quest
         {
             ClickAtCoord(106, 736)          ;open first bookmarked quest
             Sleep(750)
-            this.difficulty_down(3)
-            Sleep(250)
+            if(this.difficulty_down(3))
+                Sleep(250)
             this.launch_quest()
             Sleep(1500)
             if(PixelSearch(&pX, &pY, 898, 953, 934, 994, 0x522C44, 2) and iteration < 15)          ;check if the quest menu is still open, i.e. there are more heroes to send out and more quest slots to fill
