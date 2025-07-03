@@ -234,9 +234,9 @@ escapeToShop()
     }
 }
 
-waitForEvent(x1, y1, x2, y2, colour, scanInterval, secMaxWait)
+waitForEvent(x1, y1, x2, y2, colour, scanInterval, msMaxWait)
 {
-    loop((secMaxWait*1000)/scanInterval)
+    loop((msMaxWait)/scanInterval)
     {
         if(PixelSearch(&pX, &pY, x1, y1, x2, y2, colour, 3))
         {

@@ -17,10 +17,11 @@ tick := 0
 
 heroTokenMode := false
 {
+    configs := ConfigManager()
     customerZone := [710, 513, 1112, 639]
     if(DevMode() and false)
     {
-        tick := 4 
+        tick := 19 
     }
     else
     {
@@ -28,17 +29,16 @@ heroTokenMode := false
         FixWindowFrozen()
         CheckWindowRes(1920, 1009, 10)
         return_to_default_pos()
-    MouseMove(customerZone[1], customerZone[2])
-    sleep(1000)
-    MouseMove(customerZone[3], customerZone[4])
-    sleep(1000)
+        MouseMove(customerZone[1], customerZone[2])
+        sleep(1000)
+        MouseMove(customerZone[3], customerZone[4])
+        sleep(1000)
     }
     if(PixelSearch(&pX, &pY, 8, 4, 29, 22, 0xEDC53F, 2))
         subscription := true
     else
         subscription := false
     global surchargeCost
-    configs := ConfigManager()
     counter_upgrade := false
     ExtraInventory := false
     AutomaticRestartTimer := 0
@@ -49,8 +49,8 @@ heroTokenMode := false
     lost_city_of_gold := true
     inventory_level := 0.9
     gemCount := Gem()
-    a := true
-    while a == true
+    mainLoop := true
+    while mainLoop == true
     {
         sellingMode := false
         buyingMode := false
@@ -216,6 +216,7 @@ heroTokenMode := false
         }
         else if(PixelSearch(&pX, &pY, customerZone[1], (customerZone[2] + 113), customerZone[3], customerZone[4], 0xEFE7D3, 1) and counter_upgrade and !PixelSearch(&pXb, &pYb, 1387, 23, 1413, 48, 0xFFE55C, 2) and tickallocator(tick, "customer"))         ;Look for and click on the customer bubble, if there is a counter upgrade active, and if you cant see guild tokens in the top right(not in city view)
         {
+            currentCustomer := Customer(inventory_level)
             ClickAtCoord(pX + 10, pY + 10)
             Sleep(500)
             capriceDailyBonus()
@@ -229,7 +230,7 @@ heroTokenMode := false
                 Send("{Esc}")
                 Sleep(250)
             }
-            else if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
+            else if(currentCustomer.scan.WaitButton())        ;check for wait button
             {
                 inventory_level := Process_Customers(customerZone, inventory_level)
             }
@@ -378,16 +379,23 @@ heroTokenMode := false
                 Sleep(1000)
                 
             }
-
+            if(A_Hour < 18 and A_Hour > 15)
+                Quest.openAllChests()
             escapeToShop()
             Sleep(3000)
+            a := false
             if(PixelSearch(&pX, &pY, 743, 256, 1261, 749, 0x11E85C, 2))         ;scan for furniture finished upgrading
             {
                 ClickAtCoord(pX, pY)
-                if(PixelSearch(&pX, &pY, 620, 181, 1277, 766, 0x35FF5C, 2))         ;scan again for furniture finished upgrading
-                {
-                    ClickAtCoord(pX, pY)
-                }
+                a := true
+            }
+            else if(PixelSearch(&pX, &pY, 620, 181, 1277, 766, 0x35FF5C, 2))         ;scan again for furniture finished upgrading
+            {
+                ClickAtCoord(pX, pY)
+                a := true
+            }
+            if(a)
+            {
                 Sleep(1500)
                 if(PixelSearch(&pX, &pY, 867, 932, 916, 969, 0x23F85D, 2))          ;check for okay button toward the bottom middle of the screen
                 {

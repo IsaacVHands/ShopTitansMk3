@@ -1,5 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 #Include ../../../lib/helpers.ahk
+#Include Scan.ahk
 #Include Basic.ahk
 #Include Case_Manager.ahk
 #SingleInstance Force
@@ -12,6 +13,7 @@ class Customer
 		this.inventory := inventory
 		this.Type := ""
 		this.case_manager := Case_Manager()
+		this.scan := Scan()
 	}
 	static Refuse()
 	{

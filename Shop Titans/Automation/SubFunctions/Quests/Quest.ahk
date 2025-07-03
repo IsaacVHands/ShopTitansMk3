@@ -1,6 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 #include ../../../lib/helpers.ahk
 #Include QuestCollector.ahk
+#Include OpenChests.ahk
 #SingleInstance Force
 
 Class Quest
@@ -149,6 +150,15 @@ Class Quest
                 ClickAtCoord(895, 772)          ;click collect/collect all
             }
             Sleep(100)
+        }
+    }
+    static openAllChests()
+    {
+        if(OpenChests.openChestMenu())
+        {
+            OpenChests.unlockChests()
+            Sleep(500)
+            OpenChests.closeChestMenu()
         }
     }
 }

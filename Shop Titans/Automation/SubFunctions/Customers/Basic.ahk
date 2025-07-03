@@ -7,6 +7,11 @@ class Basic
     static Refuse()
 	{
 		SendInput("z")      ;refuse
+		Sleep(500)
+		if(PixelSearch(&pX, &pY, 1003, 622, 1048, 657, 0x21F75D, 2))			;check if it is checking if you are sure
+		{
+			ClickAtCoord(1080, 643)			;click yes
+		}
 	}
 	static SmallTalk()
 	{
