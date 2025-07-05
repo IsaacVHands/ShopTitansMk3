@@ -17,9 +17,13 @@ tick := 0
 
 heroTokenMode := false
 {
+    mouseMove(478, 337)
+    Sleep(1000)
+    MouseMove(935,397)
+    Sleep(1000)
     configs := ConfigManager()
     customerZone := [710, 513, 1112, 639]
-    if(DevMode() and false)
+    if(DevMode() and true)
     {
         tick := 19 
     }
@@ -98,6 +102,7 @@ heroTokenMode := false
         }
         if(A_Hour > hour)
         {
+            lost_city_of_gold := true
             gemCount.logGems()
             counter_upgrade := false
             if(WinExist("ahk_exe ShopTitan.exe"))
@@ -444,7 +449,7 @@ heroTokenMode := false
         {
             collect_bounty()
         }
-        else if(A_Hour < 19 and 16 < A_Hour and piggyBank)
+        else if(A_Hour < 22 and 16 < A_Hour and piggyBank)
         {
             ClickAtCoord(1881, 37)          ;click the white bars in the top right
             Sleep(500)
