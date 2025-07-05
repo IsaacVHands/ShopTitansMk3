@@ -13,9 +13,9 @@ Class Furniture
         {
             return false
         }
-        else if(PixelSearch(&pX, &pY, 1807, 945, 1824, 970, 0x552B44, 2))         ;check for edit button
+        else if(PixelSearch(&pX, &pY, 1721, 923, 1734, 937, 0x37FF5D, 2))         ;check for edit button
         {
-            ;
+            
         }
     }
 }

@@ -66,6 +66,15 @@ Class Quest
                 {
                     ClickAtCoord(1295, 404)         ;add hero
                 }
+                else
+                {
+                    if(!PixelSearch(&pX, &pY, 1220, 726, 1232, 741, 0x29F863, 2))            ;check for green launch quest button not being there
+                    {
+                        ClickAtCoord(1524, 206)
+                        Sleep(500)
+                    }
+                    break
+                }
                 Sleep(333)
             }
         }
@@ -87,6 +96,14 @@ Class Quest
                 break
         }
     }
+    /*static get_hero_availability()
+    {
+        if(PixelSearch(&pX, &pY, 215, 890, 226, 920, 0xFFB629, 3) and PixelSearch(&pX, &pY, 1866, 851, 1879, 877, 0xFFB42A, 3))            ;check for extra heroes and quest slots
+        {
+            return true
+        }
+        else if()
+    }*/
     static open_quest_menu(tab)
     {
         if(PixelSearch(&pX, &pY, 548, 947, 579, 973, 0x522C44, 2))          ;check if the questing menu is already open
@@ -110,7 +127,7 @@ Class Quest
     {
         if(this.open_quest_menu("a"))
         {
-            Sleep(500)
+            Sleep(1000)
             if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
             {
                 ClickAtCoord(pX, pY)        ;open the LCOG quest
