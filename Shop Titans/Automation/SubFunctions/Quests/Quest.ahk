@@ -96,21 +96,45 @@ Class Quest
                 break
         }
     }
-    /*static get_hero_availability()
+    static get_hero_availability()
     {
-        if(PixelSearch(&pX, &pY, 215, 890, 226, 920, 0xFFB629, 3) and PixelSearch(&pX, &pY, 1866, 851, 1879, 877, 0xFFB42A, 3))            ;check for extra heroes and quest slots
+        if(PixelSearch(&pX, &pY, 1866, 851, 1879, 877, 0xFFB42A, 3))            ;check for available questing slots
         {
-            return true
+            if(PixelSearch(&pX, &pY, 215, 890, 226, 920, 0xFFB629, 3))            ;check for extra heroes and quest slots
+            {
+                return true
+            }
+            else if(PixelSearch(&pX, &pY, 215, 890, 226, 920, 0xF53516, 2))         ;check if there is a red exclamtion mark on the hero number slot
+            {
+                Send("1")
+                Sleep(1000)
+                ClickAtCoord(1374, 967)      ;open the hero line
+                Sleep(500)
+                if(PixelSearch(&pX, &pY, 282, 893, 286, 898, 0x6EFF2E, 2))          ;check for ready hero
+                {
+                    send("{Escape}")
+                    Sleep(500)
+                    return true
+                }
+                ClickAtCoord(1581, 964)
+                sleep(500)
+                if(PixelSearch(&pX, &pY, 282, 893, 286, 898, 0x6EFF2E, 2))          ;check for ready champion
+                {
+                    send("{Escape}")
+                    Sleep(500)
+                    return true
+                }
+            }
         }
-        else if()
-    }*/
+        return false
+    }
     static open_quest_menu(tab)
     {
         if(PixelSearch(&pX, &pY, 548, 947, 579, 973, 0x522C44, 2))          ;check if the questing menu is already open
         {
             return true
         }
-        else if(PixelSearch(&pX, &pY, 215, 890, 226, 920, 0xFFB629, 3) and PixelSearch(&pX, &pY, 1866, 851, 1879, 877, 0xFFB42A, 3))            ;check for extra heroes and quest slots
+        else if(this.get_hero_availability())            ;check for extra heroes and quest slots
         {
             SendInput("{Space}")         ;open quest menu
             Sleep(1000)
