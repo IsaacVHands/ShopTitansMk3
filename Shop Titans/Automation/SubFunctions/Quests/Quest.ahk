@@ -32,7 +32,7 @@ Class Quest
         {
             ClickAtCoord(1090, 635)         ;click difficulty down
             Sleep(333)          
-            if(PixelSearch(&pX, &pY, 1090, 632, 1097, 641, 0x522C44, 2))
+            if(PixelSearch(&pX, &pY, 1090, 632, 1097, 641, 0x522C44, 2))            ;check if difficulty is minimized
             {
                 break
             }
@@ -51,6 +51,24 @@ Class Quest
     Static launch_quest()
     {
         ClickAtCoord(1297, 760)         ;click explore area
+    }
+    static fix_overawed_party()
+    {
+        if(PixelSearch(&pX, &pY, 1222, 726, 1238, 739, 0x29653A, 2))            ;check if send quest button is slitely grayed out
+        {
+            this.difficulty_down(11)
+            Sleep(500)
+            ClickAtCoord(711, 623)          ;open the add heros menu
+            Sleep(500)
+            loop(6)
+            {
+                if(PixelSearch(&pX, &pY, 1227, 399, 1242, 415, 0x5B3047, 2) and !PixelSearch(&pX, &pY, 1228, 472, 1247, 491, 0x81DFFF, 2))            ;check if hero is ready, and if hero is not sleeping
+                {
+                    ClickAtCoord(1295, 404)         ;add hero
+                }
+                Sleep(333)
+            }
+        }
     }
     static maximize_party_difficulty()
     {
@@ -97,6 +115,8 @@ Class Quest
             {
                 ClickAtCoord(pX, pY)        ;open the LCOG quest
                 sleep(500)
+                this.fix_overawed_party()
+                Sleep(500)
                 if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
                 {
                     this.maximize_party_difficulty()

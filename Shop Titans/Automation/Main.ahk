@@ -17,10 +17,6 @@ tick := 0
 
 heroTokenMode := false
 {
-    mouseMove(478, 337)
-    Sleep(1000)
-    MouseMove(935,397)
-    Sleep(1000)
     configs := ConfigManager()
     customerZone := [710, 513, 1112, 639]
     if(DevMode() and true)
