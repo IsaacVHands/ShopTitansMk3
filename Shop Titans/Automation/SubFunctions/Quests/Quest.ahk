@@ -15,11 +15,12 @@ Class Quest
         loop(n)
         {
             ClickAtCoord(1499, 635)         ;click difficulty up
-            Sleep(333)
+            Sleep(200)
             if(PixelSearch(&pX, &pY, 1490, 627, 1500, 643, 0x522C44, 2))
             {
-                break
+                return true
             }
+            return false
         }
     }
     static difficulty_down(n)
@@ -31,22 +32,88 @@ Class Quest
         loop(n)
         {
             ClickAtCoord(1090, 635)         ;click difficulty down
-            Sleep(333)          
+            Sleep(200)          
             if(PixelSearch(&pX, &pY, 1090, 632, 1097, 641, 0x522C44, 2))            ;check if difficulty is minimized
             {
-                break
+                return true
             }
         }
         return false
     }
-    Static get_hero_happiness()
+    static get_party_size_current(maxPartySize)
     {
-        if(PixelSearch(&pX, &pY, 478, 337, 935, 397, 0x13E533, 3))          ;check if there is green
-            return 1
-        else if(PixelSearch(&pX, &pY, 478, 337, 935, 382, 0x202020, 3) and PixelSearch(&pX, &pY, 478, 337, 935, 397, 0xF6B614, 3))          ;check if there is black and yellow (super happy)
-            return 1
+        if(maxPartySize == 5)
+        {
+            currentPartySize := 0
+            Coords := [513, 354, 611, 324, 701, 357, 789, 324, 877, 353]
+            loop(maxPartySize)
+            {
+                if(PixelSearch(&pX, &pY, Coords[(A_Index * 2) - 1] - 10, Coords[((A_Index * 2))] - 10, Coords[(A_Index * 2) - 1], Coords[((A_Index * 2))], 0xF8F4E6, 4))           ;check if the white part of the bubble exists(to decrease false posatives)
+                    currentPartySize++                      
+            }
+            return currentPartySize
+        }
+    }
+    static get_hero_happiness(topLeftFaceX, topLeftFaceY)
+    {
+        if(PixelSearch(&pX, &pY, topLeftFaceX - 10, topLeftFaceY - 10, topLeftFaceX, topLeftFaceY, 0xF8F4E6, 4))           ;check if the white part of the bubble exists(to decrease false posatives)
+        {
+            topLeftFaceX2 := topLeftFaceX + 20
+            topLeftFaceY2 := topLeftFaceY + 20
+            if(PixelSearch(&pX, &pY, topLeftFaceX, topLeftFaceY, topLeftFaceX2, topLeftFaceY2, 0x8C00FE, 3))           ;check if the face is purple
+                return 0
+            else if(PixelSearch(&pX, &pY, topLeftFaceX, topLeftFaceY, topLeftFaceX2, topLeftFaceY2, 0xFF1E00, 3))           ;check if the face is red
+                return 1
+            else if(PixelSearch(&pX, &pY, topLeftFaceX, topLeftFaceY, topLeftFaceX2, topLeftFaceY2, 0xFF8300, 3))           ;check if the face is orange
+                return 2
+            else if(PixelSearch(&pX, &pY, topLeftFaceX, topLeftFaceY, topLeftFaceX2, topLeftFaceY2, 0xF4CA00, 3))           ;check if the face is yellow
+                return 3
+            else if(PixelSearch(&pX, &pY, topLeftFaceX, topLeftFaceY, (topLeftFaceX + 20), (topLeftFaceY + 20), 0x64F88C, 3))           ;check if the face is green
+                return 4
+            else if(PixelSearch(&pX, &pY, topLeftFaceX, topLeftFaceY, topLeftFaceX2, topLeftFaceY2, 0xFEBC15, 3))           ;check if the face has black
+                return 5
+        }
         else
-            return 0
+            return -1
+    }
+    Static get_party_happiness(maxPartySize)
+    {
+        if(maxPartySize == 5)
+        {
+            a := 0
+            b := 0
+            partyCount := maxPartySize
+            Coords := [513, 354, 611, 324, 701, 357, 789, 324, 877, 353]
+            loop(5)
+            {
+                ; MsgBox(A_Index ", " Coords[A_Index * 2])
+                currentHero := this.get_hero_happiness(Coords[(A_Index * 2) - 1], Coords[((A_Index * 2))])
+                if(currentHero == 5)
+                {
+                    a++
+                    b++
+                }
+                else if(currentHero >= 3)
+                    b++
+                else if(currentHero == -1)
+                    partyCount--
+            }
+            if(partyCount == 1 and a > 0 or b > 0 and partyCount == 1)
+                return true
+            else if(a > 0 or b > 0 or b > 2)
+                return true
+            else
+                return false
+        }
+        else
+        {
+            if(PixelSearch(&pX, &pY, 478, 337, 935, 397, 0x13E533, 3))          ;check if there is green
+                return true
+            else if(PixelSearch(&pX, &pY, 478, 337, 935, 382, 0x202020, 3) and PixelSearch(&pX, &pY, 478, 337, 935, 397, 0xF6B614, 3))          ;check if there is black and yellow (super happy)
+                return true
+            else
+                return false
+        }
     }
     Static launch_quest()
     {
@@ -79,19 +146,21 @@ Class Quest
             }
         }
     }
-    static maximize_party_difficulty()
+    static maximize_party_difficulty(maxPartySize)
     {
+        maxDif := false
         loop(11)
         {
-            if(this.get_hero_happiness() == 1)
-                this.difficulty_up(1)
+            if(this.get_party_happiness(maxPartySize) and !maxDif)
+                maxDif := this.difficulty_up(1)
             else
                 break
         }
+        minDif := false
         loop(11)
         {
-            if(this.get_hero_happiness() == 0)
-                this.difficulty_down(1)
+            if(!this.get_party_happiness(maxPartySize) and !minDif)
+                minDif := this.difficulty_down(1)
             else
                 break
         }
@@ -142,6 +211,7 @@ Class Quest
                 ClickAtCoord(1416, 970)     ;open all tab
             else if(PixelSearch(&pX, &pY, 1616, 950, 1662, 985, 0x251921, 3) and tab == "b")         ;check if the bookmarks tab is not selected 
                 ClickAtCoord(1757, 973)     ;open bookmark tab
+            Sleep(1000)
             return true
         }
         else
@@ -151,16 +221,24 @@ Class Quest
     {
         if(this.open_quest_menu("a"))
         {
-            Sleep(1000)
             if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
             {
                 ClickAtCoord(pX, pY)        ;open the LCOG quest
                 sleep(500)
                 this.fix_overawed_party()
                 Sleep(500)
+                if(this.get_party_size_current(5) < 5)
+                {
+                    loop(2)
+                    {
+                        send("{Escape}")
+                        Sleep(500)
+                    }
+                    return true
+                }
                 if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
                 {
-                    this.maximize_party_difficulty()
+                    this.maximize_party_difficulty(5)
                     ClickAtCoord(1301, 761)         ;send quest
                     if(!PixelSearch(&pX, &pY, 27, 930, 39, 943, 0x00FF4F, 3) and numtries < 15)       ;if there are still more questing slots
                     {
