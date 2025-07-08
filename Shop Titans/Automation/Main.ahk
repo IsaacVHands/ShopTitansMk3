@@ -20,8 +20,7 @@ heroTokenMode := false
     configs := ConfigManager()
     customerZone := [710, 513, 1112, 639]
     if(DevMode() and true)
-    {
-        ; MsgBox(Quest.get_party_size_current(5))    
+    {   
         tick := 19 
     }
     else

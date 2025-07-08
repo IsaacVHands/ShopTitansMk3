@@ -54,9 +54,9 @@ Class Quest
             return currentPartySize
         }
     }
-    static get_hero_happiness(topLeftFaceX, topLeftFaceY)
+    static get_hero_happiness(topLeftFaceX, topLeftFaceY, attempt)
     {
-        if(PixelSearch(&pX, &pY, topLeftFaceX - 10, topLeftFaceY - 10, topLeftFaceX, topLeftFaceY, 0xF8F4E6, 4))           ;check if the white part of the bubble exists(to decrease false posatives)
+        if(PixelSearch(&pX, &pY, topLeftFaceX - 10, topLeftFaceY - 10, topLeftFaceX, topLeftFaceY, 0xF8F4E6, 4) and attempt < 3)           ;check if the white part of the bubble exists(to decrease false posatives)
         {
             topLeftFaceX2 := topLeftFaceX + 20
             topLeftFaceY2 := topLeftFaceY + 20
@@ -72,9 +72,14 @@ Class Quest
                 return 4
             else if(PixelSearch(&pX, &pY, topLeftFaceX, topLeftFaceY, topLeftFaceX2, topLeftFaceY2, 0xFEBC15, 3))           ;check if the face has black
                 return 5
+            else if(PixelSearch(&pX, &pY, topLeftFaceX - 10, topLeftFaceY - 10, topLeftFaceX, topLeftFaceY, 0xF8F4E6, 3))            ;check for the white part of the charcter bubble
+            {
+                attempt++
+                additionalTry := this.get_hero_happiness(topLeftFaceX, topLeftFaceY, attempt)
+                return additionalTry
+            }
         }
-        else
-            return -1
+        return -1
     }
     Static get_party_happiness(maxPartySize)
     {
@@ -87,7 +92,7 @@ Class Quest
             loop(5)
             {
                 ; MsgBox(A_Index ", " Coords[A_Index * 2])
-                currentHero := this.get_hero_happiness(Coords[(A_Index * 2) - 1], Coords[((A_Index * 2))])
+                currentHero := this.get_hero_happiness(Coords[(A_Index * 2) - 1], Coords[((A_Index * 2))], 0)
                 if(currentHero == 5)
                 {
                     a++
