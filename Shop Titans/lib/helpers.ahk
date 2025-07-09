@@ -242,6 +242,7 @@ waitForEvent(x1, y1, x2, y2, colour, scanInterval, msMaxWait)
         {
             return true
         }
+        Sleep(msMaxWait)
     }
     return false
 }

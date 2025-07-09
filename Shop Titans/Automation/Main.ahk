@@ -11,7 +11,6 @@
 #SingleInstance Force
 delay := 500
 energyLevel := 0
-surchargeCost := 0.1
 restartCounter := 0
 tick := 0
 
@@ -21,7 +20,7 @@ heroTokenMode := false
     customerZone := [710, 513, 1112, 639]
     if(DevMode() and true)
     {   
-        tick := 19 
+        tick := 5 
     }
     else
     {
@@ -38,7 +37,8 @@ heroTokenMode := false
         subscription := true
     else
         subscription := false
-    global surchargeCost
+    upTime := 0
+    questy := Quest()
     counter_upgrade := false
     ExtraInventory := false
     AutomaticRestartTimer := 0
@@ -98,6 +98,7 @@ heroTokenMode := false
         }
         if(A_Hour > hour)
         {
+            upTime++
             lost_city_of_gold := true
             gemCount.logGems()
             counter_upgrade := false
@@ -317,17 +318,16 @@ heroTokenMode := false
             Sleep(2000)
             SendEvent("{WheelDown 10}")         ;scroll all the way out
             Sleep(1000)
-            currentQuest := Quest()
             loop(7)
             {
-                if(!currentQuest.questCollector.collectQuest(subscription, configs.questing_userepairpacks))      ;collect any finished quests
+                if(!questy.questCollector.collectQuest(subscription, configs.questing_userepairpacks))      ;collect any finished quests
                     break
                 Sleep(500)
             }
             Sleep(500)
             if(configs.questing_lostcityofgold and lost_city_of_gold)
             {
-                lost_city_of_gold := Quest.basic_lcog(0)
+                lost_city_of_gold := questy.basic_lcog(0, upTime)
                 Sleep(750)
             }
             else
@@ -335,7 +335,7 @@ heroTokenMode := false
             Quest.EscapeStuckCases(5)
             if(configs.questing and !lost_city_of_gold)
             {
-                Quest.farmEasyChests(0)
+                questy.farmEasyChests(0)
             }
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {

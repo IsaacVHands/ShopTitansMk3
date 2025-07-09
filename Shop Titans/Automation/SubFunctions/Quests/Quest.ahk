@@ -1,5 +1,6 @@
 ﻿#Requires AutoHotkey v2.0
 #include ../../../lib/helpers.ahk
+#Include ../General/MenuManager.ahk
 #Include QuestCollector.ahk
 #Include OpenChests.ahk
 #SingleInstance Force
@@ -9,8 +10,10 @@ Class Quest
     __New() 
     {
         this.questCollector := QuestCollector()
+        this.highestDifficulty := -1
+        this.upTime := 0
     }
-    static difficulty_up(n)
+    difficulty_up(n)
     {
         loop(n)
         {
@@ -23,7 +26,7 @@ Class Quest
             return false
         }
     }
-    static difficulty_down(n)
+    difficulty_down(n)
     {
         if(PixelSearch(&pX, &pY, 1090, 632, 1097, 641, 0x522C44, 2))
         {
@@ -40,7 +43,7 @@ Class Quest
         }
         return false
     }
-    static get_party_size_current(maxPartySize)
+    get_party_size_current(maxPartySize)
     {
         if(maxPartySize == 5)
         {
@@ -54,7 +57,7 @@ Class Quest
             return currentPartySize
         }
     }
-    static get_hero_happiness(topLeftFaceX, topLeftFaceY, attempt)
+    get_hero_happiness(topLeftFaceX, topLeftFaceY, attempt)
     {
         if(PixelSearch(&pX, &pY, topLeftFaceX - 10, topLeftFaceY - 10, topLeftFaceX, topLeftFaceY, 0xF8F4E6, 4) and attempt < 3)           ;check if the white part of the bubble exists(to decrease false posatives)
         {
@@ -81,7 +84,7 @@ Class Quest
         }
         return -1
     }
-    Static get_party_happiness(maxPartySize)
+    get_party_happiness(maxPartySize)
     {
         if(maxPartySize == 5)
         {
@@ -120,11 +123,11 @@ Class Quest
                 return false
         }
     }
-    Static launch_quest()
+    launch_quest()
     {
         ClickAtCoord(1297, 760)         ;click explore area
     }
-    static fix_overawed_party()
+    fix_overawed_party()
     {
         if(PixelSearch(&pX, &pY, 1222, 726, 1238, 739, 0x29653A, 2))            ;check if send quest button is slitely grayed out
         {
@@ -151,26 +154,47 @@ Class Quest
             }
         }
     }
-    static maximize_party_difficulty(maxPartySize)
+    maximize_party_difficulty(maxPartySize, maxDifficulty, upTime)
     {
-        maxDif := false
-        loop(11)
+        if(upTime > 6)
         {
-            if(this.get_party_happiness(maxPartySize) and !maxDif)
-                maxDif := this.difficulty_up(1)
-            else
-                break
+            maxDif := false
+            loop(maxDifficulty)
+            {
+                if(this.get_party_happiness(maxPartySize) and !maxDif)
+                    maxDif := this.difficulty_up(1)
+                else
+                    break
+            }
+            minDif := false
+            loop(maxDifficulty)
+            {
+                if(!this.get_party_happiness(maxPartySize) and !minDif)
+                    minDif := this.difficulty_down(1)
+                else
+                    break
+            }
+            return -1
         }
-        minDif := false
-        loop(11)
+        else
         {
-            if(!this.get_party_happiness(maxPartySize) and !minDif)
-                minDif := this.difficulty_down(1)
-            else
-                break
+            this.difficulty_up(maxDifficulty)
+            currentDifficulty := maxDifficulty
+            minDif := false
+            loop(maxDifficulty)
+            {
+                if(!this.get_party_happiness(maxPartySize) and !minDif)
+                {
+                    minDif := this.difficulty_down(1)
+                    currentDifficulty--
+                }
+                else
+                    break
+            }
+            return currentDifficulty
         }
     }
-    static get_hero_availability()
+    get_hero_availability()
     {
         if(PixelSearch(&pX, &pY, 1866, 851, 1879, 877, 0xFFB42A, 3))            ;check for available questing slots
         {
@@ -202,7 +226,7 @@ Class Quest
         }
         return false
     }
-    static open_quest_menu(tab)
+    open_quest_menu(tab)
     {
         if(PixelSearch(&pX, &pY, 548, 947, 579, 973, 0x522C44, 2))          ;check if the questing menu is already open
         {
@@ -222,8 +246,38 @@ Class Quest
         else
             return false
     }
-    static basic_lcog(numtries)
+    useBooster(booster, maxTier)
     {
+        if(PixelSearch(&pX, &pY, 1488, 745, 1495, 753, 0xA74C80, 2))            ;check for booster button
+        {
+            ClickAtCoord(1492, 751)         ;open booster menu
+            Sleep(200)
+            if(waitForEvent(58, 988, 69, 999, 0xB36D20, 100, 5000))             ;check to see if the menu was open
+            {
+                boosterList := ["power", "loot", "compass"]
+                startingSlot := 0
+                loop(boosterList.Length)
+                {
+                    if(booster == boosterList[A_Index])
+                        startingSlot := ((A_Index - 1) * 3) + 1 
+                }
+                loop(maxTier)
+                {
+                    if(MenuManager.SlotNonZero(startingSlot + A_Index - 1))
+                    {
+                        MenuManager.clickSlot(startingSlot + A_Index - 1)
+                        return true
+                    }
+                }
+                Send("{Escape}")
+            }
+            return false
+        }
+    }
+    basic_lcog(numtries, upTime)
+    {
+        maxEventDifficulty := 12
+        this.upTime := upTime
         if(this.open_quest_menu("a"))
         {
             if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
@@ -243,13 +297,20 @@ Class Quest
                 }
                 if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
                 {
-                    this.maximize_party_difficulty(5)
+                    currentDifficulty := this.maximize_party_difficulty(5, maxEventDifficulty, upTime)
+                    if(currentDifficulty > this.highestDifficulty)
+                        this.highestDifficulty := currentDifficulty
+                    if(currentDifficulty == maxEventDifficulty or this.upTime > 5 and currentDifficulty == this.highestDifficulty)          ;checks if either the quest has the global or local(after at least 5 hours) maxium
+                    {
+                        this.useBooster("loot", 2)
+                        Sleep(500)
+                    }
                     ClickAtCoord(1301, 761)         ;send quest
                     if(!PixelSearch(&pX, &pY, 27, 930, 39, 943, 0x00FF4F, 3) and numtries < 15)       ;if there are still more questing slots
                     {
                         Sleep(7000)
                         attempt := numtries + 1
-                        this.basic_lcog(attempt)
+                        this.basic_lcog(attempt, upTime)
                     }
                 }
                 return true
@@ -263,7 +324,7 @@ Class Quest
         else
             return true
     }
-    static farmEasyChests(iteration)
+    farmEasyChests(iteration)
     {
         ; if(A_Hour >= 0 and A_Hour < 7 or A_Hour >= 9 and A_Hour < 12)
         ; {
