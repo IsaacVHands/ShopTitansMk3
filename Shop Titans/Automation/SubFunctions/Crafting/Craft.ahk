@@ -209,4 +209,14 @@ Class Craft
             this.Craft4()
         }
     }
+    static CraftSlotShift()
+    {
+        MouseMove(518, 725)
+        Sleep(100)
+        Send("{LButton Down}")
+        Sleep(100)
+        MouseMove(277, 725, 20)
+        Sleep(100)
+        Send("{LButton Up}")
+    }
 }
