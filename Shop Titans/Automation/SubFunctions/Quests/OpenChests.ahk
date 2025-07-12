@@ -17,7 +17,7 @@ Class OpenChests
     }
     static unlockChests()
     {
-        while(true)
+        loop(100)
         {
             waitForEvent(750, 912, 870, 952, 0xFFFFFF, 50, 5000)
             if(PixelSearch(&pX, &pY, 750, 912, 870, 952, 0xFFFFFF, 3))          ;check for keys available

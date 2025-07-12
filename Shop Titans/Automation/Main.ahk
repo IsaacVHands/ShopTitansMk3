@@ -13,10 +13,10 @@
 delay := 500
 energyLevel := 0
 restartCounter := 0
-tick := 0
 
 heroTokenMode := false
 {
+    tick := 0
     configs := ConfigManager()
     customerZone := [710, 513, 1112, 639]
     if(DevMode() and false)
