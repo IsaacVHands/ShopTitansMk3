@@ -21,7 +21,7 @@ heroTokenMode := false
     customerZone := [710, 513, 1112, 639]
     if(DevMode() and false)
     {   
-        tick := 19 
+        tick := 1
     }
     else
     {
@@ -216,7 +216,7 @@ heroTokenMode := false
             FixWindowFrozen()
         }
         sleep(500)
-        if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3))        ;check for wait button
+        if(PixelSearch(&pX, &pY, 1023, 737, 1053, 768, 0x522C44, 3) and PixelSearch(&pX, &pY, 750, 628, 768, 654, 0xF7461B, 2))        ;check for wait button and refuse button
         {
             inventory_level := Process_Customers(customerZone, inventory_level)
         }
