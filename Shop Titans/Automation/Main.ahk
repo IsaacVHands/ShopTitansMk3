@@ -19,7 +19,7 @@ heroTokenMode := false
 {
     configs := ConfigManager()
     customerZone := [710, 513, 1112, 639]
-    if(DevMode() and true)
+    if(DevMode() and false)
     {   
         tick := 19 
     }

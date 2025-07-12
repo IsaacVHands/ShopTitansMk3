@@ -126,6 +126,7 @@ Class Furniture
                 Sleep(100)
             }
         }
+        this.clearCache()
         return false
     }
     askForHelp()
