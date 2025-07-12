@@ -8,6 +8,7 @@
 #Include SubFunctions/Market/CollectAndRelistMarket.ahk
 #Include SubFunctions/General/ConfigManager.ahk
 #Include SubFunctions/Crafting/Craft.ahk
+#Include SubFunctions/General/UpgradeFurniture.ahk
 #SingleInstance Force
 delay := 500
 energyLevel := 0
@@ -20,7 +21,7 @@ heroTokenMode := false
     customerZone := [710, 513, 1112, 639]
     if(DevMode() and true)
     {   
-        tick := 5 
+        tick := 19 
     }
     else
     {
@@ -37,6 +38,7 @@ heroTokenMode := false
         subscription := true
     else
         subscription := false
+    furnitureUpgrade := Furniture()
     upTime := 0
     questy := Quest()
     counter_upgrade := false
@@ -106,6 +108,8 @@ heroTokenMode := false
             {
                 WinMaximize("ahk_exe ShopTitan.exe")
             }
+            furnitureUpgrade.findAndUpgrade()
+            Sleep(1000)
             if(configs.crafting_enchantments_autotrash)
             {
                 ClickAtCoord(383, 944)          ;open the inventory
@@ -368,40 +372,21 @@ heroTokenMode := false
                 ClickAtCoord(951, 941)          ;click the continue button
                 Sleep(500)
                 ClickAtCoord(1133, 938)          ;click the continue button
+                Sleep(2000)
             }
             if(PixelSearch(&pX, &pY, 262, 934, 305, 959, 0xF5BB0D, 2))       ;scan for market tab
             {
                 collectAndRelistMarket()
                 Sleep(1000)
             }
-            if(PixelSearch(&pX, &pY, 654, 164, 1362, 748, 0x11E85C, 2))         ;scan for upgraded furniture
-            {
-                ClickAtCoord(pX, pY)        ;click upgrade furniture
-                Sleep(1000)
-                
-            }
-            if(A_Hour < 18 and A_Hour > 15)
+            if(0 < A_Hour and A_Hour < 2)
                 Quest.openAllChests()
             escapeToShop()
-            Sleep(3000)
-            a := false
-            if(PixelSearch(&pX, &pY, 743, 256, 1261, 749, 0x11E85C, 2))         ;scan for furniture finished upgrading
-            {
-                ClickAtCoord(pX, pY)
-                a := true
-            }
-            else if(PixelSearch(&pX, &pY, 620, 181, 1277, 766, 0x35FF5C, 2))         ;scan again for furniture finished upgrading
-            {
-                ClickAtCoord(pX, pY)
-                a := true
-            }
-            if(a)
+            Sleep(3500)
+            if(furnitureUpgrade.acknowledgeUpgrade())
             {
                 Sleep(1500)
-                if(PixelSearch(&pX, &pY, 867, 932, 916, 969, 0x23F85D, 2))          ;check for okay button toward the bottom middle of the screen
-                {
-                    ClickAtCoord(966, 945)          ;click okay
-                }
+                furnitureUpgrade.upgradeFinishedOk()
                 Sleep(1000)
                 return_to_default_pos()
             }

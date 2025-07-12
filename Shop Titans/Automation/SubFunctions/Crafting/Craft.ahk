@@ -211,6 +211,7 @@ Class Craft
     }
     static CraftSlotShift()
     {
+        SendMode("Event")
         MouseMove(518, 725)
         Sleep(100)
         Send("{LButton Down}")

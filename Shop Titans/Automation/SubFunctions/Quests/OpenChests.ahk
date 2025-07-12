@@ -39,7 +39,7 @@ Class OpenChests
         if(PixelSearch(&pX, &pY, 1696, 898, 1714, 913, 0x0EEFC7, 2))            ;check if quest menu is open
         {
             send("Escape")
-            Sleep(500)
+            Sleep(1500)
         }
     }
 }

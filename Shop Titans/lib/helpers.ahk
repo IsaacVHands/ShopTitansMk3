@@ -246,3 +246,34 @@ waitForEvent(x1, y1, x2, y2, colour, scanInterval, msMaxWait)
     }
     return false
 }
+
+clickRandomPoint(x1, y1, x2, y2)
+{
+    ClickAtCoord(Random(x1, x2), Random(y1, y2))
+}
+
+clickRandomPointNotInDeadZone(x1, y1, x2, y2, voidX1, voidY1, voidX2, voidY2)
+{
+    clickX := 0
+    clickY := 0
+    loop(1000)
+    {
+        rndX := Random(x1, x2)
+        if(rndX < voidX1 or voidX2 < rndX)
+        {
+            clickX := rndX
+            break
+        }
+    }
+    loop(1000)
+    {
+        rndY := Random(y1, y2)
+        if(rndY < voidY1 or voidY2 < rndY)
+        {
+            clickY := rndY
+            break
+        }
+    }
+    ClickAtCoord(clickX, clickY)
+    return [clickX, clickY]
+}
