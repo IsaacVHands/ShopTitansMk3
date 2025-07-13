@@ -67,12 +67,12 @@ Class Furniture
     }
     acknowledgeUpgrade()
     {
-        if(PixelSearch(&pX, &pY, 570, 319, 1289, 753, 0x11E85C, 2))         ;scan for furniture finished upgrading
+        if(PixelSearch(&pX, &pY, 755, 234, 1229, 797, 0x11E85C, 2))         ;scan for furniture finished upgrading
         {
             ClickAtCoord(pX, pY)
             return true
         }
-        else if(PixelSearch(&pX, &pY, 570, 319, 1289, 753, 0x35FF5C, 2))         ;scan again for furniture finished upgrading
+        else if(PixelSearch(&pX, &pY, 755, 234, 1229, 797, 0x35FF5C, 2))         ;scan again for furniture finished upgrading
         {
             ClickAtCoord(pX, pY)
             return true

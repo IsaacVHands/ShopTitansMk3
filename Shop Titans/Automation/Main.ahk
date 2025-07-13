@@ -19,9 +19,9 @@ heroTokenMode := false
     tick := 0
     configs := ConfigManager()
     customerZone := [710, 513, 1112, 639]
-    if(DevMode() and false)
-    {   
-        tick := 1
+    if(DevMode() and true)
+    {
+        tick := 19
     }
     else
     {
@@ -389,6 +389,8 @@ heroTokenMode := false
                 furnitureUpgrade.upgradeFinishedOk()
                 Sleep(1000)
                 return_to_default_pos()
+                Sleep(1000)
+                furnitureUpgrade.findAndUpgrade()
             }
         }
         else if(tickallocator(tick, "resetPos"))     ;reset position
