@@ -95,6 +95,7 @@ Class ConfigManager
 global configs := ""
 getConfigs()
 {
+    global configs
     if(configs == "")
     {
         configs := ConfigManager()
