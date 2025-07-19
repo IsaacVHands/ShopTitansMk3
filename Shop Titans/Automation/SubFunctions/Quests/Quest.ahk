@@ -506,7 +506,7 @@ Class Quest
         }
     }
     totLaunchQuest()
-    {
+    { 
         if(PixelSearch(&pX, &pY, 1696, 938, 1715, 964, 0x21F75D, 2))            ;scan for climb floor button in bottom right
         {
             ClickAtCoord(1754, 943)         ;click climb to next floor
@@ -526,6 +526,8 @@ Class Quest
                     this.useBooster("power", A_Index - 1, 2)
                 }
             }
+            Send("{Escape}")
+            Sleep(500)
             Send("{Escape}")
             Sleep(500)
             Send("{Escape}")
