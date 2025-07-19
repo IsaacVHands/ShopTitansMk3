@@ -91,3 +91,13 @@ Class ConfigManager
         return name
     }
 }
+
+global configs := ""
+getConfigs()
+{
+    if(configs == "")
+    {
+        configs := ConfigManager()
+    }
+    return configs
+}

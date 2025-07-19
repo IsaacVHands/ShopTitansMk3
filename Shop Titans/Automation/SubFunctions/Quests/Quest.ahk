@@ -1,6 +1,7 @@
 ﻿#Requires AutoHotkey v2.0
 #include ../../../lib/helpers.ahk
 #Include ../General/MenuManager.ahk
+#Include ../General/ConfigManager.ahk
 #Include QuestCollector.ahk
 #Include OpenChests.ahk
 #SingleInstance Force
@@ -9,6 +10,7 @@ Class Quest
 {
     __New() 
     {
+        this.configs := getConfigs()
         this.questCollector := QuestCollector()
         this.highestDifficulty := -1
         this.upTime := 0
@@ -109,6 +111,33 @@ Class Quest
             if(partyCount == 1 and a > 0 or b > 0 and partyCount == 1)
                 return true
             else if(a > 0 or b > 0 or b > 2)
+                return true
+            else
+                return false
+        }
+        if(maxPartySize == 4)
+        {
+            a := 0
+            b := 0
+            partyCount := maxPartySize
+            Coords := [507, 346, 638, 361, 757, 333, 877, 355]
+            loop(maxPartySize)
+            {
+                ; MsgBox(A_Index ", " Coords[A_Index * 2])
+                currentHero := this.get_hero_happiness(Coords[(A_Index * 2) - 1], Coords[((A_Index * 2))], 0)
+                if(currentHero == 5)
+                {
+                    a++
+                    b++
+                }
+                else if(currentHero >= 3)
+                    b++
+                else if(currentHero == -1)
+                    partyCount--
+            }
+            if(partyCount == 1 and a > 0 or b > 0 and partyCount == 1)
+                return true
+            else if(a > 0 or b > 0 or b > 1)
                 return true
             else
                 return false
@@ -246,7 +275,7 @@ Class Quest
         else
             return false
     }
-    useBooster(booster, maxTier)
+    useBooster(booster, minTier, maxTier)
     {
         if(PixelSearch(&pX, &pY, 1488, 745, 1495, 753, 0xA74C80, 2))            ;check for booster button
         {
@@ -263,9 +292,9 @@ Class Quest
                 }
                 loop(maxTier)
                 {
-                    if(MenuManager.SlotNonZero(startingSlot + A_Index - 1))
+                    if(MenuManager.SlotNonZero(startingSlot + A_Index + minTier - 1))
                     {
-                        MenuManager.clickSlot(startingSlot + A_Index - 1)
+                        MenuManager.clickSlot(startingSlot + A_Index + minTier - 1)
                         return true
                     }
                 }
@@ -273,6 +302,24 @@ Class Quest
             }
             return false
         }
+    }
+    clearBooster()
+    {
+        if(PixelSearch(&pX, &pY, 1489, 746, 1494, 754, 0xA84C80, 2))            ;scan for a boost already being active
+        {
+            ClickAtCoord(1491, 751)
+            Sleep(500)
+        }
+    }
+    findActiveEvent()
+    {
+        this.open_quest_menu("a")
+        if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2) and this.configs.questing_lostcityofgold)            ;check if the LCOG quest is available
+            return "lcog"
+        if(this.totFindEvent(false) and this.configs.questing_toweroftitans)
+            return "tot"
+        else
+            return "nothing"
     }
     basic_lcog(numtries, upTime)
     {
@@ -302,7 +349,7 @@ Class Quest
                         this.highestDifficulty := currentDifficulty
                     if(currentDifficulty == maxEventDifficulty or this.upTime > 5 and currentDifficulty == this.highestDifficulty)          ;checks if either the quest has the global or local(after at least 5 hours) maxium
                     {
-                        this.useBooster("loot", 2)
+                        this.useBooster("loot", 0, 2)
                         Sleep(500)
                     }
                     ClickAtCoord(1301, 761)         ;send quest
@@ -365,5 +412,131 @@ Class Quest
             Sleep(500)
             OpenChests.closeChestMenu()
         }
+    }
+    /*
+    findMaxDifficulty()
+    {
+        this.difficulty_down(13)
+        Sleep()
+    }
+    basicLaunchDifMax()
+    {
+        maxEventDifficulty := 12
+        this.upTime := upTime
+        if(this.open_quest_menu("a"))
+        {
+            if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
+            {
+                ClickAtCoord(pX, pY)        ;open the LCOG quest
+                sleep(500)
+                this.fix_overawed_party()
+                Sleep(500)
+                if(this.get_party_size_current(5) < 5)
+                {
+                    loop(2)
+                    {
+                        send("{Escape}")
+                        Sleep(500)
+                    }
+                    return true
+                }
+                if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
+                {
+                    currentDifficulty := this.maximize_party_difficulty(5, maxEventDifficulty, upTime)
+                    if(currentDifficulty > this.highestDifficulty)
+                        this.highestDifficulty := currentDifficulty
+                    if(currentDifficulty == maxEventDifficulty or this.upTime > 5 and currentDifficulty == this.highestDifficulty)          ;checks if either the quest has the global or local(after at least 5 hours) maxium
+                    {
+                        this.useBooster("loot", 2)
+                        Sleep(500)
+                    }
+                    ClickAtCoord(1301, 761)         ;send quest
+                    if(!PixelSearch(&pX, &pY, 27, 930, 39, 943, 0x00FF4F, 3) and numtries < 15)       ;if there are still more questing slots
+                    {
+                        Sleep(7000)
+                        attempt := numtries + 1
+                        this.basic_lcog(attempt, upTime)
+                    }
+                }
+                return true
+            }
+            else
+            {
+                send("{Escape}")
+                return false
+            }
+        }
+        else
+            return true
+    }
+    flashQuest()
+    {
+        
+    }*/
+    totFindEvent(boolSelect)
+    {
+        if(PixelSearch(&pX, &pY, 15, 894, 815, 909, 0x460546, 2))           ;scan for tot quest
+        {
+            if(boolSelect)
+                ClickAtCoord(pX, pY)            ;click on tot quest
+            return true
+        }
+        else
+            return false
+    }
+    totSelectDifficulty()
+    {
+        if(PixelSearch(&pX, &pY, 922, 734, 940, 752, 0xF7D6FE, 2))      ;scan for difficulty selecter
+        {
+            if(DevMode())
+            {
+                ClickAtCoord(1109, 579)         ;move up difficulty
+                Sleep(500)
+            }
+            ClickAtCoord(965, 727)          ;click select tower
+            Sleep(300)
+            ClickAtCoord(965, 727)          ;click confirm
+            Sleep(500)
+            if(PixelSearch(&pX, &pY, 994, 631, 1020, 659, 0x20F75A, 2))         ;check for confirm button
+            {
+                ClickAtCoord(1090, 642)             ;click confirm button
+                Sleep(500)
+            }
+            Sleep(5000)
+        }
+    }
+    totLaunchQuest()
+    {
+        if(PixelSearch(&pX, &pY, 1696, 938, 1715, 964, 0x21F75D, 2))            ;scan for climb floor button in bottom right
+        {
+            ClickAtCoord(1754, 943)         ;click climb to next floor
+            Sleep(500)
+            loop(3)
+            {
+                if(this.get_party_happiness(4))
+                {
+                    this.launch_quest()
+                    Sleep(750)
+                    Send("{Escape}")
+                    return true
+                }
+                else
+                {
+                    this.clearBooster()
+                    this.useBooster("power", A_Index - 1, 2)
+                }
+            }
+            Send("{Escape}")
+            Sleep(500)
+            Send("{Escape}")
+            return false
+        }
+    }
+    totAuto()
+    {
+        this.totFindEvent(true)
+        Sleep(1000)
+        this.totSelectDifficulty()
+        this.totLaunchQuest()
     }
 }

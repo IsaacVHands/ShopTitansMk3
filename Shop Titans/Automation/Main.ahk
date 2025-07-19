@@ -17,10 +17,12 @@ restartCounter := 0
 heroTokenMode := false
 {
     tick := 0
-    configs := ConfigManager()
+    configs := getConfigs()
     customerZone := [710, 513, 1112, 639]
-    if(DevMode() and true)
+    if(DevMode() and false)
     {
+        tmp := Quest()
+        tmp.totAuto()
         tick := 19
     }
     else
@@ -329,18 +331,19 @@ heroTokenMode := false
                 Sleep(500)
             }
             Sleep(500)
-            if(configs.questing_lostcityofgold and lost_city_of_gold)
+            switch(questy.findActiveEvent())
             {
-                lost_city_of_gold := questy.basic_lcog(0, upTime)
-                Sleep(750)
+                case "lcog":
+                    questy.basic_lcog(0, upTime)
+                    Sleep(750)
+                case "tot":
+                    questy.totAuto()
+                    Sleep(750)
+                case "nothing":
+                    questy.farmEasyChests(0)
+                    Sleep(750)
             }
-            else
-                lost_city_of_gold := false
             Quest.EscapeStuckCases(5)
-            if(configs.questing and !lost_city_of_gold)
-            {
-                questy.farmEasyChests(0)
-            }
             if(PixelSearch(&pX, &pY, 946, 354, 1034, 468, 0x19CC9D, 2))         ;check if the offer help button is available
             {
                 ClickAtCoord(993, 416)      ;click the offer help button
@@ -623,7 +626,7 @@ CheckWindowRes(x, y, errorMargin)
 {
     windowX := SysGet(16)
     windowY := SysGet(17)
-    if(x - errorMargin > windowX or windowX > x + errorMargin or y - errorMargin > windowY or windowY > y + errorMargin)
+    if(windowX < x - errorMargin or x + errorMargin < windowX or y - errorMargin > windowY or windowY > y + errorMargin)
     {
         msgBox("Error: resolution is not set to 1920 X 1080 `nplease set resolution the the appropriate `nsetting before pressing ok")
     }
