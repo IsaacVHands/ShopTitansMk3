@@ -23,6 +23,7 @@ Class ConfigManager
         this.market_collect := true
         this.market_offer := false
         this.market_request := false
+        general := true
         this.general_upgradefurniture := true
         configFile := getMainDir() "/Shop Titans/Config.txt"
         loop read configFile
@@ -68,6 +69,8 @@ Class ConfigManager
                         this.market_request := mode
                     Case "general.upgradefurniture":
                         this.general_upgradefurniture := mode
+                    Case "general":
+                        this.general := mode
                     default:
                         MsgBox("ERROR: config found in config file that does not exist in code: " this.GetConfigName(A_LoopReadLine))
                 }
