@@ -19,10 +19,8 @@ heroTokenMode := false
     tick := 0
     configs := getConfigs()
     customerZone := [710, 513, 1112, 639]
-    if(DevMode() and false)
+    if(DevMode() and true)
     {
-        tmp := Quest()
-        tmp.totAuto()
         tick := 19
     }
     else
@@ -110,7 +108,8 @@ heroTokenMode := false
             {
                 WinMaximize("ahk_exe ShopTitan.exe")
             }
-            furnitureUpgrade.findAndUpgrade()
+            if(configs.general_upgradefurniture)
+                furnitureUpgrade.findAndUpgrade()
             Sleep(1000)
             if(configs.crafting_enchantments_autotrash)
             {

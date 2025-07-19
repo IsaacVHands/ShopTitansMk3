@@ -17,3 +17,6 @@ market := true
    market.collect := true
    market.offer := false
    market.request := false
+
+general := true
+   general.upgradefurniture := true

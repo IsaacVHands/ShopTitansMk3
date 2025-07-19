@@ -6,23 +6,24 @@ Class ConfigManager
 {
     __New() 
     {
-        this.crafting := false
-        this.crafting_buycomponents := false
+        this.crafting := true
+        this.crafting_buycomponents := true
         this.crafting_buycomponents_maxbuyprice := false
         this.crafting_mastery := false
         this.crafting_bookmarkpriority := false
         this.crafting_enchantments_autotrash := false
-        this.questing := false
+        this.questing := true
         this.questing_regularquests := false
         this.questing_keyquests := false
         this.questing_userepairpacks := false
         this.questing_events := false
         this.questing_toweroftitans := false
         this.questing_lostcityofgold := false
-        this.market := false
-        this.market_collect := false
+        this.market := true
+        this.market_collect := true
         this.market_offer := false
         this.market_request := false
+        this.general_upgradefurniture := true
         configFile := getMainDir() "/Shop Titans/Config.txt"
         loop read configFile
         {
@@ -65,6 +66,8 @@ Class ConfigManager
                         this.market_offer := mode
                     Case "market.request":
                         this.market_request := mode
+                    Case "general.upgradefurniture":
+                        this.general_upgradefurniture := mode
                     default:
                         MsgBox("ERROR: config found in config file that does not exist in code: " this.GetConfigName(A_LoopReadLine))
                 }

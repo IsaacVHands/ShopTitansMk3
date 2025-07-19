@@ -532,6 +532,10 @@ Class Quest
             return false
         }
     }
+    totQuestslotSpent()
+    {
+        
+    }
     totAuto()
     {
         this.totFindEvent(true)
