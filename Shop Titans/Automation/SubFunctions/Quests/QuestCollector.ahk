@@ -128,6 +128,10 @@ class QuestCollector
             this.fixBrokenEquipment(subStatus, repairPackSetting)
             Sleep(250)
             this.clickThroughLootScreen()
+            Sleep(1000)
+            this.fixBrokenEquipment(subStatus, repairPackSetting)
+            Sleep(250)
+            this.clickThroughLootScreen()
             return true
         }
         else 

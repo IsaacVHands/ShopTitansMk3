@@ -170,6 +170,14 @@ heroTokenMode := false
                     ClickAtCoord(100, 912)      ;click the shop button
                     Sleep(500)
                 }
+                else if(PixelSearch(&pX, &pY, 988, 668, 1015, 700, 0x1EF65A, 2))            ;scan for broken equipment
+                {
+                    ClickAtCoord(1092, 684)
+                    Sleep(750)
+                    ClickAtCoord(1393, 657)         ;Repair with repair kits
+                    Sleep(10000)
+                    ClickAtCoord(852, 737)          ;click collect all
+                }
                 else if(PixelSearch(&pX, &pY, 903, 614, 931, 655, 0xF7491F, 3))
                 {
                     ClickAtCoord(893, 644)      ;click the no button
