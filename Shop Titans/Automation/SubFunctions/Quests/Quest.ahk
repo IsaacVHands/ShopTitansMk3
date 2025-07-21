@@ -280,7 +280,7 @@ Class Quest
         if(PixelSearch(&pX, &pY, 1488, 745, 1495, 753, 0xA74C80, 2))            ;check for booster button
         {
             ClickAtCoord(1492, 751)         ;open booster menu
-            Sleep(200)
+            Sleep(800)
             if(waitForEvent(58, 988, 69, 999, 0xB36D20, 100, 5000))             ;check to see if the menu was open
             {
                 boosterList := ["power", "loot", "compass"]
@@ -305,7 +305,7 @@ Class Quest
     }
     clearBooster()
     {
-        if(PixelSearch(&pX, &pY, 1489, 746, 1494, 754, 0xA84C80, 2))            ;scan for a boost already being active
+        if(!PixelSearch(&pX, &pY, 1489, 746, 1494, 754, 0xA84C80, 2))            ;scan for a boost already being active
         {
             ClickAtCoord(1491, 751)
             Sleep(500)
@@ -523,7 +523,8 @@ Class Quest
                 else
                 {
                     this.clearBooster()
-                    this.useBooster("power", A_Index - 1, 2)
+                    this.useBooster("power", (A_Index - 1), 2)
+                    Sleep(750)
                 }
             }
             Send("{Escape}")
