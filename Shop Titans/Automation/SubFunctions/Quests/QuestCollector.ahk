@@ -5,6 +5,11 @@
 
 class QuestCollector
 {
+    __New() 
+    {
+        this.configs := getConfigs()
+        this.subStatus := false
+    }
     clickReadyQuest()
     {
         if(PixelSearch(&pX, &pY, 1643, 961, 1722, 998, 0x71571B, 3))        ;check if quest is ready
@@ -81,8 +86,12 @@ class QuestCollector
     }
     clickThroughLootScreen()
     {
-        loop(200)
+        loop(1000)
         {
+            if(PixelSearch(&pX, &pY, 983, 659, 1014, 701, 0x20F75C, 2))     ;check for broken equipment
+            {
+                this.fixBrokenEquipment(this.subStatus, this.configs.questing_userepairpacks)
+            }
             if(PixelSearch(&pX, &pY, 1097, 740, 1156, 780, 0x21F45A, 2))    ;check for level up
             {
                 ClickAtCoord(1211, 758)     ;click continue
@@ -120,17 +129,11 @@ class QuestCollector
     }
     collectQuest(subStatus, repairPackSetting)
     {
+        this.subStatus := subStatus
         if(this.clickReadyQuest())
         {
             Sleep(1000)
             this.skipCombat()
-            sleep(1000)
-            this.fixBrokenEquipment(subStatus, repairPackSetting)
-            Sleep(250)
-            this.clickThroughLootScreen()
-            Sleep(1000)
-            this.fixBrokenEquipment(subStatus, repairPackSetting)
-            Sleep(250)
             this.clickThroughLootScreen()
             return true
         }

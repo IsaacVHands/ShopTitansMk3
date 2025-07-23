@@ -14,6 +14,7 @@ Class Quest
         this.questCollector := QuestCollector()
         this.highestDifficulty := -1
         this.upTime := 0
+        this.tot := true
     }
     difficulty_up(n)
     {
@@ -259,6 +260,11 @@ Class Quest
     {
         if(PixelSearch(&pX, &pY, 548, 947, 579, 973, 0x522C44, 2))          ;check if the questing menu is already open
         {
+            if(PixelSearch(&pX, &pY, 1305, 947, 1344, 979, 0x251921, 3) and tab == "a")         ;check if the all tab is not selected
+                ClickAtCoord(1416, 970)     ;open all tab
+            else if(PixelSearch(&pX, &pY, 1616, 950, 1662, 985, 0x251921, 3) and tab == "b")         ;check if the bookmarks tab is not selected 
+                ClickAtCoord(1757, 973)     ;open bookmark tab
+            Sleep(1000)
             return true
         }
         else if(this.get_hero_availability())            ;check for extra heroes and quest slots
@@ -316,7 +322,7 @@ Class Quest
         this.open_quest_menu("a")
         if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2) and this.configs.questing_lostcityofgold)            ;check if the LCOG quest is available
             return "lcog"
-        if(this.totFindEvent(false) and this.configs.questing_toweroftitans)
+        if(this.totFindEvent(false) and this.configs.questing_toweroftitans and this.tot)
             return "tot"
         else
             return "nothing"
@@ -542,8 +548,18 @@ Class Quest
     totAuto()
     {
         this.totFindEvent(true)
-        Sleep(1000)
+        Sleep(500)
+        if(PixelSearch(&pX, &pY, 1300, 165, 1352, 198, 0xFFEB04, 2))            ;scan for yellow letters taht indecate the event is over
+            this.tot := false
+        Sleep(500)
         this.totSelectDifficulty()
         this.totLaunchQuest()
+    }
+    resetVariables(day)
+    {
+        if(A_WDay == day)
+        {
+            this.tot := true
+        }
     }
 }

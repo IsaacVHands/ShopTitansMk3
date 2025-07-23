@@ -19,7 +19,7 @@ heroTokenMode := false
     tick := 0
     configs := getConfigs()
     customerZone := [710, 513, 1112, 639]
-    if(DevMode() and true)
+    if(DevMode() and false)
     {
         tick := 19
     }
@@ -133,6 +133,7 @@ heroTokenMode := false
                 }
                 Send("{Escape}")
             }
+            questy.resetVariables(5)
             hour := A_Hour
         }
         if(A_Hour == 0)
@@ -347,6 +348,8 @@ heroTokenMode := false
                     questy.totAuto()
                     Sleep(750)
                 case "nothing":
+                    questy.open_quest_menu("b")
+                    Sleep(750)
                     questy.farmEasyChests(0)
                     Sleep(750)
             }
