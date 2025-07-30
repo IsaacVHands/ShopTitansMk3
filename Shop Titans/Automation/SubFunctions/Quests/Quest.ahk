@@ -14,6 +14,7 @@ Class Quest
         this.questCollector := QuestCollector()
         this.highestDifficulty := -1
         this.upTime := 0
+        this.difMax := 13
         this.tot := true
     }
     difficulty_up(n)
@@ -52,6 +53,28 @@ Class Quest
         {
             currentPartySize := 0
             Coords := [513, 354, 611, 324, 701, 357, 789, 324, 877, 353]
+            loop(maxPartySize)
+            {
+                if(PixelSearch(&pX, &pY, Coords[(A_Index * 2) - 1] - 10, Coords[((A_Index * 2))] - 10, Coords[(A_Index * 2) - 1], Coords[((A_Index * 2))], 0xF8F4E6, 4))           ;check if the white part of the bubble exists(to decrease false posatives)
+                    currentPartySize++                      
+            }
+            return currentPartySize
+        }
+        else if(maxPartySize == 4)
+        {
+            currentPartySize := 0
+            Coords := [506, 345, 638, 361, 757, 334, 875, 355]
+            loop(maxPartySize)
+            {
+                if(PixelSearch(&pX, &pY, Coords[(A_Index * 2) - 1] - 10, Coords[((A_Index * 2))] - 10, Coords[(A_Index * 2) - 1], Coords[((A_Index * 2))], 0xF8F4E6, 4))           ;check if the white part of the bubble exists(to decrease false posatives)
+                    currentPartySize++                      
+            }
+            return currentPartySize
+        }
+        else if(maxPartySize == 3)
+        {
+            currentPartySize := 0
+            Coords := [549, 349, 694, 352, 841, 350]
             loop(maxPartySize)
             {
                 if(PixelSearch(&pX, &pY, Coords[(A_Index * 2) - 1] - 10, Coords[((A_Index * 2))] - 10, Coords[(A_Index * 2) - 1], Coords[((A_Index * 2))], 0xF8F4E6, 4))           ;check if the white part of the bubble exists(to decrease false posatives)
@@ -379,25 +402,38 @@ Class Quest
     }
     farmEasyChests(iteration)
     {
-        ; if(A_Hour >= 0 and A_Hour < 7 or A_Hour >= 9 and A_Hour < 12)
-        ; {
         this.open_quest_menu("b")
         Sleep(500)
         if(PixelSearch(&pX, &pY, 898, 953, 934, 994, 0x522C44, 2))          ;check if the quest menu is open
         {
             ClickAtCoord(106, 736)          ;open first bookmarked quest
-            Sleep(750)
-            if(this.difficulty_down(3))
-                Sleep(250)
-            this.launch_quest()
-            Sleep(1500)
-            if(PixelSearch(&pX, &pY, 898, 953, 934, 994, 0x522C44, 2) and iteration < 15)          ;check if the quest menu is still open, i.e. there are more heroes to send out and more quest slots to fill
+            Sleep(1000)
+            tmp1 := 0
+            tmp2 := 0
+            if(DevMode() and false)
+                tmp2 := this.get_party_size_current(4)
+            else
+                tmp1 := this.get_party_size_current(3)
+            if(tmp1 == 3 or tmp2 == 4)
             {
-                iteration++
-                this.farmEasyChests(iteration)
+                if(this.difficulty_down(3))
+                    Sleep(250)
+                this.launch_quest()
+                Sleep(1500)
+                if(PixelSearch(&pX, &pY, 898, 953, 934, 994, 0x522C44, 2) and iteration < 15)          ;check if the quest menu is still open, i.e. there are more heroes to send out and more quest slots to fill
+                {
+                    iteration++
+                    this.farmEasyChests(iteration)
+                }
+            }
+            else
+            {
+                send("{Escape}")
+                Sleep(500)
+                send("{Escape}")
+                Sleep(500)
             }
         }
-        ; }
     }
     static EscapeStuckCases(checkIterations)
     {
@@ -419,61 +455,58 @@ Class Quest
             OpenChests.closeChestMenu()
         }
     }
-    /*
-    findMaxDifficulty()
+    getHeroCount()
     {
-        this.difficulty_down(13)
-        Sleep()
+        ;range of 4 man quest: 488, 339, 910, 391, 0xF4EDCF
+    }
+    /*findMaxDifficulty()
+    {
+        this.difficulty_down(this.difMax)
+        Sleep(350)
+        dif := 1
+        loop(this.difMax)
+        {
+            if(this.difficulty_down(1))
+                dif++
+            else
+                break
+        }
+        return dif
     }
     basicLaunchDifMax()
     {
-        maxEventDifficulty := 12
+        maxEventDifficulty := this.findMaxDifficulty()
         this.upTime := upTime
-        if(this.open_quest_menu("a"))
+        sleep(500)
+        this.fix_overawed_party()
+        Sleep(500)
+        if(this.get_party_size_current(5) < 5)
         {
-            if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
-            {
-                ClickAtCoord(pX, pY)        ;open the LCOG quest
-                sleep(500)
-                this.fix_overawed_party()
-                Sleep(500)
-                if(this.get_party_size_current(5) < 5)
-                {
-                    loop(2)
-                    {
-                        send("{Escape}")
-                        Sleep(500)
-                    }
-                    return true
-                }
-                if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
-                {
-                    currentDifficulty := this.maximize_party_difficulty(5, maxEventDifficulty, upTime)
-                    if(currentDifficulty > this.highestDifficulty)
-                        this.highestDifficulty := currentDifficulty
-                    if(currentDifficulty == maxEventDifficulty or this.upTime > 5 and currentDifficulty == this.highestDifficulty)          ;checks if either the quest has the global or local(after at least 5 hours) maxium
-                    {
-                        this.useBooster("loot", 2)
-                        Sleep(500)
-                    }
-                    ClickAtCoord(1301, 761)         ;send quest
-                    if(!PixelSearch(&pX, &pY, 27, 930, 39, 943, 0x00FF4F, 3) and numtries < 15)       ;if there are still more questing slots
-                    {
-                        Sleep(7000)
-                        attempt := numtries + 1
-                        this.basic_lcog(attempt, upTime)
-                    }
-                }
-                return true
-            }
-            else
+            loop(2)
             {
                 send("{Escape}")
-                return false
+                Sleep(500)
+            }
+            return true
+        }
+        if(!PixelSearch(&pX, &pY, 1274, 778, 1303, 788, 0x206032, 3))           ;check if there are any available heros
+        {
+            currentDifficulty := this.maximize_party_difficulty(5, maxEventDifficulty, upTime)
+            if(currentDifficulty > this.highestDifficulty)
+                this.highestDifficulty := currentDifficulty
+            if(currentDifficulty == maxEventDifficulty or this.upTime > 5 and currentDifficulty == this.highestDifficulty)          ;checks if either the quest has the global or local(after at least 5 hours) maxium
+            {
+                this.useBooster("loot", 2)
+                Sleep(500)
+            }
+            ClickAtCoord(1301, 761)         ;send quest
+            if(!PixelSearch(&pX, &pY, 27, 930, 39, 943, 0x00FF4F, 3) and numtries < 15)       ;if there are still more questing slots
+            {
+                Sleep(7000)
+                attempt := numtries + 1
+                this.basic_lcog(attempt, upTime)
             }
         }
-        else
-            return true
     }
     flashQuest()
     {
@@ -540,10 +573,6 @@ Class Quest
             Send("{Escape}")
             return false
         }
-    }
-    totQuestslotSpent()
-    {
-        
     }
     totAuto()
     {

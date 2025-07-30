@@ -18,6 +18,7 @@ heroTokenMode := false
 {
     tick := 0
     configs := getConfigs()
+    questy := Quest()
     customerZone := [710, 513, 1112, 639]
     if(DevMode() and false)
     {
@@ -40,7 +41,6 @@ heroTokenMode := false
         subscription := false
     furnitureUpgrade := Furniture()
     upTime := 0
-    questy := Quest()
     counter_upgrade := false
     ExtraInventory := false
     AutomaticRestartTimer := 0
@@ -387,7 +387,7 @@ heroTokenMode := false
                 ClickAtCoord(1133, 938)          ;click the continue button
                 Sleep(2000)
             }
-            if(PixelSearch(&pX, &pY, 262, 934, 305, 959, 0xF5BB0D, 2))       ;scan for market tab
+            if(PixelSearch(&pX, &pY, 262, 934, 305, 959, 0xF5BB0D, 2) and configs.market and configs.market_collect)       ;scan for market tab
             {
                 collectAndRelistMarket()
                 Sleep(1000)
