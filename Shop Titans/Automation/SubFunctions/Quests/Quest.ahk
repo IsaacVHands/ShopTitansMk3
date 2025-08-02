@@ -343,7 +343,7 @@ Class Quest
     findActiveEvent()
     {
         this.open_quest_menu("a")
-        if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2) and this.configs.questing_lostcityofgold)            ;check if the LCOG quest is available
+        if(PixelSearch(&pX, &pY, 809, 873, 19, 896, 0x6D3906, 2) and this.configs.questing_lostcityofgold)            ;check if the LCOG quest is available
             return "lcog"
         if(this.totFindEvent(false) and this.configs.questing_toweroftitans and this.tot)
             return "tot"
@@ -356,7 +356,7 @@ Class Quest
         this.upTime := upTime
         if(this.open_quest_menu("a"))
         {
-            if(PixelSearch(&pX, &pY, 19, 873, 809, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
+            if(PixelSearch(&pX, &pY, 809, 873, 19, 896, 0x6D3906, 2))            ;check if the LCOG quest is available
             {
                 ClickAtCoord(pX, pY)        ;open the LCOG quest
                 sleep(500)

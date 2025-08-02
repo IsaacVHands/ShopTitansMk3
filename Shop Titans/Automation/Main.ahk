@@ -20,7 +20,7 @@ heroTokenMode := false
     configs := getConfigs()
     questy := Quest()
     customerZone := [710, 513, 1112, 639]
-    if(DevMode() and false)
+    if(DevMode() and true)
     {
         tick := 19
     }
