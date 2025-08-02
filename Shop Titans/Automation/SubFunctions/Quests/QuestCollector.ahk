@@ -102,6 +102,10 @@ class QuestCollector
                 ClickAtCoord(958, 931)     ;click continue
                 Sleep(300)
             }
+            if(PixelSearch(&pX, &pY, 862, 743, 874, 754, 0x522C44, 2))          ;scan quest failed
+            {
+                ClickAtCoord(955, 747)          ;continue
+            }
             if(PixelSearch(&pX, &pY, 704, 734, 747, 763, 0x522C44, 2) or PixelSearch(&pX, &pY, 839, 726, 895, 772, 0xE3A00D, 2))      ;check for collect button, or gold collect button
             {
                 Sleep(500)

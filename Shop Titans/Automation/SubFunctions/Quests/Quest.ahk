@@ -132,9 +132,9 @@ Class Quest
                 else if(currentHero == -1)
                     partyCount--
             }
-            if(partyCount == 1 and a > 0 or b > 0 and partyCount == 1)
+            if(partyCount == 1 and a > 1 or b > 1 and partyCount == 1)
                 return true
-            else if(a > 0 or b > 0 or b > 2)
+            else if(a > 1 or b > 1 or b > 3)
                 return true
             else
                 return false
